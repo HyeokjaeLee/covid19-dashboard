@@ -157,10 +157,8 @@ var world_total_confirmed=0;
 var world_total_active=0;
 var world_total_recovered=0;
 var world_total_deaths=0;
-var test2;
 $.ajax({url:  "https://api.covid19api.com/world", dataType: "json",async: false,
 success: function(data){
-    test2=data.length;
     world_new_confirmed[0]="Confirmed";
     world_new_deaths[0]="Deaths";
     world_total_deaths=data[data.length-1].TotalDeaths;
