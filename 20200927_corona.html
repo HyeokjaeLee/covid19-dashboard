@@ -10,37 +10,34 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
 	</head>
 	<body onload="main_f()">
-		<div class="menu">
-			<div class="menu_item";>
-				<a href="20200927_login.html">로그인 | </a>
-				<a href="20200927_join.html">회원가입 | </a>
-				<a href="20200927_portfolio.html">홈으로 | </a>
-			</div>
-			</div>
-			<div class="basic_form" style="width: 90%; height: 1500px; top:5%; margin:2% 0%; padding:0% 2.5%;">
+		<div id = "test"></div>
+			<div class="basic_form" style="width: 90%; height: auto; top:0%; margin:2% 0%; padding:0% 2.5%;">
 				
-				<div><ul id = "test"></ul><h1>COVID-19 Dashboard</h1></div>
-				<a onclick="this.nextSibling.style.display=(this.nextSibling.style.display=='none')?'block':'none';">
-					<button class="setting_bt">Countries setting</button></a><div style="display:none";>
-						<ul>1.counrty :<input id="country0_input" value="Korea (South)" list="countries" style="width:12%; margin: 1% 2.5%;">
-							2.counrty :<input id="country1_input" value="China" list="countries" style="width:12%; margin: 1% 2.5%;">
-							3.counrty :<input id="country2_input" value="Japan" list="countries" style="width:12%; margin: 1% 2.5%;"></ul>
-						<ul>
-						4.counrty :<input id="country3_input" value="United States of America" list="countries" style = "width:12%; margin: 1% 2.5%;">
-						5.counrty :<input id="country4_input" value="Italy" list="countries" style="width:12%; margin: 1% 2.5%;">
-						6.counrty :<input id="country5_input" value="France" list="countries" style="width:12%; margin: 1% 2.5%;"></ul>
-					</div>
-					<a onclick="this.nextSibling.style.display=(this.nextSibling.style.display=='none')?'block':'none';">
-						<button class="setting_bt">Time setting</button></a><div style="display:none;">
-							From :<input type="date" id="target_time_start" value="2020-09-01" list="countries" style="width:13%; margin: 1% 4%;">
-							To :<input type="date" id="target_time_end" value="2020-10-01" list="countries" style="width:13%; margin: 1% 4%;">
-						</div>
+				<h1>COVID-19 Dashboard</h1>
+			<a onclick="if(txt_input_countries.style.display=='none'){txt_input_countries.style.display='';
+			if(input_time.style.display==''){input_time.style.display='none'}}
+			else {txt_input_countries.style.display='none';}">
+					<button class="setting_bt">Countries setting</button></a>
+					<a onclick="if(input_time.style.display=='none'){input_time.style.display='';if(txt_input_countries.style.display==''){txt_input_countries.style.display='none'}}
+					else {input_time.style.display='none';}">
+							<button class="setting_bt">Time setting</button></a>
 					
 				  <datalist id="countries">
 				  </datalist>
-				  <input type="button" class="setting_bt" id="refresh_1" onclick="main_f();" value="Refresh chart"><hr>
-				<div id ="linechart" style="left:-1%"></div>
-					<div id="areachart" style="left:-1%"></div>
+				  <input type="button" class="setting_bt" id="refresh_1" onclick="main_f();" value="Refresh chart">
+				  <ol id="txt_input_countries" style="display:none";><hr>
+					<li>Counrty :<input id="country0_input" onfocus="this.value=''; country1_help_on();" onblur="country1_help_off()" value="Korea (South)" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"><span id="help_country1"></span></li>
+					<li>Counrty :<input id="country1_input" onfocus="this.value='';" value="China" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
+						<li>Counrty :<input id="country2_input" onfocus="this.value='';" value="Japan" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
+						<li>Counrty :<input id="country3_input" onfocus="this.value='';" value="United States of America" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
+							<li>Counrty :<input id="country4_input" onfocus="this.value='';" value="Italy" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
+								<li>Counrty :<input id="country5_input" onfocus="this.value='';" value="France" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li></ol>
+								<ul id="input_time" style="display:none";><hr>
+									<li>From :<input type="date" id="target_time_start" list="countries" style="width:13%; margin: 1% 1%; display: left;">
+										To :<input type="date" id="target_time_end" list="countries" style="width:13%; margin: 1% 1%; display: left;"></li></ul>
+								<hr>
+				<div id ="linechart" style="left:-1%; width: 75%;"></div>
+					<div id="areachart" style="left:-1%; width: 75%"></div>
 					<div id ="worldchart1" style="left:-1%; width: 25%; float:left;"></div>
 					<div id ="worldchart2" style="left:-1%; width: 25%; float:left;"></div>
 					<div id ="worldchart3" style="left:-1%; width: 48%; float:left;"></div>

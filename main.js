@@ -7,6 +7,14 @@ function getFormatDate(date){
     return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
 }
 
+function country1_help_on(){
+  document.getElementById("help_country1").innerHTML = "1번 나라는 가장 많은 정보를 표시합니다.";
+	document.getElementById("help_country1").style.color="green";
+}
+function country1_help_off(){
+  document.getElementById("help_country1").innerHTML = "";
+}
+
 var ago_2day=new Date();
 ago_2day.setDate(ago_2day.getDate()-2);
 var ago_31day=new Date();

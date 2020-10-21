@@ -96,3 +96,5 @@
 		 background-size : 200%;
 		 color : white;
 		}
+
+		.setting_input {width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD}
