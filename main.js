@@ -58,7 +58,7 @@ var target0_country_deaths = new Array();
 
 for(i=1;i<=diffDay;i++){
     date_item_x.setDate(date_item_x.getDate()+i-1)
-    date_x[i]=getFormatDate(date_item_x).replace(/-/g,'').substring(4,8);
+    date_x[i]=getFormatDate(date_item_x).substring(2,11);
     date_item_x = new Date(target_time_start);
 }
 
@@ -78,19 +78,14 @@ $.ajax({url:  country_api, dataType: "json",async: false,
 
 for(i=0; i<6; i++){
     target_countries[i] = countries_slug_list[countries_name_list.indexOf(document.getElementById("country"+i+"_input").value)];
+    target_api[i] = main_api + target_countries[i] + "/status/confirmed?from=" + target_time_start + "T00:00:00Z&to=" + target_time_end + "T00:00:00Z";
     }
-
-
-for(k=0; k<6; k++){
-    target_api[k] = main_api + target_countries[k] + "/status/confirmed?from=" + target_time_start + "T00:00:00Z&to=" + target_time_end + "T00:00:00Z";}
-
-
 
     $.ajax({url:  target_api[0], dataType: "json",async: false,
         success: function(data){
             target0_country_case[0]=target_countries[0]+"_cases";
-            for(i=1;i<=diffDay;i++){
-                target0_country_case[i]=data[i-1].Cases;
+            for(k=1;k<=diffDay;k++){
+                target0_country_case[k]=data[k-1].Cases;
             }
             targets_country_case[0]=target0_country_case;
         }
@@ -165,13 +160,16 @@ success: function(data){
     world_total_recovered=data[data.length-1].TotalRecovered;
     world_total_confirmed=data[data.length-1].TotalConfirmed;
     world_total_active=world_total_confirmed- world_total_recovered- world_total_deaths;
-    for(i=1;i<=data.length+1;i++){
-        world_new_confirmed[i]=data[i-1].NewConfirmed;
-        world_new_deaths[i]=data[i-1].NewDeaths;
+    for(k=0,z=1;k<=data.length;z++){
+        for(i=0;i<10;i++){
+          world_new_confirmed[z]=data[k].NewConfirmed;
+          world_new_deaths[z]=data[k].NewDeaths;
+          k++;
+        }
     }
 }
 });
-document.getElementById("test").textContent=world_total_active;
+document.getElementById("test").textContent=world_new_deaths[1]
         var chart1 = c3.generate({
     
     bindto: "#linechart",
@@ -191,7 +189,7 @@ document.getElementById("test").textContent=world_total_active;
     },
     axis:{
         x : {
-            type:"category"
+            type:"timeseries"
         }
     }
   
@@ -228,7 +226,7 @@ document.getElementById("test").textContent=world_total_active;
     },
     axis:{
         x : {
-            type:"category"
+            type:"timeseries"
         }
     },
     point : {

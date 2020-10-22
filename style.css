@@ -33,8 +33,7 @@
 	height: 600px;
 	padding: 2% 2%;
 	border-radius: 15px;
-	position: absolute;
-	top: 150%;
+	position: relative;
 	left: 2.5%
 	}
 	
