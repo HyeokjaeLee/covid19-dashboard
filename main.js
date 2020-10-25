@@ -7,19 +7,11 @@ function getFormatDate(date){
     return  year + '-' + month + '-' + day;     //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
 }
 
-function sum(array) {
-  var result = 0.0;
-
-  for (var i = 0; i < array.length; i++)
-    result += array[i];
-
-  return result;
-}
-
 function country1_help_on(){
   document.getElementById("help_country1").innerHTML = "1번 나라는 가장 많은 정보를 표시합니다.";
 	document.getElementById("help_country1").style.color="green";
 }
+
 function country1_help_off(){
   document.getElementById("help_country1").innerHTML = "";
 }
@@ -36,23 +28,23 @@ document.getElementById("target_time_start").value = getFormatDate(ago_31day);
 document.getElementById("target_time_end").value = getFormatDate(ago_2day);
 
 function main_f() {
-var country_api = "https://api.covid19api.com/countries";
-var main_api = "https://api.covid19api.com/total/country/";
-var target_api = new Array();
+  var country_api = "https://api.covid19api.com/countries";
+  var main_api = "https://api.covid19api.com/total/country/";
+  var target_api = new Array();
 
-var countries_options = "";
-var countries_slug_list = new Array();
-var countries_name_list = new Array();
-var target_countries = new Array(3);
+  var countries_options = "";
+  var countries_slug_list = new Array();
+  var countries_name_list = new Array();
+  var target_countries = new Array(3);
 
 
-var target_time_start = document.getElementById("target_time_start").value;
-var target_time_end = document.getElementById("target_time_end").value;
-var date1 = new Date(target_time_start);
-var date2 = new Date(target_time_end);
-var diffDay = (date2.getTime()-date1.getTime()) / (1000*60*60*24)+1; //입력받은 Date의 차
-var date_item_x = date1;
-var date_x = ["date"]; //X축 값을 배정해줄 배열
+  var target_time_start = document.getElementById("target_time_start").value;
+  var target_time_end = document.getElementById("target_time_end").value;
+  var date1 = new Date(target_time_start);
+  var date2 = new Date(target_time_end);
+  var diffDay = (date2.getTime()-date1.getTime()) / (1000*60*60*24)+1; //입력받은 Date의 차
+  var date_item_x = date1;
+  var date_x = ["date"]; //X축 값을 배정해줄 배열
 
 
 
@@ -86,22 +78,30 @@ var targets_country_recovered= new Array();
           var target_country_active=[document.getElementById("country"+i+"_input").value];
           var target_country_deaths=[document.getElementById("country"+i+"_input").value];
           var target_country_recovered=[document.getElementById("country"+i+"_input").value];
+
           for(k=1;k<=data.length;k++){
-              target_country_confirmed[k]=data[k-1].Confirmed;
-              target_country_active[k]=data[k-1].Active;
-              target_country_deaths[k]=data[k-1].Deaths;
-              target_country_recovered[k]=data[k-1].Recovered;
+            target_country_confirmed[k]=data[k-1].Confirmed;
+            target_country_active[k]=data[k-1].Active;
+            target_country_deaths[k]=data[k-1].Deaths;
+            target_country_recovered[k]=data[k-1].Recovered;
           }
           targets_country_confirmed[i]=target_country_confirmed;
           targets_country_active[i]=target_country_active;
           targets_country_deaths[i]=target_country_deaths;
           targets_country_recovered[i]=target_country_recovered;
-          
       }
+      });
+    }
       
-  });
-    
-      }
+  var targets_country_new_confirmed =  new Array();
+  for(i=0;i<3;i++){
+    var target_country_new_confirmed = [targets_country_confirmed[i][0],null];
+    for(k=1;k<targets_country_confirmed[i].length;k++){
+      target_country_new_confirmed[k+1]=targets_country_confirmed[i][k+1]-targets_country_confirmed[i][k]
+    }
+    targets_country_new_confirmed[i]=target_country_new_confirmed
+  }
+     
 
 //그래프 X축에 들어갈 값들 입력
 for(i=1;i<=diffDay;i++){
@@ -111,48 +111,123 @@ for(i=1;i<=diffDay;i++){
 }
 
 
-        var chart1 = c3.generate({
-    
+  var chart1 = c3.generate({
     bindto: "#linechart",
-  
     data: {
-    x : "date",
+      x : "date",
       columns: [
       date_x,
       targets_country_confirmed[0],
       targets_country_confirmed[1],
       targets_country_confirmed[2],
       ]
+    },
+    axis:{
+      x : {
+        type:"timeseries"
+      }
+    },
+    point : {
+      show: false
+    }
   
+  });
+
+
+  var chart2 = c3.generate({
+    bindto: "#linechart2",
+    data: {
+      x : "date",
+      columns: [
+        date_x,
+        targets_country_new_confirmed[0],
+        targets_country_new_confirmed[1],
+        targets_country_new_confirmed[2],
+      ]
     },
     axis:{
         x : {
             type:"timeseries"
         }
+    },
+    point : {
+      show: false
     }
-  
   });
-for(i=0; i<3; i++){
+
+
+  for(i=0; i<3; i++){
+    var chart3 = c3.generate({
+      bindto: "#donutchart"+i,
+      data: {
+        columns: [
+          ["Active",targets_country_active[i][targets_country_active[i].length-1]],
+          ["Deaths",targets_country_deaths[i][targets_country_deaths[i].length-1]],
+          ["Recovered",targets_country_recovered[i][targets_country_recovered[i].length-1]]
+        ],
+        type: "donut",
+        colors:{Deaths:"#8C8C8C",Recovered:"#86E57F",Active:"#F15F5F"},
+        labels: {
+          format: {
+            y: d3.format(".1%"),
+          }
+        }
+      },
+      donut: {
+        expand: false,
+        title: document.getElementById("country"+i+"_input").value
+      },
+      axis: {
+        x: {
+          type: 'categorized',
+          categories: ['Unique Click Rate','Total Click Rate']
+        },
+      },
+      bar: {
+        width: {
+          ratio: 0.5,
+        },
+      }
+    });
+  }
+
+
+  var total_confirmed;
+  var total_deaths;
+  var total_recovered;
+  var total_active;
+  $.ajax({url:  'https://api.covid19api.com/world/total', dataType: "json",async: false,
+  success: function(data){
+    total_confirmed = data.TotalConfirmed;
+    total_deaths = data.TotalDeaths;
+    total_recovered = data.TotalRecovered;
+    total_active = total_confirmed -(total_deaths+total_recovered);
+  }
+  });
+
+
+  document.getElementById("form_1_2").innerHTML=
+  "Total Confirmed "+total_confirmed + "<br><br> Total Active "+total_active + "<br><br> Total Deaths "+total_deaths + "<br><br> Total Recovered "+total_recovered
   var chart2 = c3.generate({
-    bindto: "#donutchart"+i,
+    bindto: "#form_1_1",
     data: {
       columns: [
-        ["Active",targets_country_active[i][targets_country_active[i].length-1]],
-        ["Deaths",targets_country_deaths[i][targets_country_deaths[i].length-1]],
-        ["Recovered",targets_country_recovered[i][targets_country_recovered[i].length-1]]
+        ["Active",total_active],
+        ["Deaths",total_deaths],
+        ["Recovered",total_recovered]
       ],
       type: "donut",
-      colors:{Deaths:"#000000",Recovered:"#47C83E",Active:"#FF0000"},
+      colors:{Deaths:"#8C8C8C",Recovered:"#86E57F",Active:"#F15F5F"},
       labels: {
         format: {
-            y: d3.format(".1%"),
-        }}
+          y: d3.format(".1%"),
+        }
+      }
     },
     donut: {
-
       expand: false,
-  
-      title: document.getElementById("country"+i+"_input").value},
+      title:"Worldwide"
+    },
     axis: {
       x: {
         type: 'categorized',
@@ -162,12 +237,7 @@ for(i=0; i<3; i++){
     bar: {
       width: {
         ratio: 0.5,
-
       },
     }
   });
-
-}
-  
-
 }

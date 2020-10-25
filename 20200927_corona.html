@@ -1,46 +1,87 @@
 <!DOCTYPE html>
 	<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=">
-	<title>COVID-19 Dashboard</title>
-	<link rel="stylesheet" href="style.css">
-	<link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css"/>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=">
+		<title>COVID-19 Dashboard</title>
+		<link rel="stylesheet" href="style.css">
+		<link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css"/>
+   		<script src="https://d3js.org/d3.v3.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
 	</head>
-	<body onload="main_f()">
-		<div id = "test"></div>
+
+	<body onload="main_f();">
+
+		<datalist id="countries"></datalist>
 		<div class="basic_form" style="width: 90%; height: auto; margin:2% 0%; padding:2% 2.5%; margin-bottom:1%">
 			<h1>COVID-19 Dashboard</h1><hr>
-			<a onclick="if(txt_input_countries.style.display=='none'){txt_input_countries.style.display='';
-			if(input_time.style.display==''){input_time.style.display='none'}}
+			<a onclick="
+			if(txt_input_countries.style.display=='none'){txt_input_countries.style.display='';
+				if(input_time.style.display==''){input_time.style.display='none'}
+			}
 			else {txt_input_countries.style.display='none';}">
-					<button class="setting_bt">Countries setting</button></a>
-					<a onclick="if(input_time.style.display=='none'){input_time.style.display='';if(txt_input_countries.style.display==''){txt_input_countries.style.display='none'}}
-					else {input_time.style.display='none';}">
-							<button class="setting_bt">Time setting</button></a>
-				  <datalist id="countries">
-				  </datalist>
-				  <input type="button" class="setting_bt" id="refresh_1" onclick="main_f();" value="Refresh chart">
-				  <ol id="txt_input_countries" style="display:none";>
-					<li>Counrty :<input id="country0_input" onfocus="this.value=''; country1_help_on();" onblur="country1_help_off()" value="Korea (South)" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"><span id="help_country1"></span></li>
-					<li>Counrty :<input id="country1_input" onfocus="this.value='';" value="Canada" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
-						<li>Counrty :<input id="country2_input" onfocus="this.value='';" value="Japan" list="countries" style="width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li></ol>
-								<ul id="input_time" style="display:none";>
-									<li>From :<input type="date" id="target_time_start" list="countries" style="width:13%; margin: 1% 1%; display: left;">
-										To :<input type="date" id="target_time_end" list="countries" style="width:13%; margin: 1% 1%; display: left;"></li></ul>
+				<button class="setting_bt">Countries setting</button>
+			</a>
+			<a onclick="
+			if(input_time.style.display=='none'){input_time.style.display='';
+				if(txt_input_countries.style.display==''){txt_input_countries.style.display='none'}
+			}
+			else {input_time.style.display='none';}">
+				<button class="setting_bt">Time setting</button>
+			</a>
+			<input type="button" class="setting_bt" id="refresh_1" onclick="main_f();" value="Refresh chart">
+			<ol id="txt_input_countries" style="display:none";>
+				<li>Counrty :<input id="country0_input" onfocus="this.value=''; country1_help_on();" onblur="country1_help_off()" value="Korea (South)" list="countries" style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"><span id="help_country1"></span></li>
+				<li>Counrty :<input id="country1_input" onfocus="this.value='';" value="Canada" list="countries" style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
+				<li>Counrty :<input id="country2_input" onfocus="this.value='';" value="Japan" list="countries" style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li></ol>
+			<ul id="input_time" style="display:none";>
+				<li>From :<input type="date" id="target_time_start" list="countries" style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD">
+					To :<input type="date" id="target_time_end" list="countries" style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD"></li>
+			</ul>
 		</div>
-			<div class="basic_form" style="width: 90%; height: 800px; float: block; margin:2% 0%; padding:2% 2.5%;">
-				<dl style="left:-1%; width: 66%; height: 33%;float:left;"><dt style="margin-bottom: 4%;">각 나라별 확진자 수</dt><dd id ="linechart" style="height: 100%;"></dd></dl>
-				<dl style="left:-1%; width: 33%; height: 95%;float:left;"><dt style="margin-bottom: 4%;">나라별 비율</dt><dd id ="donutchart0" style="height: 33%;"></dd>
+
+		<div class="basic_form" style="width: 40.5%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%; margin-right:4%;">
+			<dl style="left:-1%; width: 100%; height: 100%;float:left; margin-bottom:4%;">
+				<dt style="margin-bottom: 4%;">
+					세계 확진자 비율
+					<dd id="form_1_1"  style="height: 90%; float:left; width: 60%; left:-10%">
+						Loading...
+					</dd>
+				</dt>
+				<dt id="form_1_2" style="width:30%; height: 100%;float:right; text-align: right;">
+					Loading...
+				</dt>
+			</dl>
+		</div>
+
+		<div class="basic_form" id="form_2" style="width: 40.5%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%;">
+			<dl style="left:-1%; width: 50%; height: 80%;float:left; margin-bottom:4%;">
+				<dt style="margin-bottom: 4%;">세계신규 확진자 수
+					<dd id ="worldchart" style="height: 100%;">Loading...</dd>
+				</dt>
+			</dl>
+		</div>
+
+		<div class="basic_form" style="width: 90%; height: 800px; float: left; margin:2% 0%; padding:2% 2.5%;">
+			<dl style="left:-1%; width: 66%; height: 40%;float:left; margin-bottom:4%;">
+				<dt style="margin-bottom: 4%;">국가별 확진자
+					<dd id ="linechart" style="height: 100%;">Loading...</dd>
+				</dt>
+			</dl>
+			<dl style="left:-1%; width: 33%; height: 95%;float:right;">
+				<dt style="margin-bottom: 4%;">국가별 확진자 비율
+					<dd id ="donutchart0" style="height: 33%;">Loading...</dd>
 					<dd id ="donutchart1" style="height: 33%;"></dd>
-
-					<dd id ="donutchart2" style="height: 33%;"></dd></dl>
-			</div>
-			<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-			<script src="main.js">
-				</script>
-
-		</body>
+					<dd id ="donutchart2" style="height: 33%;"></dd>
+				</dt>
+			</dl>
+			<dl style="left:-1%; width: 66%; height: 40%;float:left;">
+				<dt style="margin-bottom: 4%;">국가별 신규 확진자
+					<dd id ="linechart2" style="height: 100%;">Loading...</dd>
+				</dt>
+			</dl>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="main.js"></script>
+	</body>
 </html>
