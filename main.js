@@ -7,6 +7,24 @@ function getFormatDate(date){
     return  year + '-' + month + '-' + day;     //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
 }
 
+ function ajax_get(url, callback) {//ajax 구현을 위한 함수
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          console.log('responseText:' + xmlhttp.responseText);
+          try {
+              var data = JSON.parse(xmlhttp.responseText);
+          } catch(err) {
+              console.log(err.message + " in " + xmlhttp.responseText);
+              return;
+          }
+          callback(data);
+      }
+  };
+  xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
+    xmlhttp.send();
+}
+
 function country1_help_on(){
   document.getElementById("help_country1").innerHTML = "1번 나라는 가장 많은 정보를 표시합니다.";
 	document.getElementById("help_country1").style.color="green";
@@ -53,16 +71,15 @@ function main_f() {
 
 
 //나라별 slug값과 name값을 받아옴
-$.ajax({url:  country_api, dataType: "json",async: false,
-        success: function(data){
-            for(i=0;i<data.length;i++){
-                countries_slug_list[i]=data[i].Slug;
-                countries_name_list[i]=data[i].Country;
-                countries_options += '<option value="' + countries_name_list[i] + '">' //받아온 나라별 name을 HTML Option 형식으로 바꿔서 저장
-            }
-            document.getElementById("countries").innerHTML = countries_options; // 저장한 옵션을 HTML에 입력
-        }
+    ajax_get(country_api,function(data){
+      for(i=0;i<data.length;i++){
+        countries_slug_list[i]=data[i].Slug;
+        countries_name_list[i]=data[i].Country;
+        countries_options += '<option value="' + countries_name_list[i] + '">' //받아온 나라별 name을 HTML Option 형식으로 바꿔서 저장
+    }
+    document.getElementById("countries").innerHTML = countries_options; // 저장한 옵션을 HTML에 입력
     });
+
 
     var targets_country_confirmed = new Array();
 var targets_country_active= new Array();
@@ -72,13 +89,11 @@ var targets_country_recovered= new Array();
     for(i=0; i<3;i++){
       target_countries[i] = countries_slug_list[countries_name_list.indexOf(document.getElementById("country"+i+"_input").value)]; //입력받은 국가별 name값을 api를 받아올수 있는 slug값으로 변환해서 저장
       target_api[i] = main_api + target_countries[i] + "?from=" + target_time_start + "T00:00:00Z&to=" + target_time_end + "T00:00:00Z";
-      $.ajax({url:  target_api[i], dataType: "json",async: false,
-      success: function(data){
-          var target_country_confirmed=[document.getElementById("country"+i+"_input").value]; //처음에 for문을 돌렸더니 마지막 ajax값만 들어가서 서로 다른 ajax을 여러번 사용했으나 저장할 배열을 ajax안에서 선언하니 해결됨
+      ajax_get(target_api[i],function(data){
+        var target_country_confirmed=[document.getElementById("country"+i+"_input").value]; //처음에 for문을 돌렸더니 마지막 ajax값만 들어가서 서로 다른 ajax을 여러번 사용했으나 저장할 배열을 ajax안에서 선언하니 해결됨
           var target_country_active=[document.getElementById("country"+i+"_input").value];
           var target_country_deaths=[document.getElementById("country"+i+"_input").value];
           var target_country_recovered=[document.getElementById("country"+i+"_input").value];
-
           for(k=1;k<=data.length;k++){
             target_country_confirmed[k]=data[k-1].Confirmed;
             target_country_active[k]=data[k-1].Active;
@@ -89,7 +104,6 @@ var targets_country_recovered= new Array();
           targets_country_active[i]=target_country_active;
           targets_country_deaths[i]=target_country_deaths;
           targets_country_recovered[i]=target_country_recovered;
-      }
       });
     }
       
@@ -196,18 +210,16 @@ for(i=1;i<=diffDay;i++){
   var total_deaths;
   var total_recovered;
   var total_active;
-  $.ajax({url:  'https://api.covid19api.com/world/total', dataType: "json",async: false,
-  success: function(data){
-    total_confirmed = data.TotalConfirmed;
-    total_deaths = data.TotalDeaths;
-    total_recovered = data.TotalRecovered;
-    total_active = total_confirmed -(total_deaths+total_recovered);
-  }
-  });
 
+ ajax_get('https://api.covid19api.com/world/total',function(data){
+  total_confirmed = data.TotalConfirmed;
+  total_deaths = data.TotalDeaths;
+  total_recovered = data.TotalRecovered;
+  total_active = total_confirmed -(total_deaths+total_recovered);
+ });
 
   document.getElementById("form_1_2").innerHTML=
-  "Total Confirmed "+total_confirmed + "<br><br> Total Active "+total_active + "<br><br> Total Deaths "+total_deaths + "<br><br> Total Recovered "+total_recovered
+  "Total Confirmed<br>"+total_confirmed + "<br><br>Total Active<br>"+total_active + "<br><br>Total Deaths<br>"+total_deaths + "<br><br>Total Recovered<br>"+total_recovered
   var chart2 = c3.generate({
     bindto: "#form_1_1",
     data: {
@@ -240,4 +252,51 @@ for(i=1;i<=diffDay;i++){
       },
     }
   });
+
+setTimeout(function(){//한번에 api정보를 다 못받아와서 시간차를 둠
+var record_start_day= new Date(2020,3,1); //월은 0월부터 시작
+var record_start_day2=new Date(2020,4,1);
+var world_new_confirmed = ["new_confirmed"];
+var world_new_deaths =["new_deaths"];
+
+
+for(i=1;record_start_day2<new Date();i++){
+
+  var rsd_url=getFormatDate(record_start_day);
+  var rsd2_url=getFormatDate(record_start_day2);
+  ajax_get("https://api.covid19api.com/world?from="+rsd_url+"T00:00:00Z&to="+rsd2_url+"T00:00:00Z",function(data){
+    world_new_confirmed[i]=0;
+    world_new_deaths[i]=0;
+      for(k=0;k<data.length;k++){
+            world_new_confirmed[i]+=data[k].NewConfirmed;
+            world_new_deaths[i]+=data[k].NewDeaths;
+          }
+          record_start_day.setMonth(record_start_day.getMonth() + 1);
+          record_start_day2.setMonth(record_start_day2.getMonth() + 1);
+  });
 }
+
+var chart4 = c3.generate({
+
+  bindto: "#worldchart",
+
+  data: {
+    columns: [
+      world_new_confirmed
+],type:"bar"
+  },
+});
+var chart4 = c3.generate({
+
+  bindto: "#worldchart2",
+
+  data: {
+    columns: [
+      world_new_deaths
+],type:"bar"
+  },
+});
+},2000);
+  
+}
+window.onload=main_f();
