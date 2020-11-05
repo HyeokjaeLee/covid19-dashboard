@@ -219,7 +219,7 @@ for(i=1;i<=diffDay;i++){
  });
 
   document.getElementById("form_1_2").innerHTML=
-  "Confirmed<br>"+total_confirmed + "<br><br>Active<br>"+total_active + "<br><br>Deaths<br>"+total_deaths + "<br><br>Recovered<br>"+total_recovered
+  "Total Confirmed<br>"+total_confirmed + "<br><br>Total Active<br>"+total_active + "<br><br>Total Deaths<br>"+total_deaths + "<br><br>Total Recovered<br>"+total_recovered
   var chart2 = c3.generate({
     bindto: "#form_1_1",
     data: {
@@ -256,14 +256,14 @@ for(i=1;i<=diffDay;i++){
 setTimeout(function(){//한번에 api정보를 다 못받아와서 시간차를 둠
 var record_start_day= new Date(2020,3,1); //월은 0월부터 시작
 var record_start_day2=new Date(2020,4,1);
-var world_new_confirmed = ["NewConfirmed"];
-var world_new_deaths =["NewDeaths"];
-var month_for_x = ["Month"];
+var world_new_confirmed = ["new_confirmed"];
+var world_new_deaths =["new_deaths"];
+
 
 for(i=1;record_start_day2<new Date();i++){
+
   var rsd_url=getFormatDate(record_start_day);
   var rsd2_url=getFormatDate(record_start_day2);
-  month_for_x[i]=rsd_url.substr(2,5);
   ajax_get("https://api.covid19api.com/world?from="+rsd_url+"T00:00:00Z&to="+rsd2_url+"T00:00:00Z",function(data){
     world_new_confirmed[i]=0;
     world_new_deaths[i]=0;
@@ -281,42 +281,20 @@ var chart4 = c3.generate({
   bindto: "#worldchart",
 
   data: {
-    x:"Month",
     columns: [
-      world_new_confirmed,
-      month_for_x
-],type:"bar",colors: {
-  NewConfirmed: "#F15F5F",
-}
+      world_new_confirmed
+],type:"bar"
   },
-  axis: {
-    y:{show:false},
-    x: {
-      type: 'categorized',
-      categories: ['Unique Click Rate','Total Click Rate']
-    }
-  }
 });
 var chart4 = c3.generate({
 
   bindto: "#worldchart2",
 
   data: {
-    x:"Month",
     columns: [
-      world_new_deaths,
-      month_for_x
-],type:"bar",colors: {
-  NewDeaths: "#8C8C8C",
-}
+      world_new_deaths
+],type:"bar"
   },
-  axis: {
-    y:{show:false},
-    x: {
-      type: 'categorized',
-      categories: ['Unique Click Rate','Total Click Rate']
-    }
-  }
 });
 },2000);
   
