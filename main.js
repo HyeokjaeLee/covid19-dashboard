@@ -7,22 +7,21 @@ function getFormatDate(date){
     return  year + '-' + month + '-' + day;     //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
 }
 
- function ajax_get(url, callback) {//ajax 구현을 위한 함수
+function ajax_get(url, callback) {//ajax 구현을 위한 함수
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-          console.log('responseText:' + xmlhttp.responseText);
-          try {
-              var data = JSON.parse(xmlhttp.responseText);
-          } catch(err) {
-              console.log(err.message + " in " + xmlhttp.responseText);
-              return;
-          }
-          callback(data);
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      console.log('responseText:' + xmlhttp.responseText);
+      try {var data = JSON.parse(xmlhttp.responseText);}
+      catch(err) {
+        console.log(err.message + " in " + xmlhttp.responseText);
+        return;
       }
+      callback(data);
+    }
   };
   xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
-    xmlhttp.send();
+  xmlhttp.send();
 }
 
 function country1_help_on(){
@@ -46,6 +45,47 @@ document.getElementById("target_time_start").value = getFormatDate(ago_31day);
 document.getElementById("target_time_end").value = getFormatDate(ago_2day);
 
 function main_f() {
+  var total_info=new Array();
+  var country_arr=["Country"];
+  var infected_arr=["Confirmed"];
+  var deceased_arr=["Deaths"];
+  var recovered_arr=["Recovered"];
+  ajax_get("https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true",function(data){
+    for(i=0;i<data.length;i++){
+      total_info[i]=[data[i].country,data[i].infected,data[i].deceased,data[i].recovered];
+    }
+    total_info.sort(function(a,b){
+      return b[1]-a[1];
+    });
+    for(i=1;i<=20;i++){
+      country_arr[i]=total_info[i-1][0];
+      infected_arr[i]=total_info[i-1][1];
+      deceased_arr[i]=total_info[i-1][2];
+      recovered_arr[i]=total_info[i-1][3];
+    }
+  });
+  var chart4 = c3.generate({
+
+    bindto: "#Confirmed_by_countries",
+  
+    data: {
+      x:"Country",
+      columns: [
+        country_arr,
+        infected_arr,
+        recovered_arr,
+        deceased_arr
+  ],type:"bar",
+  colors:{Deaths:"#8C8C8C",Recovered:"#86E57F"}
+    },
+    axis: {
+      legend: { hide: true },
+      y:{show:false},
+      x: {
+        type: 'categorized'
+      }
+    }
+  });
   var country_api = "https://api.covid19api.com/countries";
   var main_api = "https://api.covid19api.com/total/country/";
   var target_api = new Array();
@@ -242,8 +282,7 @@ for(i=1;i<=diffDay;i++){
     },
     axis: {
       x: {
-        type: 'categorized',
-        categories: ['Unique Click Rate','Total Click Rate']
+        type: 'categorized'
       },
     },
     bar: {

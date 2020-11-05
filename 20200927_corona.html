@@ -12,7 +12,7 @@
 
 	<body>
 		<datalist id="countries"></datalist>
-		<div class="basic_form" style="width: 90%; height: auto; margin:2% 0%; padding:2% 2.5%; margin-bottom:1%">
+		<div class="basic_form" style="width: 90%; height: auto; margin:2% 0%; padding:2% 2.5%; margin-bottom:0.5%">
 			<h1>COVID-19 Dashboard</h1><hr>
 			<a onclick="
 			if(txt_input_countries.style.display=='none'){txt_input_countries.style.display='';
@@ -39,7 +39,17 @@
 			</ul>
 		</div>
 
-		<div class="basic_form" style="width: 30.5%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%; margin-right:4%;">
+		<div class="basic_form" style="width: 90%; height: 300px; float: left; margin:2% 0%; padding:0.5% 2.5%;">
+			<dl style="width: 100%; height: 100%;float:left; margin-bottom:4%;">
+				<dt>국가별 총 확진자 수 TOP20
+					<dd id="Confirmed_by_countries" style="top:0%; height: 90%;">
+						loading...
+					</dd>
+				</dt>
+			</dl>
+		</div>
+
+		<div class="basic_form" style="width: 30.5%; height: 300px; float: left; margin:2% 0%; padding:0.5% 2.5%; margin-right:4%;">
 			<dl style="left:-1%; width: 100%; height: 100%;float:left; margin-bottom:2%;">
 				<dt style="margin-bottom: 0%;">
 					세계 확진자 비율
@@ -53,7 +63,7 @@
 			</dl>
 		</div>
 
-		<div class="basic_form" id="form_2" style="width: 50.5%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%;">
+		<div class="basic_form" id="form_2" style="width: 50.5%; height: 300px; float: left; margin:2% 0%; padding:0.5% 2.5%;">
 			<dl style="width: 50%; height: 80%;float:left; margin-bottom:4%;">
 				<dt style="margin-bottom: 4%;">세계 신규 확진자 수
 					<dd id ="worldchart" style="height: 100%;left:-10%;">Loading...</dd>
@@ -65,9 +75,9 @@
 				</dt>
 			</dl>
 		</div>
-		<div class="basic_form" style="width: 90%; height: 800px; float: left; margin:2% 0%; padding:2% 2.5%;">
+		<div class="basic_form" style="width: 90%; height: 800px; float: left; margin:2% 0%; padding:0.5% 2.5%;">
 			<dl style="left:-1%; width: 66%; height: 40%;float:left; margin-bottom:4%;">
-				<dt style="margin-bottom: 4%;">국가별 확진자
+				<dt style="margin-bottom: 0.5%;">국가별 확진자
 					<dd id ="linechart" style="height: 100%;">Loading...</dd>
 				</dt>
 			</dl>
@@ -79,14 +89,14 @@
 				</dt>
 			</dl>
 			<dl style="left:-1%; width: 66%; height: 40%;float:left;">
-				<dt style="margin-bottom: 4%;">국가별 신규 확진자
+				<dt style="margin-bottom: 0.5%;">국가별 신규 확진자
 					<dd id ="linechart2" style="height: 100%;">Loading...</dd>
 				</dt>
 			</dl>
 		</div>
-		<div class="basic_form" style="width: 24%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%; margin-right:4%;"></div>
-		<div class="basic_form" style="width: 24%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%; margin-right:4%;"></div>
-		<div class="basic_form" style="width: 24%; height: 300px; float: left; margin:2% 0%; padding:2% 2.5%; margin-right:4%;"></div>
+		<div class="basic_form" style="width: 24%; height: 300px; float: left; margin:2% 0%; padding:0.5% 2.5%; margin-right:4%;"></div>
+		<div class="basic_form" style="width: 24%; height: 300px; float: left; margin:2% 0%; padding:0.5% 2.5%; margin-right:4%;"></div>
+		<div class="basic_form" style="width: 24%; height: 300px; float: left; margin:2% 0%; padding:0.5% 2.5%; margin-right:4%;"></div>
 		<script src="main.js"></script>
 	</body>
 </html>
