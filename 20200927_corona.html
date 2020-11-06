@@ -33,21 +33,23 @@
 		<input type="button" class="setting_bt" id="refresh_1" onclick="main_f();" value="Refresh chart">
 		<input type="button" class="setting_bt" onclick="information();" value="Information">
 		<ol id="txt_input_countries" style="display:none" ;>
-			<li>Counrty :<input id="country0_input" onfocus="this.value=''; country1_help_on();"
-					onblur="country1_help_off()" value="Korea (South)" list="countries"
+			<li>Counrty :<input id="country0_input" onfocus="this.value='';" value="Korea (South)"
+					onblur="change_value(),date_change()" list="countries"
 					style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD">
 			</li>
 			<li>Counrty :<input id="country1_input" onfocus="this.value='';" value="Canada" list="countries"
+					onblur="change_value(),date_change()"
 					style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD">
 			</li>
 			<li>Counrty :<input id="country2_input" onfocus="this.value='';" value="Japan" list="countries"
+					onblur="change_value(),date_change()"
 					style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD">
 			</li>
 		</ol>
 		<ul id="input_time" style="display:none" ;>
-			<li>From :<input type="date" id="target_time_start" list="countries"
+			<li>From :<input type="date" id="target_time_start" list="countries" onblur="date_change()"
 					style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD">
-				To :<input type="date" id="target_time_end" list="countries"
+				To :<input type="date" id="target_time_end" list="countries" onblur="date_change()"
 					style="width:20%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD">
 			</li>
 		</ul>

@@ -1,3 +1,16 @@
+var country_api = "https://api.covid19api.com/countries";
+var main_api = "https://api.covid19api.com/total/country/";
+var countries_options = "";
+var countries_slug_list = new Array();
+var countries_name_list = new Array();
+var target_api = new Array();
+var target_countries = new Array(3);
+var ago_2day = new Date();
+ago_2day.setDate(ago_2day.getDate() - 2);
+var ago_31day = new Date();
+ago_31day.setDate(ago_31day.getDate() - 31);
+var target_times = [];
+
 function getFormatDate(date) {
   var year = date.getFullYear();              //yyyy
   var month = (1 + date.getMonth());          //M
@@ -28,69 +41,10 @@ function ajax_get(url, callback) {//ajax 구현을 위한 함수
   xmlhttp.send();
 }
 
-var ago_2day = new Date();
-ago_2day.setDate(ago_2day.getDate() - 2);
-var ago_31day = new Date();
-ago_31day.setDate(ago_31day.getDate() - 31);
-var target_times = [];
-
-
-
 document.getElementById("target_time_start").value = getFormatDate(ago_31day);
 document.getElementById("target_time_end").value = getFormatDate(ago_2day);
 
-function main_f() {
-  var total_info = new Array();
-  var country_arr = ["Country"];
-  var infected_arr = ["Confirmed"];
-  var deceased_arr = ["Deaths"];
-  var recovered_arr = ["Recovered"];
-  ajax_get("https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true", function (data) {
-    for (i = 0; i < data.length; i++) {
-      total_info[i] = [data[i].country, data[i].infected, data[i].deceased, data[i].recovered];
-    }
-    total_info.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    for (i = 1; i <= 20; i++) {
-      country_arr[i] = total_info[i - 1][0];
-      infected_arr[i] = total_info[i - 1][1];
-      deceased_arr[i] = total_info[i - 1][2];
-      recovered_arr[i] = total_info[i - 1][3];
-    }
-  });
-  var Confirmed_by_countries = c3.generate({
-
-    bindto: "#Confirmed_by_countries",
-
-    data: {
-      x: "Country",
-      columns: [
-        country_arr,
-        infected_arr,
-        recovered_arr,
-        deceased_arr
-      ],
-      type: "bar",
-      colors: {
-        Deaths: "#8C8C8C",
-        Recovered: "#86E57F"
-      }
-    },
-    axis: {
-      legend: { hide: true },
-      y: { show: false },
-      x: { type: 'categorized' }
-    }
-  });
-
-  var country_api = "https://api.covid19api.com/countries";
-  var main_api = "https://api.covid19api.com/total/country/";
-  var target_api = new Array();
-  var countries_options = "";
-  var countries_slug_list = new Array();
-  var countries_name_list = new Array();
-  var target_countries = new Array(3);
+function change_value() {
   var target_time_start = document.getElementById("target_time_start").value;
   var target_time_end = document.getElementById("target_time_end").value;
   var date1 = new Date(target_time_start);
@@ -98,16 +52,6 @@ function main_f() {
   var diffDay = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24) + 1; //입력받은 Date의 차
   var date_item_x = date1;
   var date_x = ["date"]; //X축 값을 배정해줄 배열
-
-  ajax_get(country_api, function (data) {//나라별 slug값과 name값을 받아옴
-    for (i = 0; i < data.length; i++) {
-      countries_slug_list[i] = data[i].Slug;
-      countries_name_list[i] = data[i].Country;
-      countries_options += '<option value="' + countries_name_list[i] + '">' //받아온 나라별 name을 HTML Option 형식으로 바꿔서 저장
-    }
-    document.getElementById("countries").innerHTML = countries_options; // 저장한 옵션을 HTML에 입력
-  });
-
 
   var targets_country_confirmed = new Array();
   var targets_country_active = new Array();
@@ -134,7 +78,11 @@ function main_f() {
       targets_country_recovered[i] = target_country_recovered;
     });
   }
-
+  for (i = 0; i < 3; i++) {
+    if (targets_country_confirmed[i][2] === undefined) {
+      alert("Counrty[" + (i + 1) + "]'s api info is empty. ( " + document.getElementById("country" + i + "_input").value + " )\n Please choose the other country.")
+    }
+  }
   var targets_country_new_confirmed = new Array();
   for (i = 0; i < 3; i++) {
     var target_country_new_confirmed = [targets_country_confirmed[i][0], null];
@@ -316,8 +264,60 @@ function main_f() {
 
     });
   };
+};
+function fixed_value() {
+  ajax_get(country_api, function (data) {//나라별 slug값과 name값을 받아옴
+    for (i = 0; i < data.length; i++) {
+      countries_slug_list[i] = data[i].Slug;
+      countries_name_list[i] = data[i].Country;
+      countries_options += '<option value="' + countries_name_list[i] + '">' //받아온 나라별 name을 HTML Option 형식으로 바꿔서 저장
+    }
+    document.getElementById("countries").innerHTML = countries_options; // 저장한 옵션을 HTML에 입력
+  });
 
+  var total_info = new Array();
+  var country_arr = ["Country"];
+  var infected_arr = ["Confirmed"];
+  var deceased_arr = ["Deaths"];
+  var recovered_arr = ["Recovered"];
+  ajax_get("https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true", function (data) {
+    for (i = 0; i < data.length; i++) {
+      total_info[i] = [data[i].country, data[i].infected, data[i].deceased, data[i].recovered];
+    }
+    total_info.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    for (i = 1; i <= 20; i++) {
+      country_arr[i] = total_info[i - 1][0];
+      infected_arr[i] = total_info[i - 1][1];
+      deceased_arr[i] = total_info[i - 1][2];
+      recovered_arr[i] = total_info[i - 1][3];
+    }
+  });
+  var Confirmed_by_countries = c3.generate({
 
+    bindto: "#Confirmed_by_countries",
+
+    data: {
+      x: "Country",
+      columns: [
+        country_arr,
+        infected_arr,
+        recovered_arr,
+        deceased_arr
+      ],
+      type: "bar",
+      colors: {
+        Deaths: "#8C8C8C",
+        Recovered: "#86E57F"
+      }
+    },
+    axis: {
+      legend: { hide: true },
+      y: { show: false },
+      x: { type: 'categorized' }
+    }
+  });
 
   var record_start_day = new Date(2020, 3, 1); //월은 0월부터 시작
   var record_start_day2 = new Date(2020, 4, 1);
@@ -383,6 +383,18 @@ function main_f() {
       }
     });
   }, 3000);
+};
 
+function main_f() {
+  fixed_value();
+  change_value();
+};
+function date_change() {
+  if (new Date(document.getElementById("target_time_end").value) > ago_2day || new Date(document.getElementById("target_time_start").value) < new Date(2020, 2, 1)) {
+    alert("Please enter the correct date\nfrom " + new Date(2020, 2, 1) + "\nto " + ago_2day)
+  }
+  else {
+    change_value();
+  }
 }
 window.onload = main_f();
