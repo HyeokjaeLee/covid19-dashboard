@@ -10,6 +10,13 @@ ago_2day.setDate(ago_2day.getDate() - 2);
 var ago_31day = new Date();
 ago_31day.setDate(ago_31day.getDate() - 31);
 var target_times = [];
+var country_arr;
+var infected_arr;
+var deceased_arr;
+var recovered_arr;
+var world_new_confirmed;
+var world_new_deaths;
+var month_for_x;
 
 function getFormatDate(date) {
   var year = date.getFullYear();              //yyyy
@@ -265,6 +272,7 @@ function change_value() {
     });
   };
 };
+
 function fixed_value() {
   ajax_get(country_api, function (data) {//나라별 slug값과 name값을 받아옴
     for (i = 0; i < data.length; i++) {
@@ -274,26 +282,20 @@ function fixed_value() {
     }
     document.getElementById("countries").innerHTML = countries_options; // 저장한 옵션을 HTML에 입력
   });
+  var fixed_value = new Worker("fixed_value.js");
+  fixed_value.onmessage = function (event) {
+    country_arr = event.data[0];
+    infected_arr = event.data[1];
+    deceased_arr = event.data[2];
+    recovered_arr = event.data[3];
+    world_new_confirmed = event.data[4];
+    world_new_deaths = event.data[5];
+    month_for_x = event.data[6];
+    fixed_value_chart();
+  }
+};
 
-  var total_info = new Array();
-  var country_arr = ["Country"];
-  var infected_arr = ["Confirmed"];
-  var deceased_arr = ["Deaths"];
-  var recovered_arr = ["Recovered"];
-  ajax_get("https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true", function (data) {
-    for (i = 0; i < data.length; i++) {
-      total_info[i] = [data[i].country, data[i].infected, data[i].deceased, data[i].recovered];
-    }
-    total_info.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    for (i = 1; i <= 20; i++) {
-      country_arr[i] = total_info[i - 1][0];
-      infected_arr[i] = total_info[i - 1][1];
-      deceased_arr[i] = total_info[i - 1][2];
-      recovered_arr[i] = total_info[i - 1][3];
-    }
-  });
+function fixed_value_chart() {
   var Confirmed_by_countries = c3.generate({
 
     bindto: "#Confirmed_by_countries",
@@ -319,70 +321,47 @@ function fixed_value() {
     }
   });
 
-  var record_start_day = new Date(2020, 3, 1); //월은 0월부터 시작
-  var record_start_day2 = new Date(2020, 4, 1);
-  var world_new_confirmed = ["NewConfirmed"];
-  var world_new_deaths = ["NewDeaths"];
-  var month_for_x = ["Month"];
-  setTimeout(function () {//한번에 api정보를 다 못받아와서 시간차를 둠
-    for (i = 1; record_start_day2 < new Date(); i++) {
-      var rsd_url = getFormatDate(record_start_day);
-      var rsd2_url = getFormatDate(record_start_day2);
-      month_for_x[i] = rsd_url.substr(2, 5);
-      ajax_get("https://api.covid19api.com/world?from=" + rsd_url + "T00:00:00Z&to=" + rsd2_url + "T00:00:00Z", function (data) {
-        world_new_confirmed[i] = 0;
-        world_new_deaths[i] = 0;
-        for (k = 0; k < data.length; k++) {
-          world_new_confirmed[i] += data[k].NewConfirmed;
-          world_new_deaths[i] += data[k].NewDeaths;
-        }
-        record_start_day.setMonth(record_start_day.getMonth() + 1);
-        record_start_day2.setMonth(record_start_day2.getMonth() + 1);
-      });
+  var worldchart = c3.generate({
+
+    bindto: "#worldchart",
+
+    data: {
+      x: "Month",
+      columns: [
+        world_new_confirmed,
+        month_for_x
+      ],
+      type: "bar", colors: {
+        NewConfirmed: "#F15F5F",
+      }
+    },
+    axis: {
+      y: { show: false },
+      x: {
+        type: 'categorized'
+      }
     }
+  });
+  var chart4 = c3.generate({
 
-    var worldchart = c3.generate({
+    bindto: "#worldchart2",
 
-      bindto: "#worldchart",
-
-      data: {
-        x: "Month",
-        columns: [
-          world_new_confirmed,
-          month_for_x
-        ],
-        type: "bar", colors: {
-          NewConfirmed: "#F15F5F",
-        }
-      },
-      axis: {
-        y: { show: false },
-        x: {
-          type: 'categorized'
-        }
+    data: {
+      x: "Month",
+      columns: [
+        world_new_deaths,
+        month_for_x
+      ], type: "bar", colors: {
+        NewDeaths: "#8C8C8C",
       }
-    });
-    var chart4 = c3.generate({
-
-      bindto: "#worldchart2",
-
-      data: {
-        x: "Month",
-        columns: [
-          world_new_deaths,
-          month_for_x
-        ], type: "bar", colors: {
-          NewDeaths: "#8C8C8C",
-        }
-      },
-      axis: {
-        y: { show: false },
-        x: {
-          type: 'categorized'
-        }
+    },
+    axis: {
+      y: { show: false },
+      x: {
+        type: 'categorized'
       }
-    });
-  }, 3000);
+    }
+  });
 };
 
 function main_f() {
