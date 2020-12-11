@@ -9,7 +9,6 @@ var ago_2day = new Date();
 ago_2day.setDate(ago_2day.getDate() - 2);
 var ago_31day = new Date();
 ago_31day.setDate(ago_31day.getDate() - 31);
-var target_times = [];
 var country_arr;
 var infected_arr;
 var deceased_arr;
