@@ -1,6 +1,6 @@
 # COVID-19-Dashboard
 
-Preview : [link](https://github.com/HyeokjaeLee/COVID-19-Dashboard/index.html)<br>
+Preview : [link](https://hyeokjaelee.github.io/COVID-19-Dashboard/index.html)<br>
 (It is no longer updated.)<br>
 
 ## to-do
