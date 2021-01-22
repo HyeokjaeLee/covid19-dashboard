@@ -16,6 +16,12 @@
 
 - Github: [@HyeokjaeLee](https://github.com/HyeokjaeLee)
 
+## Used
+
+*Graph view - D3
+*API
+*
+*
 ## to-do
 
 - [x] File Cleanup(ver.1.0.4)<br>
