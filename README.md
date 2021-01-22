@@ -14,7 +14,7 @@
 
 👤 **leehyeokjae**
 
-- Github: [@HyeokjaeLee\(Nagle\)](https://github.com/HyeokjaeLee))
+- Github: [@HyeokjaeLee](https://github.com/HyeokjaeLee)
 
 ## to-do
 
