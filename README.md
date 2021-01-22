@@ -19,9 +19,7 @@
 ## Used
 
 *Graph view - D3
-*API
-*
-*
+\*SSSS
 ## to-do
 
 - [x] File Cleanup(ver.1.0.4)<br>
