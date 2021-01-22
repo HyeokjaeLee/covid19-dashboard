@@ -18,7 +18,7 @@
 
 ## Used
 
-*Graph view - D3
+* Graph view
 \*SSSS
 ## to-do
 
