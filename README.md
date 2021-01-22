@@ -22,7 +22,7 @@
   - D3
 - API
   - https://api.apify.com
-  - ~~https://api.coivd19api.com~~(no longer working)
+  - https://api.coivd19api.com(no longer working)
 
 ## to-do
 
