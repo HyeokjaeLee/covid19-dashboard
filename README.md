@@ -4,7 +4,7 @@
 </p>
 
 > Dashboards to view corona information from different countries. <br>
-> It no longer works because api changed. <br>
+> Some graphs are no longer visible because api changed. <br>
 
 ### ✨ [Demo](https://hyeokjaelee.github.io/COVID-19-Dashboard/index.html)
 
