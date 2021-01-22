@@ -18,8 +18,12 @@
 
 ## Used
 
-* Graph view
-\*SSSS
+- Graph view
+  - D3
+- API
+  - https://api.apify.com
+  - ~~https://api.coivd19api.com~~(no longer working)
+
 ## to-do
 
 - [x] File Cleanup(ver.1.0.4)<br>
