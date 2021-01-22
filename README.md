@@ -3,8 +3,8 @@
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.4-blue.svg?cacheSeconds=2592000" />
 </p>
 
-> Dashboards to view corona information from different countries
-> It no longer works because api changed
+> Dashboards to view corona information from different countries <br>
+> It no longer works because api changed <br>
 
 ### ✨ [Demo](https://hyeokjaelee.github.io/COVID-19-Dashboard/index.html)
 
