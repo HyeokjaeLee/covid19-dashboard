@@ -4,7 +4,9 @@
 </p>
 
 > Dashboards to view corona information from different countries. <br>
+> 각 구가별 코로나 정보를 확인할수 있는 대쉬보드<br>
 > Some graphs are no longer visible because api changed. <br>
+> API정보가 바뀌어 특정 그래프들이 더이상 정상적으로 표시되지않음 <br>
 
 ### ✨ [Demo](https://hyeokjaelee.github.io/COVID-19-Dashboard/index.html)
 
@@ -28,4 +30,6 @@
 ## To-Do
 
 - [x] File Cleanup(ver.1.0.4)<br>
+  - 파일 정리
 - [ ] Code Cleanup<br>
+  - 코드 정리
