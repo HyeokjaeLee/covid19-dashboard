@@ -1,15 +1,15 @@
-<h1 align="center">COVID-19 Dashboard 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.4-blue.svg?cacheSeconds=2592000" />
-</p>
+![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=COVID-19%20Global%20Dashboard&fontSize=50&animation=fadeIn&fontAlignY=38)
+![VERSION](https://img.shields.io/badge/version-1.0.4-blue.svg?cacheSeconds=2592000)
 
-> Dashboards to view corona information from different countries. <br>
-> 각 구가별 코로나 정보를 확인할수 있는 대쉬보드<br>
-> Some graphs are no longer visible because api changed. <br>
-> API정보가 바뀌어 특정 그래프들이 더이상 정상적으로 표시되지않음 <br>
+> Dashboards for viewing the status of COVID19 by country. <br>
 
-<img src = "https://user-images.githubusercontent.com/71566740/105497377-1a731700-5d02-11eb-8056-d6cf36f1b8e4.png" width="70%">
-<img src = "https://user-images.githubusercontent.com/71566740/105497375-1810bd00-5d02-11eb-9cdc-93677dee45ce.png" width="70%">
+![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-&logo=css3&logoColor=white)
+
+## ✨ [Demo](https://hyeokjaelee.github.io/COVID19-global-dashboard/index.html)
+### :briefcase: It no longer works because of API modification.
+
+<img src = "https://user-images.githubusercontent.com/71566740/105497377-1a731700-5d02-11eb-8056-d6cf36f1b8e4.png" width="35%"><br>
+<img src = "https://user-images.githubusercontent.com/71566740/105497375-1810bd00-5d02-11eb-9cdc-93677dee45ce.png" width="35%">
 
 ## Author
 
@@ -17,17 +17,13 @@
 
 - Github: [@HyeokjaeLee](https://github.com/HyeokjaeLee)
 
-## Used
-
-- Graph view
-  - D3
-- API
-  - https://api.apify.com
-  - https://api.coivd19api.com (no longer working)
+## Used Information
+- API (no longer working)
+  - ~~https://api.apify.com~~
+  - ~~https://api.coivd19api.com~~
 
 ## To-Do
 
-- [x] File Cleanup(ver.1.0.4)<br>
-  - 파일 정리
-- [ ] Code Cleanup<br>
-  - 코드 정리
+- [x] Change file structure(ver.1.0.4)<br>
+- [ ] Code Refactoring
+
