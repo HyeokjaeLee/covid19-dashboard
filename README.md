@@ -1,9 +1,9 @@
-![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=COVID-19%20Global%20Dashboard&fontSize=50&animation=fadeIn&fontAlignY=38)
-![VERSION](https://img.shields.io/badge/version-1.0.4-blue.svg?cacheSeconds=2592000)
+![header](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=COVID-19%20Global%20Dashboard&fontSize=30&fontAlign=73&fontAlignY=50)
+![VERSION](https://img.shields.io/badge/version-1.0.4-6DA854?style=flat)
 
 > Dashboards for viewing the status of COVID19 by country. <br>
 
-![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-&logo=css3&logoColor=white)
+![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 
 ## ✨ [Demo](https://hyeokjaelee.github.io/COVID19-global-dashboard/index.html)
 ### :warning: It no longer works because of API modification.
