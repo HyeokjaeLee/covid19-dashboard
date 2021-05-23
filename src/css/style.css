@@ -1,8 +1,45 @@
 html {
-  background: #f5f7f8;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
-  padding: 20px 0;
+  -webkit-animation: color-change-5x 30s linear infinite alternate both;
+  animation: color-change-5x 30s linear infinite alternate both;
+}
+body {
+  text-align: center;
+}
+@-webkit-keyframes color-change-5x {
+  0% {
+    background: #fad9d7;
+  }
+  25% {
+    background: #faf3d7;
+  }
+  50% {
+    background: #d7fadd;
+  }
+  75% {
+    background: #d7effa;
+  }
+  100% {
+    background: #f1d7fa;
+  }
+}
+@keyframes color-change-5x {
+  0% {
+    background: #fad9d7;
+  }
+  25% {
+    background: #faf3d7;
+  }
+  50% {
+    background: #d7fadd;
+  }
+  75% {
+    background: #d7effa;
+  }
+  100% {
+    background: #f1d7fa;
+  }
 }
 
 .band {
@@ -41,10 +78,8 @@ html {
   min-height: 100%;
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
   text-decoration: none;
   color: #444;
-  position: relative;
   top: 0;
   transition: all 0.1s ease-in;
 }
@@ -104,7 +139,7 @@ body::-webkit-scrollbar-track {
 }
 
 #jb-container {
-  width: 940px;
+  width: 90%;
   margin: 10px auto;
   padding: 20px;
   border: 1px solid #bcbcbc;
@@ -152,4 +187,38 @@ body::-webkit-scrollbar-track {
     float: none;
     width: auto;
   }
+}
+
+.large_container {
+  text-align: right;
+  display: inline-block;
+  width: 45%;
+  height: 45vh;
+  background-color: #f9f9f9;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease-in;
+  margin: 1%;
+  overflow: hidden;
+}
+
+.large_container:hover {
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+}
+
+.small_container {
+  display: inline-block;
+  width: 20.5%;
+  height: 45vh;
+  background-color: whitesmoke;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease-in;
+  margin: 1%;
+}
+.small_container:hover {
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+}
+
+.chart {
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+  height: 45vh;
 }

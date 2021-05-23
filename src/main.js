@@ -36,6 +36,10 @@ test.forEach((data) => {
 
 var chart = c3.generate({
   bindto: "#test",
+  padding: {
+    right: 30,
+    bottom: 10,
+  },
   data: {
     json: {
       date: test2,
