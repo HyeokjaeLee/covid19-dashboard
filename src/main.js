@@ -1,4 +1,64 @@
-var country_api = "https://api.covid19api.com/countries";
+const getJsonAPI = (url) => {
+  const xmlhttp = new XMLHttpRequest();
+  let json_data;
+  xmlhttp.onreadystatechange = () => {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      try {
+        json_data = JSON.parse(xmlhttp.responseText);
+      } catch (err) {
+        console.log(err.message + " in " + xmlhttp.responseText);
+      }
+    }
+  };
+  xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
+  xmlhttp.send();
+  return json_data;
+};
+
+const API_URL = "https://korea-covid19-api.herokuapp.com/";
+
+const date_former = (str_date) => {
+  const date = new Date(str_date);
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+};
+console.log(new Date());
+console.log(date_former(new Date()));
+const test = getJsonAPI(API_URL + "total?from=20210312&to=20210524");
+
+const test2 = test.map((data) => date_former(data.date));
+
+const new_infec = [];
+test.forEach((data) => {
+  new_infec.push(data.confirmed.infected.new.total);
+});
+
+var chart = c3.generate({
+  bindto: "#test",
+  data: {
+    json: {
+      date: test2,
+      data1: new_infec,
+    },
+    x: "date",
+    type: "area-spline",
+    types: {
+      data1: "area-spline",
+    },
+  },
+  axis: {
+    x: {
+      show: true,
+      type: "timeseries",
+      tick: {
+        format: "%y-%m-%d",
+      },
+    },
+  },
+  point: {
+    show: false,
+  },
+});
+/*var country_api = "https://api.covid19api.com/countries";
 var main_api = "https://api.covid19api.com/total/country/";
 var countries_options = "";
 var countries_slug_list = new Array();
@@ -17,6 +77,7 @@ var world_new_confirmed;
 var world_new_deaths;
 var month_for_x;
 
+console.log()
 function getFormatDate(date) {
   var year = date.getFullYear(); //yyyy
   var month = 1 + date.getMonth(); //M
@@ -349,3 +410,4 @@ function date_change() {
   }
 }
 window.onload = main_f();
+*/

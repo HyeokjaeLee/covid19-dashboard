@@ -1,99 +1,55 @@
-	body{
-	min-height: 100vh;
-	background-image: url('https://images.unsplash.com/photo-1523821741446-edb2b68bb7a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80');
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-size: cover;
-	font-family: 'Sunflower', sans-serif;
-	}
-	
-	.menu {
-	position: relative;
-	left: 50%;
-	top: 0px;
-	width: 400px;
-	height: 50px;
-	background-color: #F1F1F1;
-	opacity: 0.9;
-	transform: translate(-50%, -50%);
-	padding: 2% 2%;
-	border-bottom-right-radius: 15px;
-	border-bottom-left-radius: 15px;
-	}
-	
-	.menu_item{
-	position: absolute;
-	top:60%;
-	font-size:20px;
-	}
-		
-  	.basic_form {
-	width: 400px;
-	background-color: #F1F1F1;
-	height: 600px;
-	padding: 2% 2%;
-	border-radius: 15px;
-	position: relative;
-	left: 2.5%
-	}
-	
-	.basic_form h1 {
-	text-align: center;
-	}
-	
-	.bt {
-	position: absolute;
-  	display : block; 
-  	width :150px;
- 	height : 60px; 
- 	border : none;
-	background-color: #08AEEA;
-	background-image: linear-gradient(120deg, gray 0%, black 100%);
-	font-family: 'Sunflower', sans-serif;
-	font-size: 20px;
- 	border-radius : 10px;
- 	background-size : 200%;
- 	color : white;
- 	left : 125px;
- 	padding: 20px 20px;
-	}
-	
-	.mark {
-	position: absolute;
-	top: 95%;
-	}
-	
-	.txtb {
-	border-bottom: 2px solid #adadad;
-	position: relative;
-	margin: 30px 0;
+body {
+  min-height: 100vh;
+  -webkit-animation: color-change-5x 20s linear infinite alternate both;
+  animation: color-change-5x 20s linear infinite alternate both;
+  font-family: "Sunflower", sans-serif;
 }
 
-.txtb input {
-	font-size: 15px;
-	color: #333;
-	width: 97%;
-	border: none;
-	padding: 0 5px;
-	height: 40px;
-	outline: none;
+body::-webkit-scrollbar {
+  width: 5px;
 }
 
-  	a:link { color: black; text-decoration: none;}
-  	a:visited { color: black; text-decoration: none;}
-	  a:hover { color: gray; text-decoration: underline;}
-	  
-	  .setting_bt {
-		height: 30px ;
-		width: 180px;
-		border : none;
-		background-color: #08AEEA;
-		background-image: linear-gradient(120deg, #08AEEA 0%, #2AF598 120%);
-		font-family: 'Sunflower', sans-serif;
-		font-size: 13px;
-		 border-radius : 3px;
-		 background-size : 200%;
-		 color : white;
-		}
+body::-webkit-scrollbar-thumb {
+  background-color: #2f3542;
+  border-radius: 1px;
+}
+body::-webkit-scrollbar-track {
+  background-color: grey;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 5px white;
+}
 
-		.setting_input {width:12%; padding:10px 10px; margin: 0.1% 1%; border: none; outline:none; background-color:#BDBDBD}
+@-webkit-keyframes color-change-5x {
+  0% {
+    background: #282c34;
+  }
+  25% {
+    background: #b22cff;
+  }
+  50% {
+    background: #ea2222;
+  }
+  75% {
+    background: #f5be10;
+  }
+  100% {
+    background: #82a9fb;
+  }
+}
+@keyframes color-change-5x {
+  0% {
+    background: #282c34;
+  }
+  25% {
+    background: #b22cff;
+  }
+  50% {
+    background: #ea2222;
+  }
+  75% {
+    background: #f5be10;
+  }
+  100% {
+    background: #82a9fb;
+  }
+}
