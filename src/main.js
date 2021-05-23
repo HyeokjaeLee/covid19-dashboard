@@ -23,13 +23,15 @@ const date_former = (str_date) => {
 };
 console.log(new Date());
 console.log(date_former(new Date()));
-const test = getJsonAPI(API_URL + "total?from=20210312&to=20210524");
+const test = getJsonAPI(
+  API_URL + "Chungcheongnam-do?from=20210312&to=20210524"
+);
 
 const test2 = test.map((data) => date_former(data.date));
 
 const new_infec = [];
 test.forEach((data) => {
-  new_infec.push(data.confirmed.infected.new.total);
+  new_infec.push(data.confirmed.infected.total);
 });
 
 var chart = c3.generate({
