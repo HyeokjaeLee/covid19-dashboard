@@ -6,6 +6,7 @@ html {
 }
 body {
   text-align: center;
+  display: flex;
 }
 @-webkit-keyframes color-change-5x {
   0% {
@@ -191,14 +192,14 @@ body::-webkit-scrollbar-track {
 
 .large_container {
   text-align: right;
-  display: inline-block;
-  width: 45%;
+  width: 700px;
   height: 45vh;
   background-color: #f9f9f9;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.1s ease-in;
   margin: 1%;
-  overflow: hidden;
+  padding: 1%;
+  flex: auto;
 }
 
 .large_container:hover {
@@ -213,12 +214,13 @@ body::-webkit-scrollbar-track {
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.1s ease-in;
   margin: 1%;
+  flex: auto;
 }
 .small_container:hover {
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }
 
 .chart {
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
-  height: 45vh;
+  width: 100%;
+  height: 42vh;
 }
