@@ -23,7 +23,7 @@ const date_former = (str_date) => {
 };
 console.log(new Date());
 console.log(date_former(new Date()));
-const test = getJsonAPI(API_URL + "Chungcheongnam-do");
+const test = getJsonAPI(API_URL + "total");
 
 const test2 = test.map((data) => date_former(data.date));
 
@@ -32,8 +32,9 @@ test.forEach((data) => {
   new_infec.push(data.confirmed.infected.total);
 });
 
-var chart = c3.generate({
+c3.generate({
   bindto: "#test",
+  padding: { left: 20, right: 20, top: 10, bottom: 10 },
   data: {
     xFormat: "%Y-%m-%d",
     json: {
@@ -63,19 +64,23 @@ var chart = c3.generate({
     show: false,
   },
 });
-var chart = c3.generate({
+
+c3.generate({
   bindto: "#test2",
+  padding: { left: 20, right: 20, top: 10, bottom: 10 },
   data: {
     xFormat: "%Y-%m-%d",
     json: {
       date: test2,
       data1: new_infec,
+      data2: new_infec,
     },
     x: "date",
     type: "area-spline",
     types: {
       data1: "area-spline",
     },
+    groups: [["data1", "data2"]],
   },
   axis: {
     x: {
