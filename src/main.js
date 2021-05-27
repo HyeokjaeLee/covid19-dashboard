@@ -9,6 +9,7 @@ const totalRegionData = (() => {
     newTotalInfected: [],
     newRecovered: [],
     totalInfected: [],
+    totalRecovered: [],
   };
   APIdata.forEach((data) => {
     result.date.push(date_former(data.date));
@@ -17,11 +18,26 @@ const totalRegionData = (() => {
     result.newTotalInfected.push(data.confirmed.infected.new.total);
     result.newRecovered.push(data.confirmed.recovered.new);
     result.totalInfected.push(data.confirmed.infected.total);
+    result.totalRecovered.push(data.confirmed.recovered.total);
   });
   return result;
 })();
+const Region = getJsonAPI(API_URL);
+const APIdata2 = Region.map((data) => {
+  const aRegionData = getJsonAPI(API_URL + data.eng);
+  return aRegionData;
+});
+console.log(APIdata2);
+const regionList = document.getElementById("regionList");
+Region.forEach((data) => {
+  console.log(data);
+  const region_li = document.createElement("div");
+  region_li.setAttribute("id", data.eng);
+  region_li.setAttribute("class", "chart_container");
+  region_li.innerHTML = data.kor;
+  regionList.appendChild(region_li);
+});
 
-console.log(totalRegionData);
 c3.generate({
   bindto: "#test",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
@@ -30,6 +46,7 @@ c3.generate({
     json: {
       date: totalRegionData.date,
       격리자: totalRegionData.totalInfected,
+      격리해제: totalRegionData.totalRecovered,
     },
     x: "date",
     type: "area-spline",
