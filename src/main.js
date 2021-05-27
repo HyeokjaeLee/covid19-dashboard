@@ -1,45 +1,35 @@
-const getJsonAPI = (url) => {
-  const xmlhttp = new XMLHttpRequest();
-  let json_data;
-  xmlhttp.onreadystatechange = () => {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      try {
-        json_data = JSON.parse(xmlhttp.responseText);
-      } catch (err) {
-        console.log(err.message + " in " + xmlhttp.responseText);
-      }
-    }
-  };
-  xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
-  xmlhttp.send();
-  return json_data;
-};
-
 const API_URL = "https://korea-covid19-api.herokuapp.com/";
 
-const date_former = (str_date) => {
-  const date = new Date(str_date);
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-};
-console.log(new Date());
-console.log(date_former(new Date()));
-const test = getJsonAPI(API_URL + "total");
+const totalRegionData = (() => {
+  const APIdata = getJsonAPI(API_URL + "total");
+  const result = {
+    date: [],
+    newLocalInfected: [],
+    newOverseasInfected: [],
+    newTotalInfected: [],
+    newRecovered: [],
+    totalInfected: [],
+  };
+  APIdata.forEach((data) => {
+    result.date.push(date_former(data.date));
+    result.newLocalInfected.push(data.confirmed.infected.new.local);
+    result.newOverseasInfected.push(data.confirmed.infected.new.overseas);
+    result.newTotalInfected.push(data.confirmed.infected.new.total);
+    result.newRecovered.push(data.confirmed.recovered.new);
+    result.totalInfected.push(data.confirmed.infected.total);
+  });
+  return result;
+})();
 
-const test2 = test.map((data) => date_former(data.date));
-
-const new_infec = [];
-test.forEach((data) => {
-  new_infec.push(data.confirmed.infected.total);
-});
-
+console.log(totalRegionData);
 c3.generate({
   bindto: "#test",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
   data: {
     xFormat: "%Y-%m-%d",
     json: {
-      date: test2,
-      data1: new_infec,
+      date: totalRegionData.date,
+      격리자: totalRegionData.totalInfected,
     },
     x: "date",
     type: "area-spline",
@@ -71,16 +61,17 @@ c3.generate({
   data: {
     xFormat: "%Y-%m-%d",
     json: {
-      date: test2,
-      data1: new_infec,
-      data2: new_infec,
+      date: totalRegionData.date,
+      전체: totalRegionData.newTotalInfected,
+      국내: totalRegionData.newLocalInfected,
+      해외: totalRegionData.newOverseasInfected,
     },
     x: "date",
-    type: "area-spline",
+    type: "area",
     types: {
-      data1: "area-spline",
+      data1: "area",
     },
-    groups: [["data1", "data2"]],
+    groups: [["국내", "해외"]],
   },
   axis: {
     x: {
@@ -99,6 +90,28 @@ c3.generate({
     show: false,
   },
 });
+
+function getJsonAPI(url) {
+  const xmlhttp = new XMLHttpRequest();
+  let json_data;
+  xmlhttp.onreadystatechange = () => {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      try {
+        json_data = JSON.parse(xmlhttp.responseText);
+      } catch (err) {
+        console.log(err.message + " in " + xmlhttp.responseText);
+      }
+    }
+  };
+  xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
+  xmlhttp.send();
+  return json_data;
+}
+
+function date_former(str_date) {
+  const date = new Date(str_date);
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
 /*var country_api = "https://api.covid19api.com/countries";
 var main_api = "https://api.covid19api.com/total/country/";
 var countries_options = "";

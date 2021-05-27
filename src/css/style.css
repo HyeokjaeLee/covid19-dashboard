@@ -18,6 +18,7 @@ body {
   margin-bottom: 20px;
   background-color: white;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
 }
 
 @media screen and (max-width: 800px) {
@@ -26,7 +27,7 @@ body {
   }
 }
 
-.large_chart_container:hover {
+.chart_container:hover {
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }
 @-webkit-keyframes color-change-5x {
