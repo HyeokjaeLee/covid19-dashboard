@@ -1,5 +1,13 @@
+@font-face {
+  src: url("../fonts/BMHANNAPro.ttf");
+  font-family: "bold";
+}
+@font-face {
+  src: url("../fonts/BMHANNAAir_ttf.ttf");
+  font-family: "light";
+}
 html {
-  font-family: "Roboto", sans-serif;
+  font-family: light, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-animation: color-change-5x 30s linear infinite alternate both;
   animation: color-change-5x 30s linear infinite alternate both;
@@ -9,6 +17,9 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 0;
+}
+body > h1 {
+  font-family: bold;
 }
 .title {
   width: 98%;
@@ -21,6 +32,7 @@ body {
   border-radius: 5px;
   padding-top: 20px;
   padding-bottom: 20px;
+  font-weight: 100;
 }
 .contents_container {
   display: flex;
@@ -28,21 +40,21 @@ body {
   width: 100%;
 }
 .chart_container {
-  width: 48%;
+  width: 46%;
   margin-left: 1%;
   margin-right: 1%;
   margin-bottom: 10px;
   background-color: white;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
+  padding: 1%;
 }
 
 @media screen and (max-width: 800px) {
   .chart_container {
-    width: 98%;
+    width: 96%;
   }
 }
-
 .chart_container:hover {
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }

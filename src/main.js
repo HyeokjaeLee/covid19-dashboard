@@ -8,7 +8,7 @@ const totalRegionData = (() => {
     newOverseasInfected: [],
     newTotalInfected: [],
     newRecovered: [],
-    totalInfected: [],
+    totalConfirmed: [],
     totalRecovered: [],
   };
   APIdata.forEach((data) => {
@@ -17,7 +17,7 @@ const totalRegionData = (() => {
     result.newOverseasInfected.push(data.confirmed.infected.new.overseas);
     result.newTotalInfected.push(data.confirmed.infected.new.total);
     result.newRecovered.push(data.confirmed.recovered.new);
-    result.totalInfected.push(data.confirmed.infected.total);
+    result.totalConfirmed.push(data.confirmed.total);
     result.totalRecovered.push(data.confirmed.recovered.total);
   });
   return result;
@@ -42,25 +42,24 @@ c3.generate({
   bindto: "#test",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
   data: {
-    xFormat: "%Y-%m-%d",
     json: {
       date: totalRegionData.date,
-      격리자: totalRegionData.totalInfected,
+      확진: totalRegionData.totalConfirmed,
       격리해제: totalRegionData.totalRecovered,
     },
     x: "date",
-    type: "area-spline",
-    types: {
-      data1: "area-spline",
-    },
+    type: "spline",
+    colors: { 확진: "#F15F5F", 격리해제: "#86E57F" },
   },
   axis: {
     x: {
       show: true,
       type: "timeseries",
       tick: {
+        format: "%y.%m.%d",
         fit: false,
         outer: false,
+        count: 7,
       },
     },
     y: {
@@ -76,7 +75,6 @@ c3.generate({
   bindto: "#test2",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
   data: {
-    xFormat: "%Y-%m-%d",
     json: {
       date: totalRegionData.date,
       전체: totalRegionData.newTotalInfected,
@@ -85,9 +83,6 @@ c3.generate({
     },
     x: "date",
     type: "area",
-    types: {
-      data1: "area",
-    },
     groups: [["국내", "해외"]],
   },
   axis: {
@@ -95,8 +90,10 @@ c3.generate({
       show: true,
       type: "timeseries",
       tick: {
+        format: "%y.%m.%d",
         fit: false,
         outer: false,
+        count: 5,
       },
     },
     y: {
