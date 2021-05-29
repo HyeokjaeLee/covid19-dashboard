@@ -28,7 +28,7 @@ const APIdata2 = Region.map((data) => {
   return aRegionData;
 });
 console.log(APIdata2);
-const regionList = document.getElementById("regionList");
+/*const regionList = document.getElementById("regionList");
 Region.forEach((data) => {
   console.log(data);
   const region_li = document.createElement("div");
@@ -37,7 +37,7 @@ Region.forEach((data) => {
   region_li.innerHTML = data.kor;
   regionList.appendChild(region_li);
 });
-
+*/
 c3.generate({
   bindto: "#test",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
