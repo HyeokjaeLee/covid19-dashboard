@@ -23,21 +23,16 @@ const totalRegionData = (() => {
   return result;
 })();
 const Region = getJsonAPI(API_URL);
-const APIdata2 = Region.map((data) => {
-  const aRegionData = getJsonAPI(API_URL + data.eng);
-  return aRegionData;
-});
-console.log(APIdata2);
-/*const regionList = document.getElementById("regionList");
-Region.forEach((data) => {
-  console.log(data);
+const recentData = getJsonAPI(API_URL + "recent");
+const regionList = document.getElementById("regionList");
+recentData.forEach((data) => {
   const region_li = document.createElement("div");
-  region_li.setAttribute("id", data.eng);
+  region_li.setAttribute("id", data.region.eng);
   region_li.setAttribute("class", "chart_container");
-  region_li.innerHTML = data.kor;
+  region_li.innerHTML = data.region;
   regionList.appendChild(region_li);
 });
-*/
+
 c3.generate({
   bindto: "#test",
   padding: { left: 20, right: 20, top: 10, bottom: 10 },
