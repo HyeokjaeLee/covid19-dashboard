@@ -12,6 +12,7 @@ const totalRegionData = (() => {
     totalRecovered: [],
   };
   APIdata.forEach((data) => {
+    console.log(data);
     result.date.push(date_former(data.date));
     result.newLocalInfected.push(data.confirmed.infected.new.local);
     result.newOverseasInfected.push(data.confirmed.infected.new.overseas);
@@ -27,9 +28,9 @@ const recentData = getJsonAPI(API_URL + "recent");
 const regionList = document.getElementById("regionList");
 recentData.forEach((data) => {
   const region_li = document.createElement("div");
-  region_li.setAttribute("id", data.region.eng);
+  region_li.setAttribute("id", data.region_eng);
   region_li.setAttribute("class", "chart_container");
-  region_li.innerHTML = data.region;
+  region_li.innerHTML = data.region_kor;
   regionList.appendChild(region_li);
 });
 
