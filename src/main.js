@@ -29,8 +29,16 @@ recentData.forEach((data) => {
   const region_li = document.createElement("div");
   const region_table = document.createElement("table");
   region_li.setAttribute("id", data.region_eng);
-  region_li.setAttribute("class", "chart_container");
-  region_li.innerHTML = `<h4>${data.region_kor}</h4>`;
+  region_li.setAttribute("class", "summary_container");
+  region_li.innerHTML = `<h4>${data.region_kor}</h4>
+  <span>${data.data.confirmed.infected.new.total}</span>
+    <span>${data.data.confirmed.infected.total}</span>
+    <span>${data.data.confirmed.recovered.new}</span>
+     <span>${data.data.confirmed.recovered.total}</span>
+    <span>${data.data.confirmed.death.new}</span>
+    <span>${data.data.confirmed.death.total}</span>
+    <span>${data.data.confirmed.total}</span>`;
+
   regionList.appendChild(region_li);
   region_li.appendChild(region_table);
 });
