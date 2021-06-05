@@ -1,41 +1,62 @@
 @font-face {
-  src: url("../fonts/BMHANNAPro.ttf");
-  font-family: "bold";
+  src: url("../fonts/neodgm_pro.woff");
+  font-family: "main";
 }
-@font-face {
-  src: url("../fonts/BMHANNAAir_ttf.ttf");
-  font-family: "light";
-}
+
 html {
-  font-family: light, sans-serif;
+  font-family: main, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -webkit-animation: color-change-5x 30s linear infinite alternate both;
-  animation: color-change-5x 30s linear infinite alternate both;
+  color: #815854;
   word-break: keep-all;
 }
 body {
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin: 0;
+  background-color: #f9ebde;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 body > h1 {
   font-family: bold;
 }
-.title {
-  width: 98%;
+header {
+  color: #b9616b;
+  margin: 1vh;
+  height: 6vh;
+  font-size: x-large;
+  font-weight: 600;
+}
+header > span {
+  color: #5ca5e1;
+}
+footer {
+  height: 2vh;
   text-align: center;
-  margin-bottom: 10px;
-  margin-left: 1%;
+}
+container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 90vh;
+}
+.half_section {
+  height: 88vh;
+  width: 48%;
+  margin: 5px 1%;
+  border-radius: 5px;
+}
+#list {
   background-color: white;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  font-weight: 100;
 }
+@media screen and (max-width: 800px) {
+  .half_section {
+    width: 98%;
+  }
+}
+
 .contents_container {
   display: flex;
   flex-wrap: wrap;
@@ -57,34 +78,39 @@ body > h1 {
   padding: 1%;
 }
 .summary_container {
-  width: 100%;
   margin-bottom: 10px;
   background-color: white;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
   padding: 1%;
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
 }
-.summary_container > h4 {
-  width: 8%;
-  text-align: center;
-  word-break: normal;
+
+.summary_container > div {
+  width: 50%;
+  display: flex;
+  border-radius: 5px;
 }
-.summary_container > span {
-  width: 13%;
+.summary_container > div > span {
+  width: 22%;
   text-align: center;
-  border: 1px;
-  border-right: gray;
-  border-style: none none none solid;
+  padding: 7px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 5px;
+  border-radius: 10px;
 }
 @media screen and (max-width: 800px) {
   .contents_container_part {
     width: 96%;
   }
-  .contents_container {
-    font-size: xx-small;
+  .title {
+    width: 97%;
+  }
+  .summary_container > div {
+    width: 98%;
   }
 }
 .chart_container:hover {

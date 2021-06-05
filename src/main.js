@@ -27,20 +27,22 @@ const recentData = getJsonAPI(API_URL + "recent");
 const regionList = document.getElementById("regionList");
 recentData.forEach((data) => {
   const region_li = document.createElement("div");
-  const region_table = document.createElement("table");
   region_li.setAttribute("id", data.region_eng);
   region_li.setAttribute("class", "summary_container");
-  region_li.innerHTML = `<h4>${data.region_kor}</h4>
-  <span>${data.data.confirmed.infected.new.total}</span>
-    <span>${data.data.confirmed.infected.total}</span>
-    <span>${data.data.confirmed.recovered.new}</span>
-     <span>${data.data.confirmed.recovered.total}</span>
-    <span>${data.data.confirmed.death.new}</span>
-    <span>${data.data.confirmed.death.total}</span>
-    <span>${data.data.confirmed.total}</span>`;
-
+  region_li.innerHTML = `
+    <div>
+      <span>${data.region_kor}</span>
+      <span>${data.data.confirmed.infected.new.total}</span>
+      <span>${data.data.confirmed.recovered.new}</span>
+      <span>${data.data.confirmed.death.new}</span>
+    </div>
+    <div>
+    <span>${data.data.confirmed.total}</span>
+      <span>${data.data.confirmed.infected.total}</span>
+      <span>${data.data.confirmed.recovered.total}</span>
+      <span>${data.data.confirmed.death.total}</span>
+    </div>`;
   regionList.appendChild(region_li);
-  region_li.appendChild(region_table);
 });
 
 c3.generate({
