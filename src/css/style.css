@@ -46,6 +46,7 @@ container {
   width: 48%;
   margin: 5px 1%;
   border-radius: 5px;
+  overflow: scroll;
 }
 #list {
   background-color: white;
