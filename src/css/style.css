@@ -6,7 +6,7 @@
 html {
   font-family: main, sans-serif;
   -webkit-font-smoothing: antialiased;
-  color: #815854;
+  color: black;
   word-break: keep-all;
 }
 body {
@@ -21,8 +21,8 @@ body > h1 {
 }
 header {
   color: #b9616b;
-  margin: 1vh;
-  height: 6vh;
+  margin: 0 1vh 0 1vh;
+  height: 8vh;
   font-size: x-large;
   font-weight: 600;
 }
@@ -46,13 +46,44 @@ container {
   width: 48%;
   margin: 5px 1%;
   border-radius: 5px;
-  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 #list {
   background-color: white;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
-@media screen and (max-width: 800px) {
+#list > type {
+  background-color: #f5f5f5;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 7px;
+  padding: 0;
+}
+#chart > div {
+  width: 98%;
+  margin-bottom: 10px;
+  background-color: white;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 1%;
+}
+#chart {
+  overflow: scroll;
+}
+#updateDate {
+  text-align: right;
+  color: black;
+  font-weight: 100;
+  font-size: 12px;
+}
+#contents {
+  height: 100%;
+  overflow: scroll;
+}
+@media screen and (max-width: 700px) {
   .half_section {
     width: 98%;
   }
@@ -71,7 +102,6 @@ container {
   flex-direction: column;
 }
 .chart_container {
-  width: 100%;
   margin-bottom: 10px;
   background-color: white;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
@@ -79,7 +109,6 @@ container {
   padding: 1%;
 }
 .summary_container {
-  margin-bottom: 10px;
   background-color: white;
   padding: 1%;
   display: flex;
@@ -91,7 +120,6 @@ container {
 .summary_container > div {
   width: 50%;
   display: flex;
-  border-radius: 5px;
 }
 .summary_container > div > span {
   width: 22%;
@@ -101,9 +129,9 @@ container {
   justify-content: space-around;
   align-items: center;
   margin: 5px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1045px) {
   .contents_container_part {
     width: 96%;
   }

@@ -16,27 +16,51 @@
 
 <body>
 	<header>
+		<div id="updateDate"></div>
 		KOR<span>ON</span>A
 	</header>
 	<container>
 		<div class="half_section" id="chart">
-			<div class="chart_container">
-				누적확진 추이
+			<div>
+				일별 누적확진자
 				<div id="test">
 				</div>
 			</div>
-			<div class="chart_container">
-				일별 신규 확진자 수
+			<div>
+				일별 신규 확진자
 				<div id="test2">
+				</div>
+			</div>
+			<div>
+				일별 격리 추이
+				<div id="test3">
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 50%;">
+					<div id="test4">
+					</div>
+				</div>
+				<div style="width: 50%;">
+					<div id="test5">
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="half_section" id="list">
-			<div id="regionList" class="contents_container_part" style="background-color: white; border-radius: 5px;">
-			</div>
-			<div class="summary_container" style="color: gray;">
-
-			</div>
+			<type class="summary_container">
+				<div><span>지역</span>
+					<span>신규 격리</span>
+					<span>신규 격리 해제</span>
+					<span>신규 사망</span>
+				</div>
+				<div><span>전체 확진</span>
+					<span>전체 격리</span>
+					<span>전체 격리 해제</span>
+					<span>전체 사망</span>
+				</div>
+			</type>
+			<div id="contents"></div>
 		</div>
 		</div>
 	</container>
