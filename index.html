@@ -16,58 +16,66 @@
 
 <body>
 	<header>
-		<div id="updateDate"></div>
-		KOR<span>ON</span>A
+		<div id="navbar"><span class="title">KOR<span style="color: yellow;">ON</span>A</span>
+			<button>최근 7일</button>
+			<button>최근 30일</button>
+			<button>전체</button>
+		</div>
 	</header>
 	<container>
-		<div class="half_section" id="chart">
-			<div>
-				일별 누적확진자
-				<div id="test">
-				</div>
-			</div>
-			<div>
-				일별 신규 확진자
-				<div id="test2">
-				</div>
-			</div>
-			<div>
-				일별 격리 추이
-				<div id="test3">
-				</div>
-			</div>
-			<div style="display: flex;">
-				<div style="width: 50%;">
-					<div id="test4">
+
+		<div class="half_section">
+			<div id="list">
+				<div id="updateDate"></div>
+				<type class="summary_container">
+					<div><span>지역</span>
+						<span>신규 격리</span>
+						<span>신규 격리 해제</span>
+						<span>신규 사망</span>
 					</div>
-				</div>
-				<div style="width: 50%;">
-					<div id="test5">
+					<div><span>전체 확진</span>
+						<span>전체 격리</span>
+						<span>전체 격리 해제</span>
+						<span>전체 사망</span>
 					</div>
-				</div>
+				</type>
+				<div id="contents"></div>
 			</div>
 		</div>
-		<div class="half_section" id="list">
-			<type class="summary_container">
-				<div><span>지역</span>
-					<span>신규 격리</span>
-					<span>신규 격리 해제</span>
-					<span>신규 사망</span>
-				</div>
-				<div><span>전체 확진</span>
-					<span>전체 격리</span>
-					<span>전체 격리 해제</span>
-					<span>전체 사망</span>
-				</div>
-			</type>
-			<div id="contents"></div>
-		</div>
+		<div class="half_section">
+			<div id="chart">
+				<section>
+					일별 누적확진자
+					<div id="test">
+					</div>
+				</section>
+				<section>
+					일별 신규 확진자
+					<div id="test2">
+					</div>
+				</section>
+				<section>
+					일별 격리 추이
+					<div id="test3">
+					</div>
+				</section>
+				<section style="display: flex;">
+					<div style="width: 50%;">
+						<div id="test4">
+						</div>
+					</div>
+					<div style="width: 50%; height: auto;">
+						<div id="test5">
+						</div>
+					</div>
+				</section>
+			</div>
 		</div>
 	</container>
 	<footer>
-		HyeokjaeLee © All rights reserved.
+		<div>HyeokjaeLee © All rights reserved.</div>
 	</footer>
-	<script src="./src/main.js"></script>
+	<script src="./src/js/main.js"></script>
 </body>
 
 </html>
