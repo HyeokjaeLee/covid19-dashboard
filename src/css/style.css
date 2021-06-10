@@ -1,6 +1,14 @@
 @font-face {
-  src: url("../fonts/neodgm_pro.woff");
+  src: url("../fonts/BMHANNAAir_ttf.ttf");
   font-family: "main";
+}
+@font-face {
+  src: url("../fonts/Karantina-Bold.ttf");
+  font-family: "bold";
+}
+@font-face {
+  src: url("../fonts/Karantina-Light.ttf");
+  font-family: "light";
 }
 
 html {
@@ -28,15 +36,16 @@ body {
 .title {
   text-align: center;
   font-size: xx-large;
-  margin: auto 10px auto 0;
+  margin: auto 50% auto 1%;
   color: white;
+  line-height: 20px;
 }
 header {
+  padding: 10px;
+  font-family: bold;
   height: 5%;
-  font-size: x-large;
-  font-weight: 600;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #3b3b3b;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
   align-items: center;
@@ -56,35 +65,14 @@ button {
 button:hover {
   background-color: #2b2b2b;
 }
-#navbar {
-  margin: auto 0;
-  height: 100%;
-  width: 97%;
-  display: flex;
-  flex-direction: row;
-  height: auto;
-}
-footer {
-  color: #aaaaaa;
-  height: 3%;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  background-color: #3b3b3b;
-  box-shadow: 0 0 11px rgba(0, 0, 0, 0.5);
-  z-index: 1;
-}
-footer > div {
-  width: 100%;
-}
 
 container {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 92%;
   overflow: scroll;
 }
 container::-webkit-scrollbar {
@@ -145,10 +133,10 @@ container::-webkit-scrollbar {
 #updateDate {
   background-color: #f5f5f5;
   text-align: right;
-  color: #aaaaaa;
   font-weight: 100;
+  padding: 5px 5px 0 0;
   font-size: 12px;
-  padding-right: 5px;
+  color: gray;
 }
 #contents {
   height: 100%;
@@ -157,6 +145,9 @@ container::-webkit-scrollbar {
 @media screen and (max-width: 700px) {
   .half_section {
     width: 98%;
+  }
+  .title {
+    margin: auto 5% auto 10px;
   }
 }
 
