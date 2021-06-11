@@ -9,7 +9,7 @@
 
 ## ✨ Preview
 
-### ~~[Demo link](https://hyeokjaelee.github.io/covid19-dashboard/index.html)~~
+### [Demo link](https://hyeokjaelee.github.io/covid19-dashboard/index.html)
 
 :warning: It no longer works because of API modification.
 
