@@ -1,5 +1,5 @@
 ![header](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=COVID-19%20Dashboard&fontSize=30&fontAlign=78&fontAlignY=50)
-![VERSION](https://img.shields.io/badge/version-1.1.3-6DA854?style=flat)
+![VERSION](https://img.shields.io/badge/version-1.1.3-6DA854?style=flat-square)
 
 > Dashboards for viewing the status of COVID19 by country. <br>
 
