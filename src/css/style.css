@@ -71,6 +71,7 @@ button {
   border-radius: 5px;
   border-style: hidden;
   transition: background-color 0.5s;
+  cursor: pointer;
 }
 button:hover {
   background-color: #2b2b2b;
@@ -187,6 +188,7 @@ footer {
 }
 .summary_container:hover {
   background-color: #f5f5f5;
+  cursor: pointer;
 }
 .summary_container > div {
   width: 50%;

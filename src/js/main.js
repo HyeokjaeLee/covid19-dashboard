@@ -1,224 +1,229 @@
-const today = new Date();
-const before7Days = date_former(
-  new Date(today.setDate(today.getDate() - 7)),
-  ""
-);
-const before30Days = date_former(
-  new Date(today.setDate(today.getDate() - 30)),
-  ""
-);
 const API_URL = "https://korea-covid19-api.herokuapp.com/";
-
+let region = "total";
+let from = "";
 //main
-(() => {
+const main = () => {
   create_list_element();
-  const chartData = create_chart_data("total");
-  draw_chart(chartData);
-})();
+  draw_chart(create_chart_data());
+};
 
-function draw_chart(chartData) {
-  const totalRegionData = chartData.totalRegionData,
-    lastData = chartData.lastData;
-  c3.generate({
-    bindto: "#test",
-    padding: { left: 20, right: 20, top: 10, bottom: 10 },
-    data: {
-      json: {
-        date: totalRegionData.date,
-        확진: totalRegionData.totalConfirmed,
-        격리해제: totalRegionData.totalRecovered,
+const change_date = (beforeDays) => {
+    const today = new Date();
+    from =
+      beforeDays == undefined
+        ? ""
+        : date_former(today.setDate(today.getDate() - beforeDays), "");
+    draw_chart(create_chart_data());
+  },
+  change_region = (region_eng) => {
+    region = region_eng;
+    draw_chart(create_chart_data());
+  },
+  create_chart_data = () => {
+    const APIdata = getJsonAPI(API_URL + region + "?from=" + from),
+      lastData = APIdata[APIdata.length - 1],
+      totalRegionData = (() => {
+        const result = {
+          date: [],
+          newLocalInfected: [],
+          newOverseasInfected: [],
+          newTotalInfected: [],
+          newRecovered: [],
+          totalConfirmed: [],
+          totalRecovered: [],
+          existingInfected: [],
+          totalInfected: [],
+        };
+        APIdata.forEach((data) => {
+          result.date.push(date_former(data.date, "-"));
+          result.newLocalInfected.push(data.confirmed.infected.new.local);
+          result.newOverseasInfected.push(data.confirmed.infected.new.overseas);
+          result.newTotalInfected.push(data.confirmed.infected.new.total);
+          result.newRecovered.push(data.confirmed.recovered.new);
+          result.totalConfirmed.push(data.confirmed.total);
+          result.totalRecovered.push(data.confirmed.recovered.total);
+          result.existingInfected.push(data.confirmed.infected.existing);
+          result.totalInfected.push(data.confirmed.infected.total);
+        });
+        return result;
+      })();
+
+    return { lastData: lastData, totalRegionData: totalRegionData };
+  },
+  draw_chart = (chartData) => {
+    const totalRegionData = chartData.totalRegionData,
+      lastData = chartData.lastData;
+    c3.generate({
+      bindto: "#test",
+      padding: { left: 20, right: 20, top: 10, bottom: 10 },
+      data: {
+        json: {
+          date: totalRegionData.date,
+          확진: totalRegionData.totalConfirmed,
+          격리해제: totalRegionData.totalRecovered,
+        },
+        x: "date",
+        type: "spline",
+        colors: { 확진: "#F15F5F", 격리해제: "#86E57F" },
       },
-      x: "date",
-      type: "spline",
-      colors: { 확진: "#F15F5F", 격리해제: "#86E57F" },
-    },
-    axis: {
-      x: {
-        show: true,
-        type: "timeseries",
-        tick: {
-          format: "%y.%m.%d",
-          fit: false,
-          outer: false,
-          count: 7,
+      axis: {
+        x: {
+          show: true,
+          type: "timeseries",
+          tick: {
+            format: "%y.%m.%d",
+            fit: false,
+            outer: false,
+            count: 7,
+          },
+        },
+        y: {
+          show: false,
         },
       },
-      y: {
+      point: {
         show: false,
       },
-    },
-    point: {
-      show: false,
-    },
-  });
+    });
 
-  c3.generate({
-    bindto: "#test2",
-    padding: { left: 20, right: 20, top: 10, bottom: 10 },
-    data: {
-      json: {
-        date: totalRegionData.date,
-        전체: totalRegionData.newTotalInfected,
-        국내: totalRegionData.newLocalInfected,
-        해외: totalRegionData.newOverseasInfected,
+    c3.generate({
+      bindto: "#test2",
+      padding: { left: 20, right: 20, top: 10, bottom: 10 },
+      data: {
+        json: {
+          date: totalRegionData.date,
+          전체: totalRegionData.newTotalInfected,
+          국내: totalRegionData.newLocalInfected,
+          해외: totalRegionData.newOverseasInfected,
+        },
+        x: "date",
+        type: "area",
+        groups: [["국내", "해외"]],
       },
-      x: "date",
-      type: "area",
-      groups: [["국내", "해외"]],
-    },
-    axis: {
-      x: {
-        show: true,
-        type: "timeseries",
-        tick: {
-          format: "%y.%m.%d",
-          fit: false,
-          outer: false,
-          count: 5,
+      axis: {
+        x: {
+          show: true,
+          type: "timeseries",
+          tick: {
+            format: "%y.%m.%d",
+            fit: false,
+            outer: false,
+            count: 5,
+          },
+        },
+        y: {
+          show: false,
         },
       },
-      y: {
+      point: {
         show: false,
       },
-    },
-    point: {
-      show: false,
-    },
-  });
+    });
 
-  c3.generate({
-    bindto: "#test3",
-    padding: { left: 20, right: 20, top: 10, bottom: 10 },
-    data: {
-      json: {
-        date: totalRegionData.date,
-        기존격리: totalRegionData.existingInfected,
-        신규격리: totalRegionData.newTotalInfected,
+    c3.generate({
+      bindto: "#test3",
+      padding: { left: 20, right: 20, top: 10, bottom: 10 },
+      data: {
+        json: {
+          date: totalRegionData.date,
+          기존격리: totalRegionData.existingInfected,
+          신규격리: totalRegionData.newTotalInfected,
+        },
+        x: "date",
+        type: "area",
+        groups: [["신규격리", "기존격리"]],
+        order: "asc",
       },
-      x: "date",
-      type: "area",
-      groups: [["신규격리", "기존격리"]],
-      order: "asc",
-    },
 
-    axis: {
-      x: {
-        show: true,
-        type: "timeseries",
-        tick: {
-          format: "%y.%m.%d",
-          fit: false,
-          outer: false,
-          count: 5,
+      axis: {
+        x: {
+          show: true,
+          type: "timeseries",
+          tick: {
+            format: "%y.%m.%d",
+            fit: false,
+            outer: false,
+            count: 5,
+          },
+        },
+        y: {
+          show: false,
         },
       },
-      y: {
+      point: {
         show: false,
       },
-    },
-    point: {
-      show: false,
-    },
-  });
+    });
 
-  c3.generate({
-    bindto: "#test4",
-    data: {
-      columns: [
-        ["Active", lastData.confirmed.infected.total],
-        ["Deaths", lastData.confirmed.death.total],
-        ["Recovered", lastData.confirmed.recovered.total],
-      ],
-      type: "donut",
-      colors: { Deaths: "#8C8C8C", Recovered: "#86E57F", Active: "#F15F5F" },
-      labels: {
-        format: {
-          y: d3.format(".1%"),
+    c3.generate({
+      bindto: "#test4",
+      data: {
+        columns: [
+          ["Active", lastData.confirmed.infected.total],
+          ["Deaths", lastData.confirmed.death.total],
+          ["Recovered", lastData.confirmed.recovered.total],
+        ],
+        type: "donut",
+        colors: { Deaths: "#8C8C8C", Recovered: "#86E57F", Active: "#F15F5F" },
+        labels: {
+          format: {
+            y: d3.format(".1%"),
+          },
         },
       },
-    },
-    donut: {
-      expand: false,
-      title: "ss",
-    },
-    axis: {
-      x: {
-        type: "categorized",
+      donut: {
+        expand: false,
+        title: "ss",
       },
-    },
-  });
-
-  c3.generate({
-    bindto: "#test5",
-    data: {
-      columns: [
-        ["Active", lastData.confirmed.infected.total],
-        ["Deaths", lastData.confirmed.death.total],
-        ["Recovered", lastData.confirmed.recovered.total],
-      ],
-      type: "donut",
-      colors: { Deaths: "#8C8C8C", Recovered: "#86E57F", Active: "#F15F5F" },
-      labels: {
-        format: {
-          y: d3.format(".1%"),
+      axis: {
+        x: {
+          type: "categorized",
         },
       },
-    },
-    donut: {
-      expand: false,
-      title: "ss",
-    },
-    axis: {
-      x: {
-        type: "categorized",
+    });
+
+    c3.generate({
+      bindto: "#test5",
+      data: {
+        columns: [
+          ["Active", lastData.confirmed.infected.total],
+          ["Deaths", lastData.confirmed.death.total],
+          ["Recovered", lastData.confirmed.recovered.total],
+        ],
+        type: "donut",
+        colors: { Deaths: "#8C8C8C", Recovered: "#86E57F", Active: "#F15F5F" },
+        labels: {
+          format: {
+            y: d3.format(".1%"),
+          },
+        },
       },
-    },
-  });
-}
-
-function create_chart_data(region, from, to) {
-  from = from == undefined ? "" : `from=${from}`;
-  to = to == undefined ? "" : `to=${to}`;
-  const APIdata = getJsonAPI(API_URL + region),
-    lastData = APIdata[APIdata.length - 1],
-    totalRegionData = (() => {
-      const result = {
-        date: [],
-        newLocalInfected: [],
-        newOverseasInfected: [],
-        newTotalInfected: [],
-        newRecovered: [],
-        totalConfirmed: [],
-        totalRecovered: [],
-        existingInfected: [],
-        totalInfected: [],
-      };
-      APIdata.forEach((data) => {
-        result.date.push(date_former(data.date, "-"));
-        result.newLocalInfected.push(data.confirmed.infected.new.local);
-        result.newOverseasInfected.push(data.confirmed.infected.new.overseas);
-        result.newTotalInfected.push(data.confirmed.infected.new.total);
-        result.newRecovered.push(data.confirmed.recovered.new);
-        result.totalConfirmed.push(data.confirmed.total);
-        result.totalRecovered.push(data.confirmed.recovered.total);
-        result.existingInfected.push(data.confirmed.infected.existing);
-        result.totalInfected.push(data.confirmed.infected.total);
-      });
-      return result;
-    })();
-  return { lastData: lastData, totalRegionData: totalRegionData };
-}
-
-function create_list_element() {
-  const recentData = getJsonAPI(API_URL + "recent");
-  const regionList = document.getElementById("contents");
-  const updateDate = document.getElementById("updateDate");
-  updateDate.innerHTML = `UPDATE : ${recentData[0].data.date}`;
-  recentData.forEach((data) => {
-    const region_li = document.createElement("li");
-    region_li.setAttribute("id", data.region_eng);
-    region_li.setAttribute("class", "summary_container");
-    region_li.innerHTML = `
+      donut: {
+        expand: false,
+        title: "ss",
+      },
+      axis: {
+        x: {
+          type: "categorized",
+        },
+      },
+    });
+  },
+  create_list_element = () => {
+    const recentData = getJsonAPI(API_URL + "recent"),
+      regionList = document.getElementById("contents"),
+      updateElement = document.getElementById("updateDate"),
+      updateDate = new Date(recentData[0].data.date);
+    updateElement.innerHTML = `UPDATE : ${date_former(
+      updateDate,
+      "-"
+    )} ${updateDate.getHours()}:${updateDate.getMinutes()}`;
+    recentData.forEach((data) => {
+      const region_li = document.createElement("li");
+      region_li.setAttribute("id", data.region_eng);
+      region_li.setAttribute("class", "summary_container");
+      region_li.setAttribute("onclick", `change_region('${data.region_eng}')`);
+      region_li.innerHTML = `
     <div>
       <span style="background-color:#F5F5F5">${data.region_kor}</span>
       <span>${data.data.confirmed.infected.new.total}</span>
@@ -231,32 +236,32 @@ function create_list_element() {
       <span>${data.data.confirmed.recovered.total}</span>
       <span>${data.data.confirmed.death.total}</span>
     </div>`;
-    regionList.appendChild(region_li);
-  });
-}
-
-function getJsonAPI(url) {
-  const xmlhttp = new XMLHttpRequest();
-  let json_data;
-  xmlhttp.onreadystatechange = () => {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      try {
-        json_data = JSON.parse(xmlhttp.responseText);
-      } catch (err) {
-        console.log(err.message + " in " + xmlhttp.responseText);
+      regionList.appendChild(region_li);
+    });
+  },
+  getJsonAPI = (url) => {
+    const xmlhttp = new XMLHttpRequest();
+    let json_data;
+    xmlhttp.onreadystatechange = () => {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        try {
+          json_data = JSON.parse(xmlhttp.responseText);
+        } catch (err) {
+          console.log(err.message + " in " + xmlhttp.responseText);
+        }
       }
-    }
+    };
+    xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
+    xmlhttp.send();
+    return json_data;
+  },
+  date_former = (str_date, separatedValue) => {
+    const date = new Date(str_date);
+    let month = date.getMonth() + 1,
+      day = date.getDate();
+    month = month < 10 ? "0" + month : month;
+    day = day < 10 ? "0" + day : day;
+    return date.getFullYear() + separatedValue + month + separatedValue + day;
   };
-  xmlhttp.open("GET", url, false); //true는 비동기식, false는 동기식 true로 할시 변수 변경전에 웹페이지가 떠버림
-  xmlhttp.send();
-  return json_data;
-}
 
-function date_former(str_date, separatedValue) {
-  const date = new Date(str_date);
-  let month = date.getMonth(),
-    day = date.getDate();
-  month = month < 10 ? "0" + month : month;
-  day = day < 10 ? "0" + day : day;
-  return date.getFullYear() + separatedValue + month + separatedValue + day;
-}
+main();
