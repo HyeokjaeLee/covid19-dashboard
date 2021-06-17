@@ -1,9 +1,7 @@
 ![header](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=COVID-19%20Dashboard&fontSize=30&fontAlign=78&fontAlignY=50)
-![VERSION](https://img.shields.io/badge/version-1.1.3-6DA854?style=flat-square)
+![VERSION](https://img.shields.io/badge/version-1.1.3-6DA854?style=flat-square)&nbsp;&nbsp;&nbsp;![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 
 > Dashboards for viewing the status of COVID19 by country. <br>
-
-![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 
 - ## :bookmark:Preview
   - #### [Demo link](https://hyeokjaelee.github.io/covid19-dashboard/index.html) (New)
