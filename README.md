@@ -4,8 +4,8 @@
 > Dashboards for viewing the status of COVID19 by country. <br>
 
 - ## :bookmark:Preview
+  **:warning:<U>This project uses heroku, It usually stays sleep and takes a few seconds for the server to turn on the first try</U>.**
   - #### [Demo link](https://hyeokjaelee.github.io/covid19-dashboard/index.html) (New)
-    - **:warning:<U>This project uses heroku,<br>It usually stays sleep and takes a few seconds for the server to turn on the first try</U>.**
   - #### ~~[Demo link]()~~ (Old)
     - **:warning:<U>It no longer works because of API modification.</U>.**
       ![preview_old1](https://user-images.githubusercontent.com/71566740/105497377-1a731700-5d02-11eb-8056-d6cf36f1b8e4.png)
