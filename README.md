@@ -9,6 +9,8 @@
 
 ## ✨ Preview
 
+**:warning: <U>This project uses heroku, It usually stays sleep and takes a few seconds for the server to turn on the first try</U>.**
+
 ### [Demo link](https://hyeokjaelee.github.io/covid19-dashboard/index.html)
 
 ~~:warning: It no longer works because of API modification.~~

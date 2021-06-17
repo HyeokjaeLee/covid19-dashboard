@@ -32,7 +32,7 @@ const regionList = document.getElementById("contents");
 const updateDate = document.getElementById("updateDate");
 updateDate.innerHTML = `UPDATE : ${recentData[0].data.date}`;
 recentData.forEach((data) => {
-  const region_li = document.createElement("section");
+  const region_li = document.createElement("li");
   region_li.setAttribute("id", data.region_eng);
   region_li.setAttribute("class", "summary_container");
   region_li.innerHTML = `
@@ -179,6 +179,7 @@ c3.generate({
     },
   },
 });
+
 c3.generate({
   bindto: "#test5",
   data: {

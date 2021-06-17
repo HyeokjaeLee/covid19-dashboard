@@ -1,79 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=" />
+    <title>COVID-19 DASHBOARD</title>
+    <link rel="stylesheet" href="./src/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css"
+    />
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
+    <title>CSS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=">
-	<title>COVID-19 DASHBOARD</title>
-	<link rel="stylesheet" href="./src/css/style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" />
-	<script src="https://d3js.org/d3.v3.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
-	<title>CSS</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-
-
-<body>
-	<header>
-		<span class="title">KOR<span style="color: yellow;">ON</span>A</span>
-		<button>최근 7일</button>
-		<button>최근 30일</button>
-		<button>전체</button>
-	</header>
-	<container>
-
-		<div class="half_section">
-
-			<div id="list">
-				<span id="updateDate"></span>
-				<type class="summary_container">
-					<div><span>지역</span>
-						<span>신규 격리</span>
-						<span>신규 격리 해제</span>
-						<span>신규 사망</span>
-					</div>
-					<div><span>전체 확진</span>
-						<span>전체 격리</span>
-						<span>전체 격리 해제</span>
-						<span>전체 사망</span>
-					</div>
-				</type>
-				<div id="contents"></div>
-			</div>
-		</div>
-		<div class="half_section">
-			<div id="chart">
-				<section>
-					일별 누적확진자
-					<div id="test">
-					</div>
-				</section>
-				<section>
-					일별 신규 확진자
-					<div id="test2">
-					</div>
-				</section>
-				<section>
-					일별 격리 추이
-					<div id="test3">
-					</div>
-				</section>
-				<section style="display: flex;">
-					<div style="width: 50%;">
-						<div id="test4">
-						</div>
-					</div>
-					<div style="width: 50%; height: auto;">
-						<div id="test5">
-						</div>
-					</div>
-				</section>
-
-			</div>
-		</div>
-	</container>
-	<script src="./src/js/main.js"></script>
-</body>
-
+  <body>
+    <header>
+      <span class="title">
+        <div>KOR<span style="color: yellow">ON</span>A</div>
+        <div id="sub_title">한국 코로나 정보</div>
+      </span>
+      <button>최근 7일</button>
+      <button>최근 30일</button>
+      <button>전체</button>
+    </header>
+    <container>
+      <div class="half_section">
+        <div id="list">
+          <span id="updateDate"></span>
+          <type class="summary_container">
+            <div>
+              <span>지역</span>
+              <span>신규 격리</span>
+              <span>신규 격리 해제</span>
+              <span>신규 사망</span>
+            </div>
+            <div>
+              <span>전체 확진</span>
+              <span>전체 격리</span>
+              <span>전체 격리 해제</span>
+              <span>전체 사망</span>
+            </div>
+          </type>
+          <ul id="contents"></ul>
+        </div>
+      </div>
+      <div class="half_section">
+        <div id="chart">
+          <div>
+            일별 누적확진자
+            <div id="test"></div>
+          </div>
+          <div>
+            일별 신규 확진자
+            <div id="test2"></div>
+          </div>
+          <div>
+            일별 격리 추이
+            <div id="test3"></div>
+          </div>
+          <div style="display: flex">
+            <div style="width: 50%">
+              <div id="test4"></div>
+            </div>
+            <div style="width: 50%; height: auto">
+              <div id="test5"></div>
+            </div>
+          </div>
+          <footer>HyeokjaeLee © All rights reserved.</footer>
+        </div>
+      </div>
+    </container>
+    <script src="./src/js/main.js"></script>
+  </body>
 </html>
