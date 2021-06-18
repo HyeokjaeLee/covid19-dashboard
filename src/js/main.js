@@ -63,7 +63,7 @@ const change_date = (beforeDays) => {
           격리해제: totalRegionData.totalRecovered,
         },
         x: "date",
-        type: "spline",
+        type: "area",
         colors: { 확진: "#F15F5F", 격리해제: "#86E57F" },
       },
       axis: {
@@ -72,7 +72,7 @@ const change_date = (beforeDays) => {
           type: "timeseries",
           tick: {
             format: "%y.%m.%d",
-            fit: false,
+            fit: true,
             outer: false,
             count: 7,
           },
@@ -97,7 +97,7 @@ const change_date = (beforeDays) => {
           해외: totalRegionData.newOverseasInfected,
         },
         x: "date",
-        type: "area",
+        type: "area-spline",
         groups: [["국내", "해외"]],
       },
       axis: {
@@ -106,7 +106,7 @@ const change_date = (beforeDays) => {
           type: "timeseries",
           tick: {
             format: "%y.%m.%d",
-            fit: false,
+            fit: true,
             outer: false,
             count: 5,
           },
@@ -130,7 +130,7 @@ const change_date = (beforeDays) => {
           신규격리: totalRegionData.newTotalInfected,
         },
         x: "date",
-        type: "area",
+        type: "area-spline",
         groups: [["신규격리", "기존격리"]],
         order: "asc",
       },
@@ -141,7 +141,7 @@ const change_date = (beforeDays) => {
           type: "timeseries",
           tick: {
             format: "%y.%m.%d",
-            fit: false,
+            fit: true,
             outer: false,
             count: 5,
           },
@@ -211,31 +211,25 @@ const change_date = (beforeDays) => {
   },
   create_list_element = () => {
     const recentData = getJsonAPI(API_URL + "recent"),
-      regionList = document.getElementById("contents"),
+      regionList = document.getElementById("list"),
       updateElement = document.getElementById("updateDate"),
       updateDate = new Date(recentData[0].data.date);
     updateElement.innerHTML = `UPDATE : ${date_former(
       updateDate,
       "-"
     )} ${updateDate.getHours()}:${updateDate.getMinutes()}`;
-    recentData.forEach((data) => {
+    recentData.forEach((data, index) => {
       const region_li = document.createElement("li");
       region_li.setAttribute("id", data.region_eng);
       region_li.setAttribute("class", "summary_container");
       region_li.setAttribute("onclick", `change_region('${data.region_eng}')`);
       region_li.innerHTML = `
-    <div>
-      <span style="background-color:#F5F5F5">${data.region_kor}</span>
-      <span>${data.data.confirmed.infected.new.total}</span>
-      <span>${data.data.confirmed.recovered.new}</span>
-      <span>${data.data.confirmed.death.new}</span>
-    </div>
-    <div>
-      <span>${data.data.confirmed.total}</span>
-      <span>${data.data.confirmed.infected.total}</span>
-      <span>${data.data.confirmed.recovered.total}</span>
-      <span>${data.data.confirmed.death.total}</span>
-    </div>`;
+    <ul class="list_item">
+      <li>${data.region_kor}</li>
+      <li>${data.data.confirmed.infected.new.total}</li>
+      <li>${data.data.confirmed.infected.total}</li>
+      <li>${data.data.confirmed.total}</li>
+    </ul>`;
       regionList.appendChild(region_li);
     });
   },
