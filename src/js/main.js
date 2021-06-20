@@ -1,5 +1,6 @@
 const API_URL = "https://korea-covid19-api.herokuapp.com/";
-let region = "total";
+let region_eng = "total";
+let region_kor = "전국";
 let from = "";
 //main
 const main = () => {
@@ -15,14 +16,13 @@ const change_date = (beforeDays) => {
         : date_former(today.setDate(today.getDate() - beforeDays), "");
     draw_chart(create_chart_data());
   },
-  change_region = (region_eng) => {
-    region = region_eng;
+  change_region = (_region_eng, _region_kor) => {
+    region_eng = _region_eng;
+    region_kor = _region_kor;
     draw_chart(create_chart_data());
-    const region_info = document.getElementById("region_info");
-    region_info.innerHTML = region;
   },
   create_chart_data = () => {
-    const APIdata = getJsonAPI(API_URL + region + "?from=" + from),
+    const APIdata = getJsonAPI(API_URL + region_eng + "?from=" + from),
       lastData = APIdata[APIdata.length - 1],
       totalRegionData = (() => {
         const result = {
@@ -49,12 +49,55 @@ const change_date = (beforeDays) => {
         });
         return result;
       })();
-
     return { lastData: lastData, totalRegionData: totalRegionData };
   },
   draw_chart = (chartData) => {
     const totalRegionData = chartData.totalRegionData,
       lastData = chartData.lastData;
+    const region_info = document.getElementById("region_info");
+    region_info.innerHTML = `
+    <span>${region_kor} 상세정보</span>
+    <table>
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th colspan='3'>격리</th>
+          <th>회복</th>
+          <th>사망</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style='background-color:#FFAB8C'>
+          <td rowspan='2' style='background-color:#FF9167'>신규</td>
+          <td rowspan='2'>${lastData.confirmed.infected.new.total}</td>
+          <td style='background-color:#FFC5AF'>해외</td>
+          <td style='background-color:#FFDDD1'>${lastData.confirmed.infected.new.overseas}</td>
+          <td rowspan='2'>${lastData.confirmed.recovered.new}</td>
+          <td rowspan='2'>${lastData.confirmed.death.new}</td>
+        </tr>
+        <tr>
+          <td style='background-color:#FFC5AF'>국내</td>
+          <td style='background-color:#FFDDD1'>${lastData.confirmed.infected.new.local}</td>
+        </tr>
+        <tr style='background-color:#BBE6FF'>
+          <td style='background-color:#8DD5FF'>기존</td>
+          <td colspan='3'>${lastData.confirmed.infected.existing}</td>
+          <td>${lastData.confirmed.recovered.existing}</td>
+          <td>${lastData.confirmed.death.existing}</td>
+        </tr>
+        <tr style='background-color:#FFDFFD'>
+          <td style='background-color:#FFC9FC'>전체</td>
+          <td colspan='3'>${lastData.confirmed.infected.total}</td>
+          <td>${lastData.confirmed.recovered.total}</td>
+          <td>${lastData.confirmed.death.total}</td>
+        </tr>
+        <tr style='background-color:#C5FFDB'>
+          <td style='background-color:#9CFFC1'>누적 확진</td>
+          <td colspan='5'>${lastData.confirmed.total}</td>
+        </tr>
+      </tbody>
+    </table>
+    `;
     c3.generate({
       bindto: "#test",
       padding: { left: 20, right: 20, top: 10, bottom: 10 },
@@ -188,12 +231,12 @@ const change_date = (beforeDays) => {
       bindto: "#test5",
       data: {
         columns: [
-          ["Active", lastData.confirmed.infected.total],
-          ["Deaths", lastData.confirmed.death.total],
-          ["Recovered", lastData.confirmed.recovered.total],
+          ["격리", lastData.confirmed.infected.total],
+          ["회복", lastData.confirmed.recovered.total],
+          ["사망", lastData.confirmed.death.total],
         ],
         type: "donut",
-        colors: { Deaths: "#8C8C8C", Recovered: "#86E57F", Active: "#F15F5F" },
+        colors: { 격리: "#F15F5F", 회복: "#86E57F", 사망: "#8C8C8C" },
         labels: {
           format: {
             y: d3.format(".1%"),
@@ -202,7 +245,7 @@ const change_date = (beforeDays) => {
       },
       donut: {
         expand: false,
-        title: "ss",
+        title: "확진자 비율",
       },
       axis: {
         x: {
@@ -223,8 +266,10 @@ const change_date = (beforeDays) => {
     recentData.forEach((data, index) => {
       const region_li = document.createElement("li");
       region_li.setAttribute("id", data.region_eng);
-      region_li.setAttribute("class", "summary_container");
-      region_li.setAttribute("onclick", `change_region('${data.region_eng}')`);
+      region_li.setAttribute(
+        "onclick",
+        `change_region('${data.region_eng}','${data.region_kor}')`
+      );
       region_li.innerHTML = `
     <ul class="list_item">
       <li>${data.region_kor}</li>
