@@ -18,6 +18,8 @@ const change_date = (beforeDays) => {
   change_region = (region_eng) => {
     region = region_eng;
     draw_chart(create_chart_data());
+    const region_info = document.getElementById("region_info");
+    region_info.innerHTML = region;
   },
   create_chart_data = () => {
     const APIdata = getJsonAPI(API_URL + region + "?from=" + from),
