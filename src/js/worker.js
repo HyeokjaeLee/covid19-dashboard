@@ -11,6 +11,6 @@ const getGraphQL = async (url, query) => {
       body: JSON.stringify({ query }),
     }),
     json = await res.json(),
-    data = JSON.stringify(json.data);
+    data = json.data;
   return data;
 };

@@ -1,5 +1,5 @@
 @font-face {
-  src: url("../fonts/BMHANNAAir_ttf.ttf");
+  src: url("../fonts/NanumBarunGothicLight.otf");
   font-family: "main";
 }
 @font-face {
@@ -39,6 +39,7 @@ body {
   height: 100vh;
   position: relative;
   font-family: main;
+  min-width: 980px;
 }
 ::-webkit-scrollbar {
   width: 5px;
@@ -127,6 +128,7 @@ main {
   height: 50px;
   text-align: center;
   line-height: 50px;
+  white-space: nowrap;
 }
 #list {
   top: 50px;
@@ -149,7 +151,9 @@ main {
   flex-wrap: wrap;
   justify-content: center;
 }
-
+.chart_section > hr {
+  width: 90%;
+}
 .chart_section > div {
   box-sizing: border-box;
   padding: 10px;
@@ -162,12 +166,14 @@ main {
   transition: box-shadow 0.3s;
 }
 
+.chart_section > .small_chart {
+  width: 290px;
+}
+
 .chart_section > div:hover {
   box-shadow: 0 0 20px rgba(156, 112, 112, 0.4);
 }
-#small_chart {
-  width: 290px;
-}
+
 #region_info {
   width: 600px;
   display: flex;
@@ -186,17 +192,17 @@ main {
   text-align: center;
   height: 280px;
 }
+#region_info th {
+  background-color: #353942;
+  color: white;
+}
 #region_info th,
 td {
-  font-size: medium;
+  border: 1px solid gray;
+  font-size: 13px;
+  font-weight: bold;
   padding: 5px;
   font-weight: 100;
-  transition: font-size 0.2s, box-shadow 0.2s;
-}
-
-#region_info td:hover {
-  box-shadow: 0 0px 11px rgba(156, 112, 112, 0.3);
-  font-size: large;
 }
 
 text {
