@@ -45,7 +45,7 @@ const create_query = (region, startDate, endDate, onlyLastData) => `query{
 }`;
 
 const covid19_API = (query, funtion) => {
-  const APIworker = new Worker("/src/js/worker.js");
+  const APIworker = new Worker("./src/js/worker.js");
   APIworker.postMessage(query);
   APIworker.onmessage = (messageEvent) => {
     APIworker.terminate();
