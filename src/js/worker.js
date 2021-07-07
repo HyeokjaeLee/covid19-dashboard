@@ -1,5 +1,6 @@
 const API_URL = "https://korea-covid19-api.herokuapp.com/";
 onmessage = async (e) => {
+  console.log("test");
   const data = await getGraphQL(API_URL, e.data);
   postMessage(data);
 };
