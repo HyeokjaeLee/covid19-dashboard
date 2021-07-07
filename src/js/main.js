@@ -80,139 +80,196 @@ const create_list = () => {
         }
       }
       per100kConfirmed
+      immunityRatio
     }
   }
 }`;
   covid19_API(query, (regionalDataList) => {
-    const regionList_ul = document.getElementById("list");
-    const regionList = [];
-    const Per100kConfirmedList = [];
-    const newQuarantineList = {
-      domestic: [],
-      overseas: [],
-    };
-    const vaccinationList = {
-      first: [],
-      second: [],
-    };
+    const regionList_ul = document.getElementById("list"),
+      regionList = [],
+      per100kConfirmedList = [],
+      immunityRatio = [],
+      newQuarantineList = {
+        domestic: [],
+        overseas: [],
+      },
+      vaccinationList = {
+        first: [],
+        second: [],
+      };
+
     regionalDataList.forEach((regionalData) => {
-      Per100kConfirmedList.push(
-        regionalData.covid19DataList[0].per100kConfirmed
-      );
-      newQuarantineList.domestic.push(
-        regionalData.covid19DataList[0].quarantine.new.domestic
-      );
-      newQuarantineList.overseas.push(
-        regionalData.covid19DataList[0].quarantine.new.overseas
-      );
-      vaccinationList.first.push(
-        regionalData.covid19DataList[0].vaccination.first.total
-      );
-      vaccinationList.second.push(
-        regionalData.covid19DataList[0].vaccination.second.total
-      );
-      regionList.push(regionalData.regionKor);
-      const regionList_li = document.createElement("li");
-      regionList_li.setAttribute("id", regionalData.regionEng);
-      regionList_li.innerHTML = `
+      const covid19Data = regionalData.covid19DataList[0];
+      //사용할 데이터 분류
+      {
+        per100kConfirmedList.push(covid19Data.per100kConfirmed);
+        immunityRatio.push(covid19Data.immunityRatio);
+        newQuarantineList.domestic.push(covid19Data.quarantine.new.domestic);
+        newQuarantineList.overseas.push(covid19Data.quarantine.new.overseas);
+        vaccinationList.first.push(covid19Data.vaccination.first.total);
+        vaccinationList.second.push(covid19Data.vaccination.second.total);
+        regionList.push(regionalData.regionKor);
+      }
+      //지역 리스트 생성
+      {
+        const regionList_li = document.createElement("li");
+        regionList_li.setAttribute("id", regionalData.regionEng);
+        regionList_li.innerHTML = `
       <ul class="list_item">
         <li>${regionalData.regionKor}</li>
-        <li>${regionalData.covid19DataList[0].quarantine.new.total.toLocaleString()}</li>
-        <li>${regionalData.covid19DataList[0].quarantine.total.toLocaleString()}</li>
-        <li>${regionalData.covid19DataList[0].confirmed.total.toLocaleString()}</li>
+        <li>${covid19Data.quarantine.new.total.toLocaleString()}</li>
+        <li>${covid19Data.quarantine.total.toLocaleString()}</li>
+        <li>${covid19Data.confirmed.total.toLocaleString()}</li>
       </ul>`;
-      regionList_ul.appendChild(regionList_li);
+        regionList_ul.appendChild(regionList_li);
+      }
     });
-    //10만명 당 확진 차트
-    c3.generate({
-      bindto: "#per100k_chart",
-      padding: { left: 20, right: 20, top: 10, bottom: 10 },
-      data: {
-        json: {
-          region: regionList.slice(1, 18),
-          "10만명 당 확진자": Per100kConfirmedList.slice(1, 18),
+
+    //차트 생성
+    {
+      //10만명 당 확진 차트
+      c3.generate({
+        bindto: "#per100k_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            region: regionList.slice(1, 18),
+            "10만명 당 확진자": per100kConfirmedList.slice(1, 18),
+          },
+          x: "region",
+          type: "bar",
+          colors: { "10만명 당 확진자": "#ff8151" },
         },
-        x: "region",
-        type: "bar",
-        colors: { "10만명 당 확진자": "#e7604a" },
-      },
-      axis: {
-        x: {
-          show: true,
-          type: "category",
-        },
-        y: {
-          show: false,
-        },
-      },
-      grid: {
-        y: {
-          lines: [
-            {
-              value: Per100kConfirmedList[0],
-              text: `전국 평균 ${Per100kConfirmedList[0]}명`,
+        axis: {
+          x: {
+            show: true,
+            type: "category",
+          },
+          y: {
+            show: false,
+            tick: {
+              format: (d) => d + " 명",
             },
-          ],
+          },
         },
-      },
-      point: {
-        show: false,
-      },
-    });
-    //신규 격리 차트
-    c3.generate({
-      bindto: "#newQuarantine_chart",
-      padding: { left: 20, right: 20, top: 10, bottom: 10 },
-      data: {
-        json: {
-          region: regionList.slice(1),
-          해외: newQuarantineList.overseas.slice(1),
-          국내: newQuarantineList.domestic.slice(1),
+        grid: {
+          y: {
+            lines: [
+              {
+                value: per100kConfirmedList[0],
+                text: `전국 평균 ${per100kConfirmedList[0]}명`,
+              },
+            ],
+          },
         },
-        x: "region",
-        type: "bar",
-        groups: [["해외", "국내"]],
-      },
-      axis: {
-        x: {
-          show: true,
-          type: "category",
-        },
-        y: {
+        point: {
           show: false,
         },
-      },
-      point: {
-        show: false,
-      },
-    });
-    console.log(newQuarantineList.domestic);
-    //백신 접종 차트
-    c3.generate({
-      bindto: "#vaccination_chart",
-      padding: { left: 20, right: 20, top: 10, bottom: 10 },
-      data: {
-        json: {
-          region: regionList.slice(1, 18),
-          "1차 접종": vaccinationList.first.slice(1, 18),
-          "2차 접종": vaccinationList.second.slice(1, 18),
+      });
+      //신규 격리 차트
+      c3.generate({
+        bindto: "#newQuarantine_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            region: regionList.slice(1),
+            해외: newQuarantineList.overseas.slice(1),
+            국내: newQuarantineList.domestic.slice(1),
+          },
+          x: "region",
+          type: "bar",
+          groups: [["해외", "국내"]],
+          colors: { 해외: "#e7604a", 국내: "#ff8151" },
         },
-        x: "region",
-        type: "bar",
-      },
-      axis: {
-        x: {
-          show: true,
-          type: "category",
+        axis: {
+          x: {
+            show: true,
+            type: "category",
+          },
+          y: {
+            show: false,
+            tick: {
+              format: (d) => d + " 명",
+            },
+          },
         },
-        y: {
+        point: {
           show: false,
         },
-      },
-      point: {
-        show: false,
-      },
-    });
+      });
+      console.log(newQuarantineList.domestic);
+      //백신 접종 차트
+      c3.generate({
+        bindto: "#vaccination_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            region: regionList.slice(1, 18),
+            "1차 접종": vaccinationList.first.slice(1, 18),
+            "2차 접종": vaccinationList.second.slice(1, 18),
+          },
+          x: "region",
+          type: "bar",
+          colors: { "1차 접종": "#2cabb1", "2차 접종": "#29c7ca" },
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "category",
+          },
+          y: {
+            show: false,
+            tick: {
+              format: (d) => d + " 명",
+            },
+          },
+        },
+        point: {
+          show: false,
+        },
+      });
+      //면역 비율 차트
+      c3.generate({
+        bindto: "#immunityRatio_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            region: regionList.slice(1, 18),
+            "면역 비율": immunityRatio.slice(1, 18),
+          },
+          x: "region",
+          type: "bar",
+          colors: { "면역 비율": "#29c7ca" },
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "category",
+          },
+          y: {
+            max: 0.8,
+            show: false,
+            tick: {
+              format: d3.format(".1%"),
+            },
+          },
+        },
+        grid: {
+          y: {
+            lines: [
+              {
+                value: 0.7,
+                text: `집단면역 70%`,
+              },
+            ],
+          },
+        },
+        gauge: {},
+        point: {
+          show: false,
+        },
+      });
+    }
   });
 };
 const create_chart = (region, startDate, endDate) => {
@@ -258,14 +315,18 @@ const create_chart = (region, startDate, endDate) => {
         }
       }
       per100kConfirmed
+      immunityRatio
     }
   }
 }`;
   covid19_API(query, (regionalDataList) => {
     const covid19DataList = regionalDataList[0].covid19DataList;
     const lastData = covid19DataList[covid19DataList.length - 1];
-    const region_info = document.getElementById("region_info");
-    region_info.innerHTML = `
+    console.log(lastData.immunityRatio);
+    //지역 상세 정보 생성
+    {
+      const region_info = document.getElementById("region_info");
+      region_info.innerHTML = `
     <span>${regionalDataList[0].regionKor} 상세정보</span>
     <table>
       <thead>
@@ -308,10 +369,73 @@ const create_chart = (region, startDate, endDate) => {
       </tbody>
     </table>
     `;
+    }
+    //차트 생성
+    {
+      //확진자 비율 차트
+      c3.generate({
+        bindto: "#confirmedRatio_chart",
+        data: {
+          columns: [
+            ["격리", lastData.quarantine.total],
+            ["사망", lastData.dead.total],
+            ["회복", lastData.recovered.total],
+          ],
+          type: "donut",
+          colors: {
+            사망: "#353942",
+            회복: "#29c7ca",
+            격리: "#ff8151",
+          },
+          labels: {
+            format: {
+              y: d3.format(".1%"),
+            },
+          },
+        },
+        donut: {
+          expand: false,
+          title: "확진자 상태 비율",
+        },
+        axis: {
+          x: {
+            type: "categorized",
+          },
+        },
+      });
+      //집단 면역 비율 차트
+      c3.generate({
+        bindto: "#collectiveImmunityRatio_chart",
+        data: {
+          columns: [["면역", ((lastData.immunityRatio * 100) / 70) * 100]],
+          type: "gauge",
+        },
+        donut: {
+          expand: false,
+          title: "확진자 상태 비율",
+        },
+        axis: {
+          x: {
+            type: "categorized",
+          },
+        },
+        grid: {
+          y: {
+            lines: [
+              {
+                value: 70,
+                text: `70`,
+              },
+            ],
+          },
+        },
+      });
+    }
   });
 };
+
 create_list();
-create_chart("Total", 20210101, 20210201);
+create_chart("Total", 20210101, 20210701);
 const convert_date_format = (input_date, form) => {
     const num2str = (num) => (num < 10 ? "0" + num : String(num)),
       date = new Date(input_date),
