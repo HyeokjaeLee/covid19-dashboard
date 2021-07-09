@@ -157,7 +157,7 @@ const create_list = () => {
             lines: [
               {
                 value: per100kConfirmedList[0],
-                text: `전국 평균 ${per100kConfirmedList[0]}명`,
+                text: `전국 ${per100kConfirmedList[0]}명`,
               },
             ],
           },
@@ -404,30 +404,15 @@ const create_chart = (region, startDate, endDate) => {
         },
       });
       //집단 면역 비율 차트
-      c3.generate({
+      var chart = c3.generate({
         bindto: "#collectiveImmunityRatio_chart",
         data: {
-          columns: [["면역", ((lastData.immunityRatio * 100) / 70) * 100]],
+          columns: [["면역자 비율", lastData.dead.total]],
           type: "gauge",
         },
-        donut: {
+        gauge: {
+          max: lastData.confirmed.total,
           expand: false,
-          title: "확진자 상태 비율",
-        },
-        axis: {
-          x: {
-            type: "categorized",
-          },
-        },
-        grid: {
-          y: {
-            lines: [
-              {
-                value: 70,
-                text: `70`,
-              },
-            ],
-          },
         },
       });
     }
