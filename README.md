@@ -17,7 +17,3 @@
   - ##### Old (no longer working)
     - ~~https://api.apify.com~~
     - ~~https://api.coivd19api.com~~
-
-- ## :memo:To-Do
-  - [x] Change file structure(ver.1.0.4)<br>
-  - [ ] Code Refactoring
