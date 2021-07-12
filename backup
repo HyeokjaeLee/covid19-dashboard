@@ -308,4 +308,3 @@ const change_date = (beforeDays) => {
     return date.getFullYear() + separatedValue + month + separatedValue + day;
   };
 
-//main();
