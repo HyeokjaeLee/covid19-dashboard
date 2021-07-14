@@ -103,6 +103,7 @@ const create_list = () => {
       //사용할 데이터 분류
       {
         per100kConfirmedList.push(covid19Data.per100kConfirmed);
+        console.log(covid19Data)
         immunityRatio.push(covid19Data.immunityRatio);
         newQuarantineList.domestic.push(covid19Data.quarantine.new.domestic);
         newQuarantineList.overseas.push(covid19Data.quarantine.new.overseas);
@@ -197,7 +198,6 @@ const create_list = () => {
           show: false,
         },
       });
-      console.log(newQuarantineList.domestic);
       //백신 접종 차트
       c3.generate({
         bindto: "#vaccination_chart",
@@ -229,6 +229,7 @@ const create_list = () => {
         },
       });
       //면역 비율 차트
+      console.log(immunityRatio)
       c3.generate({
         bindto: "#immunityRatio_chart",
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
@@ -322,7 +323,6 @@ const create_chart = (region, startDate, endDate) => {
   covid19_API(query, (regionalDataList) => {
     const covid19DataList = regionalDataList[0].covid19DataList;
     const lastData = covid19DataList[covid19DataList.length - 1];
-    console.log(lastData.immunityRatio);
     //지역 상세 정보 생성
     {
       const region_info = document.getElementById("region_info");
