@@ -27,7 +27,7 @@ const create_query = (region, startDate, endDate, onlyLastData) => `query{
         new
         accumlated
       }
-      vaccination{
+      vaccinated{
         first{
           total
           new
@@ -71,7 +71,7 @@ const create_list = () => {
           total
         }
       }
-      vaccination{
+      vaccinated{
         first{
           total
         }
@@ -93,7 +93,7 @@ const create_list = () => {
         domestic: [],
         overseas: [],
       },
-      vaccinationList = {
+      vaccinatedList = {
         first: [],
         second: [],
       };
@@ -103,12 +103,11 @@ const create_list = () => {
       //사용할 데이터 분류
       {
         per100kConfirmedList.push(covid19Data.per100kConfirmed);
-        console.log(covid19Data)
         immunityRatio.push(covid19Data.immunityRatio);
         newQuarantineList.domestic.push(covid19Data.quarantine.new.domestic);
         newQuarantineList.overseas.push(covid19Data.quarantine.new.overseas);
-        vaccinationList.first.push(covid19Data.vaccination.first.total);
-        vaccinationList.second.push(covid19Data.vaccination.second.total);
+        vaccinatedList.first.push(covid19Data.vaccinated.first.total);
+        vaccinatedList.second.push(covid19Data.vaccinated.second.total);
         regionList.push(regionalData.regionKor);
       }
       //지역 리스트 생성
@@ -200,13 +199,13 @@ const create_list = () => {
       });
       //백신 접종 차트
       c3.generate({
-        bindto: "#vaccination_chart",
+        bindto: "#vaccinated_chart",
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
         data: {
           json: {
             region: regionList.slice(1, 18),
-            "1차 접종": vaccinationList.first.slice(1, 18),
-            "2차 접종": vaccinationList.second.slice(1, 18),
+            "1차 접종": vaccinatedList.first.slice(1, 18),
+            "2차 접종": vaccinatedList.second.slice(1, 18),
           },
           x: "region",
           type: "bar",
@@ -229,7 +228,6 @@ const create_list = () => {
         },
       });
       //면역 비율 차트
-      console.log(immunityRatio)
       c3.generate({
         bindto: "#immunityRatio_chart",
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
@@ -303,7 +301,7 @@ const create_chart = (region, startDate, endDate) => {
         new
         accumlated
       }
-      vaccination{
+      vaccinated{
         first{
           total
           new
@@ -323,6 +321,29 @@ const create_chart = (region, startDate, endDate) => {
   covid19_API(query, (regionalDataList) => {
     const covid19DataList = regionalDataList[0].covid19DataList;
     const lastData = covid19DataList[covid19DataList.length - 1];
+    const chartData = {
+      date: [],
+      confirmed_total: [],
+      confirmed_accumlated: [],
+      quarantine_total: [],
+      quarantine_new_total: [],
+      quarantine_new_domestic: [],
+      quarantine_new_overseas: [],
+    };
+    covid19DataList.forEach((covid19Data) => {
+      chartData.date.push(covid19Data.date);
+      chartData.confirmed_total.push(covid19Data.confirmed.total);
+      chartData.confirmed_accumlated.push(covid19Data.confirmed.accumlated);
+      chartData.quarantine_total.push(covid19Data.quarantine.total);
+      chartData.quarantine_new_total.push(covid19Data.quarantine.new.total);
+      chartData.quarantine_new_domestic.push(
+        covid19Data.quarantine.new.domestic
+      );
+      chartData.quarantine_new_overseas.push(
+        covid19Data.quarantine.new.overseas
+      );
+    });
+    console.log(chartData);
     //지역 상세 정보 생성
     {
       const region_info = document.getElementById("region_info");
@@ -404,7 +425,7 @@ const create_chart = (region, startDate, endDate) => {
         },
       });
       //집단 면역 비율 차트
-      var chart = c3.generate({
+      c3.generate({
         bindto: "#collectiveImmunityRatio_chart",
         data: {
           columns: [["면역자 비율", lastData.dead.total]],
@@ -413,6 +434,89 @@ const create_chart = (region, startDate, endDate) => {
         gauge: {
           max: lastData.confirmed.total,
           expand: false,
+        },
+      });
+
+      //확진자 그래프
+      c3.generate({
+        bindto: "#total_confirmed_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            date: chartData.date,
+            확진: chartData.confirmed_total,
+          },
+          x: "date",
+          type: "area-spline",
+        },
+        legend: {
+          hide: true,
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "timeseries",
+            tick: {
+              format: "%y.%m.%d",
+              fit: true,
+              outer: false,
+              count: 5,
+            },
+          },
+          y: {
+            show: false,
+          },
+        },
+        point: {
+          show: false,
+        },
+      });
+      //신규 확진자 그래프
+      c3.generate({
+        bindto: "#new_confirmed_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            date: chartData.date,
+            "국내 감염": chartData.quarantine_new_domestic,
+            "해외 감염": chartData.quarantine_new_overseas,
+            전체: chartData.quarantine_new_total,
+          },
+          groups: [["국내 감염", "해외 감염"]],
+          x: "date",
+          types: {
+            "국내 감염": "area-spline",
+            "해외 감염": "area-spline",
+            전체: "spline",
+          },
+          onmouseover: function (d) {
+            if (d.name === "전체") {
+              console.log(d);
+            }
+          },
+        },
+        legend: {
+          hide: true,
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "timeseries",
+            tick: {
+              multiline: false,
+              format: "%y.%m.%d",
+              fit: true,
+              outer: false,
+              centered: true,
+              count: 5,
+            },
+          },
+          y: {
+            show: false,
+          },
+        },
+        point: {
+          show: false,
         },
       });
     }
