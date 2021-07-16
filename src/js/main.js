@@ -1,3 +1,4 @@
+const today = new Date();
 const create_query = (region, startDate, endDate, onlyLastData) => `query{
   regionalDataList(region:${region} startDate:${startDate} endDate:${endDate} lastData:${onlyLastData}){
     regionEng
@@ -52,7 +53,6 @@ const covid19_API = (query, funtion) => {
     funtion(messageEvent.data.regionalDataList);
   };
 };
-
 const create_list = () => {
   const query = `query{
   regionalDataList(onlyLastDate:true){
@@ -148,7 +148,7 @@ const create_list = () => {
           y: {
             show: false,
             tick: {
-              format: (d) => d + " 명",
+              format: (d) => d + "명",
             },
           },
         },
@@ -269,8 +269,120 @@ const create_list = () => {
         },
       });
     }
+
+    const loading_div = document.getElementById("loading");
+    loading_div.parentElement.removeChild(loading_div);
   });
 };
+
+const test_chart = () => {
+  const startDate = convert_date_format(date_calcu(new Date(), 8), "");
+  const endDate = convert_date_format(today, "");
+  console.log(startDate + "" + endDate);
+  const query = `query{
+    regionalDataList(startDate:${startDate} endDate:${endDate}){
+      regionEng
+      regionKor
+      population
+      covid19DataList{
+        date
+        quarantine{
+          new{
+            total
+          }
+        }
+      }
+    }
+  }`;
+
+  covid19_API(query, (regionalDataList) => {
+    const regionList = [];
+    const chartData = [];
+    regionalDataList = regionalDataList.slice(1, 18);
+    regionalDataList.forEach((regionalData) => {
+      regionList.push(regionalData.regionKor);
+      let quarantineTotalList = regionalData.covid19DataList.map(
+        (covid19Data) => covid19Data.quarantine.new.total
+      );
+      quarantineTotalList = quarantineTotalList.slice(-7);
+      const result = quarantineTotalList.reduce(
+        (sum, currValue) => sum + currValue,
+        0
+      );
+      const average = result / quarantineTotalList.length;
+      const per100kAverage =
+        Math.round(average * (100000 / regionalData.population) * 10) / 10;
+      chartData.push(per100kAverage);
+    });
+    c3.generate({
+      bindto: "#per100k_7d_chart",
+      padding: { left: 25, right: 25, top: 10, bottom: 10 },
+      data: {
+        json: {
+          region: regionList,
+          확진: chartData,
+        },
+        x: "region",
+        type: "bar",
+        color: (color, d) => {
+          color = "#29C7CA";
+          color =
+            d.value >= 4
+              ? "#ff8151"
+              : d.value >= 2
+              ? "#FFA17D"
+              : d.value >= 1
+              ? "#FFB27D"
+              : "#29C7CA";
+          return color;
+        },
+      },
+      legend: {
+        hide: true,
+      },
+      axis: {
+        x: {
+          show: true,
+          type: "category",
+        },
+
+        y: {
+          show: true,
+          tick: {
+            outer: false,
+            values: [1, 2, 4],
+            format: (d) => d + "명",
+          },
+        },
+      },
+      grid: {
+        y: {
+          lines: [
+            {
+              value: 1,
+              text: "거리두기 2단계",
+              position: "middle",
+              class: "distancingLevelLine",
+            },
+            {
+              value: 2,
+              text: "거리두기 3단계",
+              position: "middle",
+              class: "distancingLevelLine",
+            },
+            {
+              value: 4,
+              text: "거리두기 4단계",
+              position: "middle",
+              class: "distancingLevelLine",
+            },
+          ],
+        },
+      },
+    });
+  });
+};
+
 const create_chart = (region, startDate, endDate) => {
   const query = `query{
   regionalDataList(region:${region} startDate:${startDate} endDate:${endDate}){
@@ -329,6 +441,9 @@ const create_chart = (region, startDate, endDate) => {
       quarantine_new_total: [],
       quarantine_new_domestic: [],
       quarantine_new_overseas: [],
+      dead_new: [],
+      dead_accumlated: [],
+      recovered_total: [],
     };
     covid19DataList.forEach((covid19Data) => {
       chartData.date.push(covid19Data.date);
@@ -342,6 +457,9 @@ const create_chart = (region, startDate, endDate) => {
       chartData.quarantine_new_overseas.push(
         covid19Data.quarantine.new.overseas
       );
+      chartData.recovered_total.push(covid19Data.recovered.total);
+      chartData.dead_new.push(covid19Data.dead.new);
+      chartData.dead_accumlated.push(covid19Data.dead.accumlated);
     });
     console.log(chartData);
     //지역 상세 정보 생성
@@ -445,12 +563,10 @@ const create_chart = (region, startDate, endDate) => {
           json: {
             date: chartData.date,
             확진: chartData.confirmed_total,
+            격리해제: chartData.recovered_total,
           },
           x: "date",
           type: "area-spline",
-        },
-        legend: {
-          hide: true,
         },
         axis: {
           x: {
@@ -515,6 +631,88 @@ const create_chart = (region, startDate, endDate) => {
             show: false,
           },
         },
+        grid: {
+          y: {
+            lines: [
+              {
+                value: 500,
+                text: "거리두기 2단계",
+                position: "start",
+              },
+              {
+                value: 1000,
+                text: "거리두기 3단계",
+                position: "start",
+              },
+              {
+                value: 2000,
+                text: "거리두기 4단계",
+                position: "start",
+              },
+            ],
+          },
+        },
+        point: {
+          show: false,
+        },
+      });
+
+      //통합 차트
+      c3.generate({
+        bindto: "#integration_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            date: chartData.date,
+            "신규 확진(국내)": chartData.quarantine_new_domestic,
+            "신규 확진(해외)": chartData.quarantine_new_overseas,
+            "누적 사망": chartData.dead_accumlated,
+            "신규 사망": chartData.dead_new,
+            "누적 확진": chartData.confirmed_accumlated,
+            격리해제: chartData.recovered_total,
+          },
+          groups: [
+            [
+              "신규 확진(국내)",
+              "신규 확진(해외)",
+              "누적 사망",
+              "신규 사망",
+              "누적 확진",
+            ],
+          ],
+          order: "asc",
+          x: "date",
+          types: {
+            "신규 확진(국내)": "area-spline",
+            "신규 확진(해외)": "area-spline",
+            "누적 사망": "area-spline",
+            "신규 사망": "area-spline",
+            "누적 확진": "area-spline",
+            격리해제: "spline",
+          },
+          onmouseover: function (d) {
+            if (d.name === "전체") {
+              console.log(d);
+            }
+          },
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "timeseries",
+            tick: {
+              multiline: false,
+              format: "%y.%m.%d",
+              fit: true,
+              outer: false,
+              centered: true,
+              count: 5,
+            },
+          },
+          y: {
+            show: false,
+          },
+        },
         point: {
           show: false,
         },
@@ -524,7 +722,7 @@ const create_chart = (region, startDate, endDate) => {
 };
 
 create_list();
-create_chart("Total", 20210101, 20210701);
+create_chart("Total", 20200409, 20210716);
 const convert_date_format = (input_date, form) => {
     const num2str = (num) => (num < 10 ? "0" + num : String(num)),
       date = new Date(input_date),
@@ -544,3 +742,9 @@ const convert_date_format = (input_date, form) => {
   },
   //queryString으로 받은 값과 비교하기 위한 형식으로변환 ex:20210326
   date2query_form = (date) => Number(convert_date_format(date, ""));
+
+const date_calcu = (date, num) => {
+  date.setDate(date.getDate() - num);
+  return date;
+};
+test_chart();

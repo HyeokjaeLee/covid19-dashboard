@@ -16,6 +16,12 @@
   </head>
 
   <body>
+    <div id="loading">
+      <div class="loader loader-8"></div>
+      <h1>서버에서 데이터를 불러오는 중입니다.</h1>
+      <h4>서버가 Sleep 상태일 경우 1분 정도 소요될수 있습니다.</h4>
+      <span>HyeokjaeLee © All rights reserved.</span>
+    </div>
     <header class="main_header">
       <div class="title">
         KOR<span>ON</span>A<img src="src/img/covid.png" class="icon" />
@@ -39,11 +45,15 @@
       </section>
       <section class="chart_section">
         <div>
-          100만명 당 확진
+          7일간 인구 10만 명당 평균 신규 확진
+          <div id="per100k_7d_chart"></div>
+        </div>
+        <div>
+          10만 명당 확진
           <div id="per100k_chart"></div>
         </div>
         <div>
-          신규 격리
+          신규 확진
           <div id="newQuarantine_chart"></div>
         </div>
         <div>
@@ -66,12 +76,12 @@
           <div id="total_confirmed_chart"></div>
         </div>
         <div>
-          일별 신규 확진자 수
-          <div id="new_confirmed_chart"></div>
+          누적확진 상세 추이
+          <div id="integration_chart"></div>
         </div>
         <div>
-          일별 격리 추이
-          <div id="test3"></div>
+          일별 신규 확진 추이
+          <div id="new_confirmed_chart"></div>
         </div>
         <div></div>
         <div></div>
@@ -79,6 +89,7 @@
         <footer>HyeokjaeLee © All rights reserved.</footer>
       </section>
     </main>
+
     <script src="./src/js/main.js"></script>
   </body>
 </html>
