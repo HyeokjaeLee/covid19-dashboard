@@ -58,6 +58,7 @@ const create_list = () => {
   regionalDataList(onlyLastDate:true){
     regionEng
     regionKor
+    distancingLevel
     covid19DataList{
       date
       confirmed{
@@ -114,12 +115,18 @@ const create_list = () => {
       {
         const regionList_li = document.createElement("li");
         regionList_li.setAttribute("id", regionalData.regionEng);
+        const regionName = regionalData.regionKor;
+        const distancingLevel =
+          regionName != "검역"
+            ? regionalData.distancingLevel + " 단계"
+            : "Null";
         regionList_li.innerHTML = `
       <ul class="list_item">
         <li>${regionalData.regionKor}</li>
         <li>${covid19Data.quarantine.new.total.toLocaleString()}</li>
         <li>${covid19Data.quarantine.total.toLocaleString()}</li>
         <li>${covid19Data.confirmed.total.toLocaleString()}</li>
+        <li>${distancingLevel}</li>
       </ul>`;
         regionList_ul.appendChild(regionList_li);
       }
@@ -325,7 +332,6 @@ const test_chart = () => {
         x: "region",
         type: "bar",
         color: (color, d) => {
-          color = "#29C7CA";
           color =
             d.value >= 4
               ? "#ff8151"
