@@ -1,58 +1,5 @@
 const today = new Date();
-const create_query = (region, startDate, endDate, onlyLastData) => `query{
-  regionalDataList(region:${region} startDate:${startDate} endDate:${endDate} lastData:${onlyLastData}){
-    regionEng
-    regionKor
-    population
-    covid19DataList{
-      date
-      confirmed{
-        total
-        accumlated
-      }
-      quarantine{
-        total
-        new{
-          total
-          domestic
-          overseas
-        }
-      }
-      recovered{
-        total
-        new
-        accumlated
-      }
-      dead{
-        total
-        new
-        accumlated
-      }
-      vaccinated{
-        first{
-          total
-          new
-          accumlated
-        }
-        second{
-          total
-          new
-          accumlated
-        }
-      }
-      per100kConfirmed
-    }
-  }
-}`;
 
-const covid19_API = (query, funtion) => {
-  const APIworker = new Worker("./src/js/worker.js");
-  APIworker.postMessage(query);
-  APIworker.onmessage = (messageEvent) => {
-    APIworker.terminate();
-    funtion(messageEvent.data.regionalDataList);
-  };
-};
 const create_list = () => {
   const query = `query{
   regionalDataList(onlyLastDate:true){
@@ -283,8 +230,8 @@ const create_list = () => {
 };
 
 const test_chart = () => {
-  const startDate = convert_date_format(date_calcu(new Date(), 8), "");
-  const endDate = convert_date_format(today, "");
+  const startDate = convert_date(minus_date(new Date(), 8));
+  const endDate = convert_date(today);
   console.log(startDate + "" + endDate);
   const query = `query{
     regionalDataList(startDate:${startDate} endDate:${endDate}){
@@ -727,30 +674,41 @@ const create_chart = (region, startDate, endDate) => {
   });
 };
 
-create_list();
-create_chart("Total", 20200409, 20210716);
-const convert_date_format = (input_date, form) => {
-    const num2str = (num) => (num < 10 ? "0" + num : String(num)),
-      date = new Date(input_date),
-      year = date.getFullYear(), //yyyy
-      month = num2str(1 + date.getMonth()), //M
-      day = num2str(date.getDate());
-    return year + form + month + form + day;
-  },
-  string2date = (string_date) => {
-    const strArr = string_date.split("-");
-    const numArr = [];
-    for (let i = 0; i < 3; i++) {
-      numArr[i] = Number(strArr[i]);
-    }
-    const date = new Date(numArr[0], numArr[1] - 1, numArr[2]);
-    return date;
-  },
-  //queryString으로 받은 값과 비교하기 위한 형식으로변환 ex:20210326
-  date2query_form = (date) => Number(convert_date_format(date, ""));
+/**날짜 형식 숫자로 변경
+ * @param date 날짜 "2021-05-01"
+ * @returns 20210501
+ */
+function convert_date(date) {
+  date = new Date(date);
+  const num2str = (num) => (num < 10 ? "0" + num : String(num)),
+    year = String(date.getFullYear()), //yyyy
+    month = num2str(1 + date.getMonth()), //M
+    day = num2str(date.getDate());
+  return Number(year + month + day);
+}
 
-const date_calcu = (date, num) => {
+/**Web worker에서 코로나 API 정보를 받아옴
+ * @param query 필요한 정보를 요청할 Query
+ * @param function 응답 받은 json 데이터를 활용하는 함수
+ */
+function covid19_API(query, funtion) {
+  const APIworker = new Worker("./src/js/worker.js");
+  APIworker.postMessage(query);
+  APIworker.onmessage = (messageEvent) => {
+    APIworker.terminate();
+    funtion(messageEvent.data.regionalDataList);
+  };
+}
+
+/**기준 날짜에서 원하는 일수를 뺀 날짜
+ * @param date 기준 날짜
+ * @param num 뺄 일수
+ */
+function minus_date(date, num) {
   date.setDate(date.getDate() - num);
   return date;
-};
+}
+
+create_list();
+create_chart("Total", 20200409, 20210716);
 test_chart();
