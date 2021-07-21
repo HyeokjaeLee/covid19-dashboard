@@ -1,0 +1,39 @@
+@font-face {
+  src: url("../fonts/NanumBarunGothicLight.otf");
+  font-family: "main";
+}
+@font-face {
+  src: url("../fonts/Raleway-Bold.ttf");
+  font-family: "bold";
+}
+@font-face {
+  src: url("../fonts/Raleway-Thin.ttf");
+  font-family: "thin";
+}
+footer {
+  font-family: thin;
+  text-align: center;
+  color: #5c8dbe;
+  width: 100%;
+  margin: 10px;
+}
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  margin: 0;
+  background-color: #ebf0f5;
+  height: 100vh;
+  position: relative;
+  font-family: main;
+  min-width: 980px;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #7e7e7e;
+}

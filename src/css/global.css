@@ -1,53 +1,16 @@
-@font-face {
-  src: url("../fonts/NanumBarunGothicLight.otf");
-  font-family: "main";
-}
-@font-face {
-  src: url("../fonts/Raleway-Bold.ttf");
-  font-family: "bold";
-}
-@font-face {
-  src: url("../fonts/Raleway-Thin.ttf");
-  font-family: "thin";
-}
 .icon {
   position: absolute;
   height: 25px;
   top: 12px;
 }
-footer {
-  font-family: thin;
-  text-align: center;
-  color: #5c8dbe;
-  width: 100%;
-  margin: 10px;
-}
+
 .header_text {
   flex: 1;
   font-family: thin;
   font-size: xx-large;
   padding-left: 25px;
 }
-ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-}
-body {
-  margin: 0;
-  background-color: #ebf0f5;
-  height: 100vh;
-  position: relative;
-  font-family: main;
-  min-width: 980px;
-}
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #7e7e7e;
-}
+
 main::-webkit-scrollbar {
   display: none;
 }
@@ -63,15 +26,14 @@ main::-webkit-scrollbar {
 .title {
   font-family: bold;
   background-color: #29c7ca;
-  width: 30%;
-  min-width: 350px;
+  width: 320px;
   text-align: center;
   font-size: xx-large;
 }
 .title > span {
   color: gold;
 }
-#list_header {
+.list_section > header {
   box-shadow: 0 11px 11px rgba(33, 33, 33, 0.2);
   background-color: #2cabb1;
   color: white;
@@ -110,8 +72,7 @@ main {
 }
 .list_section {
   color: #9aa4be;
-  width: 30%;
-  min-width: 350px;
+  width: 320px;
   background-color: #353942;
   height: 100%;
 }
@@ -122,7 +83,7 @@ main {
   transition: background-color 0.3s;
 }
 
-.list_item > li {
+.list_section li {
   flex: 1;
   font-size: 15px;
   height: 50px;
@@ -134,8 +95,7 @@ main {
   top: 50px;
   bottom: 0;
   left: 0;
-  width: 30%;
-  min-width: 350px;
+  width: 320px;
   position: absolute;
   overflow: auto;
 }
