@@ -1,10 +1,34 @@
 const today = new Date();
 
-function create_static_element() {
+/**dynamic element들의 기준이 되는 정보*/
+const target = {
+  region: "Total",
+  startDate: 0,
+  endDate: convert_date(today),
+};
+const main = () => {
+  create_static_elements();
+  create_dynamic_elements(target.region, target.startDate, target.endDate);
+};
+
+function change_data(_target) {
+  if (typeof _target === "string") target.region = _target;
+  else
+    target.startDate = !!_target ? convert_date(minus_date(today, _target)) : 0;
+  create_dynamic_elements(target.region, target.startDate, target.endDate);
+}
+
+/**정적 데이터를 사용하는 element 업데이트
+ * 첫 페이지 로딩시에만 호출
+ */
+function create_static_elements() {
+  const startDate = convert_date(minus_date(today, 8));
+  const endDate = convert_date(today);
   const query = `query{
-    regionalDataList(onlyLastDate:true){
+    regionalDataList(startDate:${startDate} endDate:${endDate}){
       regionEng
       regionKor
+      population
       distancingLevel
       covid19DataList{
         date
@@ -33,34 +57,46 @@ function create_static_element() {
     }
   }`;
   covid19_API(query, (regionalDataList) => {
-    regionalDataList.forEach(() => {});
-
-    const regionList = [],
-      per100kConfirmedList = [],
-      immunityRatio = [],
-      newQuarantineList = {
+    /**element를 생성하는 필요한 데이터 공간*/
+    const elementData = {
+      regionList: [],
+      per100kConfirmedList: [],
+      immunityRatio: [],
+      newQuarantineList: {
         domestic: [],
         overseas: [],
       },
-      vaccinatedList = {
+      vaccinatedList: {
         first: [],
         second: [],
-      };
+      },
+      per100kAverage: [],
+    };
 
     const regionList_ul = document.getElementById("list");
     /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
     regionalDataList.forEach((regionalData) => {
-      const covid19Data = regionalData.covid19DataList[0];
+      const covid19Data = regionalData.covid19DataList;
+      const lastCovid19Data = covid19Data[covid19Data.length - 1];
+
       //사용할 데이터 분류
       {
-        per100kConfirmedList.push(covid19Data.per100kConfirmed);
-        immunityRatio.push(covid19Data.immunityRatio);
-        newQuarantineList.domestic.push(covid19Data.quarantine.new.domestic);
-        newQuarantineList.overseas.push(covid19Data.quarantine.new.overseas);
-        vaccinatedList.first.push(covid19Data.vaccinated.first.total);
-        vaccinatedList.second.push(covid19Data.vaccinated.second.total);
-        regionList.push(regionalData.regionKor);
+        elementData.per100kConfirmedList.push(lastCovid19Data.per100kConfirmed);
+        elementData.immunityRatio.push(lastCovid19Data.immunityRatio);
+        elementData.newQuarantineList.domestic.push(
+          lastCovid19Data.quarantine.new.domestic
+        );
+        elementData.newQuarantineList.overseas.push(
+          lastCovid19Data.quarantine.new.overseas
+        );
+        elementData.vaccinatedList.first.push(
+          lastCovid19Data.vaccinated.first.total
+        );
+        elementData.vaccinatedList.second.push(
+          lastCovid19Data.vaccinated.second.total
+        );
       }
+
       //지역 리스트 생성
       {
         const regionList_li = document.createElement("li");
@@ -70,15 +106,39 @@ function create_static_element() {
           regionName != "검역"
             ? regionalData.distancingLevel + " 단계"
             : "Null";
+        regionList_li.setAttribute(
+          "onClick",
+          `change_data("${regionalData.regionEng}")`
+        );
         //수치 상으로는 일치하지만 마지막 li의 오른쪽 여백이 살짝 부족한것 처럼 느껴저서 2px를 더해줌
         regionList_li.innerHTML = `
         <ul class="list_item">
           <li>${regionalData.regionKor}</li>
-          <li>${covid19Data.quarantine.new.total.toLocaleString()}</li>
-          <li>${covid19Data.confirmed.total.toLocaleString()}</li>
+          <li>${lastCovid19Data.quarantine.new.total.toLocaleString()}</li>
+          <li>${lastCovid19Data.confirmed.total.toLocaleString()}</li>
           <li style="padding-right:2px">${distancingLevel}</li>
         </ul>`;
         regionList_ul.appendChild(regionList_li);
+      }
+
+      /**지역 구분이 검역이나 전국*/
+      if (
+        regionalData.regionKor != "검역" &&
+        regionalData.regionKor != "전국"
+      ) {
+        const last7daysCovid19DataList = covid19Data.slice(-7);
+        const quarantineNewTotalList = last7daysCovid19DataList.map(
+          (covid19Data) => covid19Data.quarantine.new.total
+        );
+        elementData.regionList.push(regionalData.regionKor);
+        const sum = quarantineNewTotalList.reduce(
+          (sum, currValue) => sum + currValue,
+          0
+        );
+        const average = sum / quarantineNewTotalList.length;
+        const per100kAverage =
+          Math.round(average * (100000 / regionalData.population) * 10) / 10;
+        elementData.per100kAverage.push(per100kAverage);
       }
     });
 
@@ -90,8 +150,8 @@ function create_static_element() {
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
         data: {
           json: {
-            region: regionList.slice(1, 18),
-            "10만명 당 확진자": per100kConfirmedList.slice(1, 18),
+            region: elementData.regionList.slice(1, 18),
+            "10만명 당 확진자": elementData.per100kConfirmedList.slice(1, 18),
           },
           x: "region",
           type: "bar",
@@ -113,8 +173,8 @@ function create_static_element() {
           y: {
             lines: [
               {
-                value: per100kConfirmedList[0],
-                text: `전국 ${per100kConfirmedList[0]}명`,
+                value: elementData.per100kConfirmedList[0],
+                text: `전국 ${elementData.per100kConfirmedList[0]}명`,
               },
             ],
           },
@@ -129,9 +189,9 @@ function create_static_element() {
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
         data: {
           json: {
-            region: regionList.slice(1),
-            해외: newQuarantineList.overseas.slice(1),
-            국내: newQuarantineList.domestic.slice(1),
+            region: elementData.regionList.slice(1),
+            해외: elementData.newQuarantineList.overseas.slice(1),
+            국내: elementData.newQuarantineList.domestic.slice(1),
           },
           x: "region",
           type: "bar",
@@ -160,9 +220,9 @@ function create_static_element() {
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
         data: {
           json: {
-            region: regionList.slice(1, 18),
-            "1차 접종": vaccinatedList.first.slice(1, 18),
-            "2차 접종": vaccinatedList.second.slice(1, 18),
+            region: elementData.regionList.slice(1, 18),
+            "1차 접종": elementData.vaccinatedList.first.slice(1, 18),
+            "2차 접종": elementData.vaccinatedList.second.slice(1, 18),
           },
           x: "region",
           type: "bar",
@@ -190,8 +250,8 @@ function create_static_element() {
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
         data: {
           json: {
-            region: regionList.slice(1, 18),
-            "면역 비율": immunityRatio.slice(1, 18),
+            region: elementData.regionList.slice(1, 18),
+            "면역 비율": elementData.immunityRatio.slice(1, 18),
           },
           x: "region",
           type: "bar",
@@ -220,9 +280,74 @@ function create_static_element() {
             ],
           },
         },
-        gauge: {},
         point: {
           show: false,
+        },
+      });
+
+      c3.generate({
+        bindto: "#per100k_7d_chart",
+        padding: { left: 25, right: 25, top: 10, bottom: 10 },
+        data: {
+          json: {
+            region: elementData.regionList.slice(1, 18),
+            확진: elementData.per100kAverage,
+          },
+          x: "region",
+          type: "bar",
+          color: (color, d) => {
+            color =
+              d.value >= 4
+                ? "#ff8151"
+                : d.value >= 2
+                ? "#FFA17D"
+                : d.value >= 1
+                ? "#FFB27D"
+                : "#29C7CA";
+            return color;
+          },
+        },
+        legend: {
+          hide: true,
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "category",
+          },
+
+          y: {
+            show: true,
+            tick: {
+              outer: false,
+              values: [1, 2, 4],
+              format: (d) => d + "명",
+            },
+          },
+        },
+        grid: {
+          y: {
+            lines: [
+              {
+                value: 1,
+                text: "거리두기 2단계",
+                position: "middle",
+                class: "distancingLevelLine",
+              },
+              {
+                value: 2,
+                text: "거리두기 3단계",
+                position: "middle",
+                class: "distancingLevelLine",
+              },
+              {
+                value: 4,
+                text: "거리두기 4단계",
+                position: "middle",
+                class: "distancingLevelLine",
+              },
+            ],
+          },
         },
       });
     }
@@ -232,114 +357,7 @@ function create_static_element() {
   });
 }
 
-const test_chart = () => {
-  const startDate = convert_date(minus_date(new Date(), 8));
-  const endDate = convert_date(today);
-  console.log(startDate + "" + endDate);
-  const query = `query{
-    regionalDataList(startDate:${startDate} endDate:${endDate}){
-      regionEng
-      regionKor
-      population
-      covid19DataList{
-        date
-        quarantine{
-          new{
-            total
-          }
-        }
-      }
-    }
-  }`;
-
-  covid19_API(query, (regionalDataList) => {
-    const regionList = [];
-    const chartData = [];
-    regionalDataList = regionalDataList.slice(1, 18);
-    regionalDataList.forEach((regionalData) => {
-      regionList.push(regionalData.regionKor);
-      let quarantineTotalList = regionalData.covid19DataList.map(
-        (covid19Data) => covid19Data.quarantine.new.total
-      );
-      quarantineTotalList = quarantineTotalList.slice(-7);
-      const result = quarantineTotalList.reduce(
-        (sum, currValue) => sum + currValue,
-        0
-      );
-      const average = result / quarantineTotalList.length;
-      const per100kAverage =
-        Math.round(average * (100000 / regionalData.population) * 10) / 10;
-      chartData.push(per100kAverage);
-    });
-    c3.generate({
-      bindto: "#per100k_7d_chart",
-      padding: { left: 25, right: 25, top: 10, bottom: 10 },
-      data: {
-        json: {
-          region: regionList,
-          확진: chartData,
-        },
-        x: "region",
-        type: "bar",
-        color: (color, d) => {
-          color =
-            d.value >= 4
-              ? "#ff8151"
-              : d.value >= 2
-              ? "#FFA17D"
-              : d.value >= 1
-              ? "#FFB27D"
-              : "#29C7CA";
-          return color;
-        },
-      },
-      legend: {
-        hide: true,
-      },
-      axis: {
-        x: {
-          show: true,
-          type: "category",
-        },
-
-        y: {
-          show: true,
-          tick: {
-            outer: false,
-            values: [1, 2, 4],
-            format: (d) => d + "명",
-          },
-        },
-      },
-      grid: {
-        y: {
-          lines: [
-            {
-              value: 1,
-              text: "거리두기 2단계",
-              position: "middle",
-              class: "distancingLevelLine",
-            },
-            {
-              value: 2,
-              text: "거리두기 3단계",
-              position: "middle",
-              class: "distancingLevelLine",
-            },
-            {
-              value: 4,
-              text: "거리두기 4단계",
-              position: "middle",
-              class: "distancingLevelLine",
-            },
-          ],
-        },
-      },
-    });
-  });
-};
-
-const create_chart = (region, startDate, endDate) => {
+const create_dynamic_elements = (region, startDate, endDate) => {
   const query = `query{
   regionalDataList(region:${region} startDate:${startDate} endDate:${endDate}){
     regionEng
@@ -417,7 +435,6 @@ const create_chart = (region, startDate, endDate) => {
       chartData.dead_new.push(covid19Data.dead.new);
       chartData.dead_accumlated.push(covid19Data.dead.accumlated);
     });
-    console.log(chartData);
     //지역 상세 정보 생성
     {
       const region_info = document.getElementById("region_info");
@@ -467,6 +484,8 @@ const create_chart = (region, startDate, endDate) => {
     }
     //차트 생성
     {
+      const axisXcount =
+        chartData.date.length < 30 ? chartData.date.length : 30;
       //확진자 비율 차트
       c3.generate({
         bindto: "#confirmedRatio_chart",
@@ -532,7 +551,7 @@ const create_chart = (region, startDate, endDate) => {
               format: "%y.%m.%d",
               fit: true,
               outer: false,
-              count: 5,
+              count: axisXcount,
             },
           },
           y: {
@@ -561,11 +580,6 @@ const create_chart = (region, startDate, endDate) => {
             "해외 감염": "area-spline",
             전체: "spline",
           },
-          onmouseover: function (d) {
-            if (d.name === "전체") {
-              console.log(d);
-            }
-          },
         },
         legend: {
           hide: true,
@@ -580,7 +594,7 @@ const create_chart = (region, startDate, endDate) => {
               fit: true,
               outer: false,
               centered: true,
-              count: 5,
+              count: axisXcount,
             },
           },
           y: {
@@ -646,11 +660,6 @@ const create_chart = (region, startDate, endDate) => {
             "누적 확진": "area-spline",
             격리해제: "spline",
           },
-          onmouseover: function (d) {
-            if (d.name === "전체") {
-              console.log(d);
-            }
-          },
         },
         axis: {
           x: {
@@ -662,7 +671,7 @@ const create_chart = (region, startDate, endDate) => {
               fit: true,
               outer: false,
               centered: true,
-              count: 5,
+              count: axisXcount,
             },
           },
           y: {
@@ -708,10 +717,9 @@ function covid19_API(query, funtion) {
  * @param num 뺄 일수
  */
 function minus_date(date, num) {
+  date = new Date(date);
   date.setDate(date.getDate() - num);
   return date;
 }
 
-create_static_element();
-create_chart("Total", 20200409, 20210716);
-test_chart();
+main();
