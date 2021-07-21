@@ -28,10 +28,16 @@
       <div class="title">
         KOR<span>ON</span>A<img src="src/img/covid.png" class="icon" />
       </div>
-      <span class="header_text">DASHBOARD<span id="updateDate"></span></span>
-      <button onclick="change_data(7)">최근 7일</button>
-      <button onclick="change_data(30)">최근 30일</button>
-      <button onclick="change_data()">전체</button>
+      <span class="header_text">DASHBOARD<span id="updatedDate"></span></span>
+      <button onclick="change_data(7); location.href='#regionChartsLine'">
+        최근 7일
+      </button>
+      <button onclick="change_data(30); location.href='#regionChartsLine'">
+        최근 30일
+      </button>
+      <button onclick="change_data(); location.href='#regionChartsLine'">
+        전체
+      </button>
     </header>
     <main>
       <section class="list_section">
@@ -54,6 +60,7 @@
           누적 확진자 <span>(10만명당)</span>
           <div id="per100k_chart"></div>
         </div>
+        <div>신규 확진자 <sapn>(10만명당)</sapn></div>
         <div>
           신규 확진자
           <div id="newQuarantine_chart"></div>
@@ -66,6 +73,7 @@
           면역 비율
           <div id="immunityRatio_chart"></div>
         </div>
+        <hr id="regionChartsLine" />
         <!--지역 상세 정보-->
         <div id="region_info"></div>
         <div class="small_chart">
@@ -93,7 +101,6 @@
           신규 사망자 추이
           <div id="new_dead_chart"></div>
         </div>
-        <div></div>
         <footer>HyeokjaeLee © All rights reserved.</footer>
       </section>
     </main>

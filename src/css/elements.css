@@ -10,7 +10,6 @@
   font-size: xx-large;
   padding-left: 25px;
 }
-
 main::-webkit-scrollbar {
   display: none;
 }
@@ -38,8 +37,8 @@ main::-webkit-scrollbar {
   background-color: #2cabb1;
   color: white;
 }
-#updateDate {
-  font-size: medium;
+#updatedDate {
+  font-size: small;
   line-height: 80px;
   padding-left: 15px;
   font-family: thin;

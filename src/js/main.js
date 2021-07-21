@@ -94,7 +94,7 @@ function create_static_elements() {
             : "Null";
         regionList_li.setAttribute(
           "onClick",
-          `change_data("${regionalData.regionEng}")`
+          `change_data("${regionalData.regionEng}"); location.href='#regionChartsLine'`
         );
         //수치 상으로는 일치하지만 마지막 li의 오른쪽 여백이 살짝 부족한것 처럼 느껴저서 2px를 더해줌
         regionList_li.innerHTML = `
@@ -340,7 +340,12 @@ function create_static_elements() {
         },
       });
     }
-
+    const updatedDate = document.getElementById("updatedDate");
+    updatedDate.innerHTML = `Update: ${
+      regionalDataList[0].covid19DataList[
+        regionalDataList[0].covid19DataList.length - 1
+      ].date
+    }`;
     const loading_div = document.getElementById("loading");
     loading_div.parentElement.removeChild(loading_div);
   });
