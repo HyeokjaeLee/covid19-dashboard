@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=" />
+    <meta name="viewport" content="width=device-width" />
     <title>COVID-19 DASHBOARD</title>
     <!-- 전체 구조 css -->
     <link rel="stylesheet" href="./src/css/global.css" />
@@ -47,25 +47,26 @@
       </section>
       <section class="chart_section">
         <div>
-          7일간 인구 10만 명당 평균 신규 확진
+          7일 평균 신규 확진자 <span>(10만명당)</span>
           <div id="per100k_7d_chart"></div>
         </div>
         <div>
-          10만 명당 확진
+          누적 확진자 <span>(10만명당)</span>
           <div id="per100k_chart"></div>
         </div>
         <div>
-          신규 확진
+          신규 확진자
           <div id="newQuarantine_chart"></div>
         </div>
         <div>
-          백신 접종
+          누적 백신 접종자
           <div id="vaccinated_chart"></div>
         </div>
         <div>
           면역 비율
           <div id="immunityRatio_chart"></div>
         </div>
+        <!--지역 상세 정보-->
         <div id="region_info"></div>
         <div class="small_chart">
           <div id="confirmedRatio_chart"></div>
@@ -74,12 +75,12 @@
           <div id="collectiveImmunityRatio_chart"></div>
         </div>
         <div>
-          누적확진 추이
+          누적 확진 추이
           <div id="total_confirmed_chart"></div>
         </div>
         <div>
-          누적확진 상세 추이
-          <div id="integration_chart"></div>
+          신규 확진, 백신 접종 비교
+          <div id="vaccined_confirmed_chart"></div>
         </div>
         <div>
           일별 신규 확진 추이
