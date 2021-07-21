@@ -271,3 +271,13 @@ text {
   font-size: 12px;
   font-weight: 900;
 }
+
+#first_vaccination,
+#second_vaccination {
+  font-size: large;
+  text-align: center;
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #ebf0f5;
+  border-radius: 5px;
+}

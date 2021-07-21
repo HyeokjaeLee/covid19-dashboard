@@ -234,7 +234,7 @@ function create_static_elements() {
           y: {
             show: false,
             tick: {
-              format: (d) => d + " 명",
+              format: (d) => d.toLocaleString() + " 명",
             },
           },
         },
@@ -435,7 +435,8 @@ function create_dynamic_elements(region, startDate, endDate) {
     {
       const region_info = document.getElementById("region_info");
       region_info.innerHTML = `
-    <span>${regionalDataList[0].regionKor} 상세정보</span>
+    <div>${regionalDataList[0].regionKor} 상세정보</div>
+    <br>
     <table>
       <thead>
         <tr>
@@ -514,18 +515,38 @@ function create_dynamic_elements(region, startDate, endDate) {
         },
       });
       //집단 면역 비율 차트
-      c3.generate({
-        bindto: "#collectiveImmunityRatio_chart",
-        data: {
-          columns: [["면역자 비율", lastData.dead.total]],
-          type: "gauge",
-        },
-        gauge: {
-          max: lastData.confirmed.total,
-          expand: false,
-        },
-      });
-
+      {
+        const lastVaccinatedFirstTotal =
+          elementData.vaccinated_first_total[
+            elementData.vaccinated_first_total.length - 1
+          ];
+        const lastVaccinatedSecondTotal =
+          elementData.vaccinated_second_total[
+            elementData.vaccinated_second_total.length - 1
+          ];
+        const first_vaccination = document.getElementById("first_vaccination");
+        const second_vaccination =
+          document.getElementById("second_vaccination");
+        first_vaccination.innerHTML = `1차 백신 접종: ${lastVaccinatedFirstTotal.toLocaleString()} 명`;
+        second_vaccination.innerHTML = `2차 백신 접종: ${lastVaccinatedSecondTotal.toLocaleString()} 명`;
+        const second_vaccinationRate_chart = c3.generate({
+          bindto: "#second_vaccinationRate_chart",
+          data: {
+            columns: [["면역자 비율", lastVaccinatedSecondTotal]],
+            type: "gauge",
+          },
+          gauge: {
+            max: regionalDataList[0].population,
+            expand: false,
+            label: {
+              show: false,
+            },
+          },
+          tooltip: {
+            show: false,
+          },
+        });
+      }
       /**누적 확진 추이 차트*/
       c3.generate({
         bindto: "#total_confirmed_chart",
@@ -555,7 +576,11 @@ function create_dynamic_elements(region, startDate, endDate) {
             },
           },
           y: {
+            padding: 0,
             show: false,
+            tick: {
+              format: (d) => d.toLocaleString() + " 명",
+            },
           },
         },
         point: {
@@ -598,7 +623,11 @@ function create_dynamic_elements(region, startDate, endDate) {
             },
           },
           y: {
+            padding: 0,
             show: false,
+            tick: {
+              format: (d) => d.toLocaleString() + " 명",
+            },
           },
         },
         point: {
@@ -641,7 +670,7 @@ function create_dynamic_elements(region, startDate, endDate) {
             show: false,
             tick: {
               outer: false,
-              format: (d) => d + "명",
+              format: (d) => d.toLocaleString() + "명",
             },
           },
           y2: {
@@ -649,10 +678,51 @@ function create_dynamic_elements(region, startDate, endDate) {
             show: false,
             tick: {
               outer: false,
-              format: (d) => d + "명",
+              format: (d) => d.toLocaleString() + "명",
             },
           },
         },
+        point: {
+          show: false,
+        },
+      });
+      c3.generate({
+        bindto: "#new_dead_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            date: elementData.date,
+            사망: elementData.dead_new,
+          },
+          x: "date",
+          type: "spline",
+          colors: {
+            사망: "#353942",
+          },
+        },
+        legend: {
+          hide: true,
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "timeseries",
+            tick: {
+              format: "%y.%m.%d",
+              fit: true,
+              outer: false,
+              count: axisXcount,
+            },
+          },
+          y: {
+            padding: 0,
+            show: false,
+            tick: {
+              format: (d) => d.toLocaleString() + " 명",
+            },
+          },
+        },
+
         point: {
           show: false,
         },
