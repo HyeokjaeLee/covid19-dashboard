@@ -1,40 +1,41 @@
 const today = new Date();
 
-const create_list = () => {
+function create_static_element() {
   const query = `query{
-  regionalDataList(onlyLastDate:true){
-    regionEng
-    regionKor
-    distancingLevel
-    covid19DataList{
-      date
-      confirmed{
-        total
-      }
-      quarantine{
-        total
-        new{
-          domestic
-          overseas
+    regionalDataList(onlyLastDate:true){
+      regionEng
+      regionKor
+      distancingLevel
+      covid19DataList{
+        date
+        confirmed{
           total
         }
-      }
-      vaccinated{
-        first{
+        quarantine{
           total
+          new{
+            domestic
+            overseas
+            total
+          }
         }
-        second{
-          total
+        vaccinated{
+          first{
+            total
+          }
+          second{
+            total
+          }
         }
+        per100kConfirmed
+        immunityRatio
       }
-      per100kConfirmed
-      immunityRatio
     }
-  }
-}`;
+  }`;
   covid19_API(query, (regionalDataList) => {
-    const regionList_ul = document.getElementById("list"),
-      regionList = [],
+    regionalDataList.forEach(() => {});
+
+    const regionList = [],
       per100kConfirmedList = [],
       immunityRatio = [],
       newQuarantineList = {
@@ -46,6 +47,8 @@ const create_list = () => {
         second: [],
       };
 
+    const regionList_ul = document.getElementById("list");
+    /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
     regionalDataList.forEach((regionalData) => {
       const covid19Data = regionalData.covid19DataList[0];
       //사용할 데이터 분류
@@ -67,14 +70,14 @@ const create_list = () => {
           regionName != "검역"
             ? regionalData.distancingLevel + " 단계"
             : "Null";
+        //수치 상으로는 일치하지만 마지막 li의 오른쪽 여백이 살짝 부족한것 처럼 느껴저서 2px를 더해줌
         regionList_li.innerHTML = `
-      <ul class="list_item">
-        <li>${regionalData.regionKor}</li>
-        <li>${covid19Data.quarantine.new.total.toLocaleString()}</li>
-        <li>${covid19Data.quarantine.total.toLocaleString()}</li>
-        <li>${covid19Data.confirmed.total.toLocaleString()}</li>
-        <li>${distancingLevel}</li>
-      </ul>`;
+        <ul class="list_item">
+          <li>${regionalData.regionKor}</li>
+          <li>${covid19Data.quarantine.new.total.toLocaleString()}</li>
+          <li>${covid19Data.confirmed.total.toLocaleString()}</li>
+          <li style="padding-right:2px">${distancingLevel}</li>
+        </ul>`;
         regionList_ul.appendChild(regionList_li);
       }
     });
@@ -227,7 +230,7 @@ const create_list = () => {
     const loading_div = document.getElementById("loading");
     loading_div.parentElement.removeChild(loading_div);
   });
-};
+}
 
 const test_chart = () => {
   const startDate = convert_date(minus_date(new Date(), 8));
@@ -709,6 +712,6 @@ function minus_date(date, num) {
   return date;
 }
 
-create_list();
+create_static_element();
 create_chart("Total", 20200409, 20210716);
 test_chart();
