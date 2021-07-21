@@ -1,5 +1,6 @@
 const today = new Date();
-
+const toLocalString = (number) =>
+  number != null ? number.toLocaleString() : number;
 /**dynamic element들의 기준이 되는 정보*/
 const target = {
   region: "Total",
@@ -99,8 +100,8 @@ function create_static_elements() {
         regionList_li.innerHTML = `
         <ul class="list_item">
           <li>${regionalData.regionKor}</li>
-          <li>${lastCovid19Data.quarantine.new.total.toLocaleString()}</li>
-          <li>${lastCovid19Data.confirmed.total.toLocaleString()}</li>
+          <li>${toLocalString(lastCovid19Data.quarantine.new.total)}</li>
+          <li>${toLocalString(lastCovid19Data.confirmed.total)}</li>
           <li style="padding-right:2px">${distancingLevel}</li>
         </ul>`;
         regionList_ul.appendChild(regionList_li);
@@ -173,7 +174,7 @@ function create_static_elements() {
           y: {
             show: false,
             tick: {
-              format: (d) => d + "명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -204,7 +205,7 @@ function create_static_elements() {
           y: {
             show: false,
             tick: {
-              format: (d) => d + " 명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -234,7 +235,7 @@ function create_static_elements() {
           y: {
             show: false,
             tick: {
-              format: (d) => d.toLocaleString() + " 명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -309,7 +310,7 @@ function create_static_elements() {
             tick: {
               outer: false,
               values: [1, 2, 4],
-              format: (d) => d + "명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -449,31 +450,35 @@ function create_dynamic_elements(region, startDate, endDate) {
       <tbody>
         <tr>
           <td rowspan='2'>신규</td>
-          <td rowspan='2'>${lastData.quarantine.new.total.toLocaleString()} 명</td>
+          <td rowspan='2'>${toLocalString(
+            lastData.quarantine.new.total
+          )} 명</td>
           <td>해외</td>
-          <td>${lastData.quarantine.new.overseas.toLocaleString()} 명</td>
-          <td rowspan='2'>${lastData.recovered.new.toLocaleString()} 명</td>
-          <td rowspan='2'>${lastData.dead.new.toLocaleString()} 명</td>
+          <td>${toLocalString(lastData.quarantine.new.overseas)} 명</td>
+          <td rowspan='2'>${toLocalString(lastData.recovered.new)} 명</td>
+          <td rowspan='2'>${toLocalString(lastData.dead.new)} 명</td>
         </tr>
         <tr>
           <td>국내</td>
-          <td>${lastData.quarantine.new.domestic.toLocaleString()} 명</td>
+          <td>${toLocalString(lastData.quarantine.new.domestic)} 명</td>
         </tr>
         <tr>
           <td>누적</td>
-          <td colspan='3'>(확진) ${lastData.confirmed.accumlated.toLocaleString()} 명</td>
-          <td>${lastData.recovered.accumlated.toLocaleString()} 명</td>
-          <td>${lastData.dead.accumlated.toLocaleString()} 명</td>
+          <td colspan='3'>(확진) ${toLocalString(
+            lastData.confirmed.accumlated
+          )} 명</td>
+          <td>${toLocalString(lastData.recovered.accumlated)} 명</td>
+          <td>${toLocalString(lastData.dead.accumlated)} 명</td>
         </tr>
         <tr>
           <td>전체</td>
-          <td colspan='3'>${lastData.quarantine.total.toLocaleString()} 명</td>
-          <td>${lastData.recovered.total.toLocaleString()} 명</td>
-          <td>${lastData.dead.total.toLocaleString()} 명</td>
+          <td colspan='3'>${toLocalString(lastData.quarantine.total)} 명</td>
+          <td>${toLocalString(lastData.recovered.total)} 명</td>
+          <td>${toLocalString(lastData.dead.total)} 명</td>
         </tr>
         <tr>
           <td>총 확진자</td>
-          <td colspan='5'>${lastData.confirmed.total.toLocaleString()} 명</td>
+          <td colspan='5'>${toLocalString(lastData.confirmed.total)} 명</td>
         </tr>
       </tbody>
     </table>
@@ -515,20 +520,32 @@ function create_dynamic_elements(region, startDate, endDate) {
         },
       });
       //집단 면역 비율 차트
-      {
-        const lastVaccinatedFirstTotal =
-          elementData.vaccinated_first_total[
-            elementData.vaccinated_first_total.length - 1
-          ];
-        const lastVaccinatedSecondTotal =
-          elementData.vaccinated_second_total[
-            elementData.vaccinated_second_total.length - 1
-          ];
-        const first_vaccination = document.getElementById("first_vaccination");
-        const second_vaccination =
-          document.getElementById("second_vaccination");
-        first_vaccination.innerHTML = `1차 백신 접종: ${lastVaccinatedFirstTotal.toLocaleString()} 명`;
-        second_vaccination.innerHTML = `2차 백신 접종: ${lastVaccinatedSecondTotal.toLocaleString()} 명`;
+      const lastVaccinatedFirstTotal =
+        elementData.vaccinated_first_total[
+          elementData.vaccinated_first_total.length - 1
+        ];
+      const lastVaccinatedSecondTotal =
+        elementData.vaccinated_second_total[
+          elementData.vaccinated_second_total.length - 1
+        ];
+      const first_vaccination = document.getElementById("first_vaccination");
+      const second_vaccination = document.getElementById("second_vaccination");
+      if (regionalDataList[0].regionKor === "검역") {
+        const second_vaccinationRate_chart = document.getElementById(
+          "second_vaccinationRate_chart"
+        );
+        second_vaccinationRate_chart.innerHTML = "";
+        first_vaccination.innerHTML = "검역";
+        second_vaccination.innerHTML =
+          "해당지역은 백신 접종 정보를<br>제공하지 않습니다.";
+      } else {
+        first_vaccination.innerHTML = `1차 백신 접종: ${toLocalString(
+          lastVaccinatedFirstTotal
+        )} 명`;
+        second_vaccination.innerHTML = `2차 백신 접종: ${toLocalString(
+          lastVaccinatedSecondTotal
+        )} 명`;
+
         const second_vaccinationRate_chart = c3.generate({
           bindto: "#second_vaccinationRate_chart",
           data: {
@@ -547,6 +564,7 @@ function create_dynamic_elements(region, startDate, endDate) {
           },
         });
       }
+
       /**누적 확진 추이 차트*/
       c3.generate({
         bindto: "#total_confirmed_chart",
@@ -579,7 +597,7 @@ function create_dynamic_elements(region, startDate, endDate) {
             padding: 0,
             show: false,
             tick: {
-              format: (d) => d.toLocaleString() + " 명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -626,7 +644,7 @@ function create_dynamic_elements(region, startDate, endDate) {
             padding: 0,
             show: false,
             tick: {
-              format: (d) => d.toLocaleString() + " 명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -670,7 +688,7 @@ function create_dynamic_elements(region, startDate, endDate) {
             show: false,
             tick: {
               outer: false,
-              format: (d) => d.toLocaleString() + "명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
           y2: {
@@ -678,7 +696,7 @@ function create_dynamic_elements(region, startDate, endDate) {
             show: false,
             tick: {
               outer: false,
-              format: (d) => d.toLocaleString() + "명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
@@ -718,7 +736,7 @@ function create_dynamic_elements(region, startDate, endDate) {
             padding: 0,
             show: false,
             tick: {
-              format: (d) => d.toLocaleString() + " 명",
+              format: (d) => toLocalString(d) + " 명",
             },
           },
         },
