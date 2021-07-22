@@ -82,36 +82,45 @@ function create_static_elements() {
     const newConfirmedCase_per100k = [];
     const regionCount = regionalDataList.length;
     const regionList_ul = document.getElementById("list");
+    const estimatedIncreasingList = document.getElementById(
+      "estimatedIncreasingList"
+    );
+    const estimatedDecreasingList = document.getElementById(
+      "estimatedDecreasingList"
+    );
+
+    /**인구 10만명당 대상 수
+     * @param num 대상 수
+     * @param population 인구 수
+     * @returns 10만명당 수
+     */
     const count_per100k = (num, population) =>
       Math.round(num * (100000 / population) * 100) / 100;
+
     /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
     regionalDataList.forEach((regionalData) => {
       const covid19Data = regionalData.covid19DataList;
       const lastCovid19Data = covid19Data[covid19Data.length - 1];
 
       //지역 리스트 생성
-      {
-        const regionList_li = document.createElement("li");
-        regionList_li.setAttribute("id", regionalData.regionEng);
-        const regionName = regionalData.regionKor;
-        const distancingLevel =
-          regionName != "검역"
-            ? regionalData.distancingLevel + " 단계"
-            : "Null";
-        regionList_li.setAttribute(
-          "onClick",
-          `change_data("${regionalData.regionEng}"); location.href='#regionChartsLine'`
-        );
-        //수치 상으로는 일치하지만 마지막 li의 오른쪽 여백이 살짝 부족한것 처럼 느껴저서 2px를 더해줌
-        regionList_li.innerHTML = `
+      const regionList_li = document.createElement("li");
+      regionList_li.setAttribute("id", regionalData.regionEng);
+      const regionName = regionalData.regionKor;
+      const distancingLevel =
+        regionName != "검역" ? regionalData.distancingLevel + " 단계" : "Null";
+      regionList_li.setAttribute(
+        "onClick",
+        `change_data("${regionalData.regionEng}"); location.href='#regionChartsLine'`
+      );
+      //수치 상으로는 일치하지만 마지막 li의 오른쪽 여백이 살짝 부족한것 처럼 느껴저서 2px를 더해줌
+      regionList_li.innerHTML = `
         <ul class="list_item">
           <li>${regionalData.regionKor}</li>
           <li>${toLocalString(lastCovid19Data.quarantine.new.total)}</li>
           <li>${toLocalString(lastCovid19Data.confirmed.total)}</li>
           <li style="padding-right:2px">${distancingLevel}</li>
         </ul>`;
-        regionList_ul.appendChild(regionList_li);
-      }
+      regionList_ul.appendChild(regionList_li);
 
       //사용할 데이터 분류
       {
@@ -157,6 +166,33 @@ function create_static_elements() {
         const average = sum / quarantineNewTotalList.length;
         const per100kAverage = count_per100k(average, regionalData.population);
         elementData.per100kAverage.push(per100kAverage);
+        const estimatedDistancingLv =
+          per100kAverage >= 4
+            ? 4
+            : per100kAverage >= 2
+            ? 3
+            : per100kAverage >= 1
+            ? 2
+            : 1;
+        const differenceEstimatedDistancingLv =
+            estimatedDistancingLv - regionalData.distancingLevel,
+          differenceEstimatedDistancingLvText =
+            differenceEstimatedDistancingLv > 0
+              ? "+" + differenceEstimatedDistancingLv
+              : differenceEstimatedDistancingLv;
+        //todo
+        const li = document.createElement("li");
+        const span = document.createElement("span");
+        li.append(
+          `${regionalData.regionKor}: ${distancingLevel} > ${estimatedDistancingLv} 단계`
+        );
+        span.append(differenceEstimatedDistancingLvText);
+        li.append(span);
+        if (differenceEstimatedDistancingLv < 0) {
+          estimatedDecreasingList.append(li);
+        } else if (differenceEstimatedDistancingLv > 0) {
+          estimatedIncreasingList.append(li);
+        }
       }
     });
     //차트 생성

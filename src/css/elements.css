@@ -298,3 +298,25 @@ text {
   color: white;
   display: none;
 }
+
+#estimatedIncreasingList > li,
+#estimatedDecreasingList > li {
+  font-size: medium;
+  text-align: left;
+  padding: 10px;
+  margin: 10px;
+  background-color: #ebf0f5;
+  border-radius: 5px;
+}
+
+#estimatedIncreasingList > li > span,
+#estimatedDecreasingList > li > span {
+  color: #29c7ca;
+  font-weight: bold;
+  float: right;
+  padding: 0 10px 0 10px;
+}
+
+#estimatedIncreasingList > li > span {
+  color: #ff8151;
+}
