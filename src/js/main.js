@@ -469,6 +469,8 @@ function create_dynamic_elements(region, startDate, endDate) {
     }
   }
 }`;
+  const lazarettoVaccinationText =
+    "해당지역은 백신 접종 정보를<br>제공하지 않습니다.";
   covid19_API(query, (regionalDataList) => {
     const covid19DataList = regionalDataList[0].covid19DataList;
     const lastData = covid19DataList[covid19DataList.length - 1];
@@ -483,6 +485,8 @@ function create_dynamic_elements(region, startDate, endDate) {
       dead_new: [],
       dead_accumlated: [],
       recovered_total: [],
+      vaccinated_first_new: [],
+      vaccinated_second_new: [],
       vaccinated_first_total: [],
       vaccinated_second_total: [],
     };
@@ -507,6 +511,8 @@ function create_dynamic_elements(region, startDate, endDate) {
       elementData.vaccinated_second_total.push(
         covid19Data.vaccinated.second.total
       );
+      elementData.vaccinated_first_new.push(covid19Data.vaccinated.first.new);
+      elementData.vaccinated_second_new.push(covid19Data.vaccinated.second.new);
     });
     //지역 상세 정보 생성
     {
@@ -596,25 +602,35 @@ function create_dynamic_elements(region, startDate, endDate) {
         },
       });
       //집단 면역 비율 차트
-      const lastVaccinatedFirstTotal =
-        elementData.vaccinated_first_total[
-          elementData.vaccinated_first_total.length - 1
-        ];
-      const lastVaccinatedSecondTotal =
-        elementData.vaccinated_second_total[
-          elementData.vaccinated_second_total.length - 1
-        ];
-      const first_vaccination = document.getElementById("first_vaccination");
-      const second_vaccination = document.getElementById("second_vaccination");
+
       if (regionalDataList[0].regionKor === "검역") {
+        const first_vaccination = document.getElementById("first_vaccination");
+        const second_vaccination =
+          document.getElementById("second_vaccination");
         const second_vaccinationRate_chart = document.getElementById(
           "second_vaccinationRate_chart"
         );
+        const newVaccination_chart = document.getElementById(
+          "newVaccination_chart"
+        );
+        const cumulativeVaccination_chart = document.getElementById(
+          "cumulativeVaccination_chart"
+        );
         second_vaccinationRate_chart.innerHTML = "";
+        newVaccination_chart.innerHTML = `<br><br><br>${lazarettoVaccinationText}`;
+        cumulativeVaccination_chart.innerHTML = `<br><br><br>${lazarettoVaccinationText}`;
         first_vaccination.innerHTML = "검역";
-        second_vaccination.innerHTML =
-          "해당지역은 백신 접종 정보를<br>제공하지 않습니다.";
+        second_vaccination.innerHTML = lazarettoVaccinationText;
       } else {
+        const lastVaccinatedFirstTotal =
+          elementData.vaccinated_first_total[
+            elementData.vaccinated_first_total.length - 1
+          ];
+        const lastVaccinatedSecondTotal =
+          elementData.vaccinated_second_total[
+            elementData.vaccinated_second_total.length - 1
+          ];
+
         first_vaccination.innerHTML = `1차 백신 접종: ${toLocalString(
           lastVaccinatedFirstTotal
         )} 명`;
@@ -636,6 +652,97 @@ function create_dynamic_elements(region, startDate, endDate) {
             },
           },
           tooltip: {
+            show: false,
+          },
+        });
+
+        let nonNullIndex;
+        elementData.vaccinated_first_new.some((vaccinedFirstNew, index) => {
+          if (vaccinedFirstNew != null) {
+            nonNullIndex = index;
+            return true;
+          }
+        });
+        /**신규 백신접종 추이 차트*/
+        const newVaccination_chart = c3.generate({
+          bindto: "#newVaccination_chart",
+          padding: { left: 20, right: 20, top: 10, bottom: 10 },
+          data: {
+            json: {
+              date: elementData.date.slice(nonNullIndex),
+              "1차 접종": elementData.vaccinated_first_new.slice(nonNullIndex),
+              "2차 접종": elementData.vaccinated_second_new.slice(nonNullIndex),
+            },
+            x: "date",
+            type: "area-spline",
+            colors: {
+              "1차 접종": "#29C7CA",
+              "2차 접종": "#2CABB1",
+            },
+          },
+          axis: {
+            x: {
+              show: true,
+              type: "timeseries",
+              tick: {
+                format: "%y.%m.%d",
+                fit: true,
+                outer: false,
+                count: axisXcount,
+              },
+            },
+            y: {
+              show: false,
+              tick: {
+                format: (d) => toLocalString(d) + " 명",
+              },
+            },
+          },
+
+          point: {
+            show: false,
+          },
+        });
+
+        /**누적 백신접종 추이 차트*/
+        const cumulativeVaccination_chart = c3.generate({
+          bindto: "#cumulativeVaccination_chart",
+          padding: { left: 20, right: 20, top: 10, bottom: 10 },
+          data: {
+            json: {
+              date: elementData.date.slice(nonNullIndex),
+              "1차 접종":
+                elementData.vaccinated_first_total.slice(nonNullIndex),
+              "2차 접종":
+                elementData.vaccinated_second_total.slice(nonNullIndex),
+            },
+            x: "date",
+            type: "area-spline",
+            colors: {
+              "1차 접종": "#29C7CA",
+              "2차 접종": "#2CABB1",
+            },
+          },
+          axis: {
+            x: {
+              show: true,
+              type: "timeseries",
+              tick: {
+                format: "%y.%m.%d",
+                fit: true,
+                outer: false,
+                count: axisXcount,
+              },
+            },
+            y: {
+              show: false,
+              tick: {
+                format: (d) => toLocalString(d) + " 명",
+              },
+            },
+          },
+
+          point: {
             show: false,
           },
         });
@@ -744,7 +851,7 @@ function create_dynamic_elements(region, startDate, endDate) {
           },
           colors: {
             "신규 확진": "#353942",
-            "2차 접종": "#29c7ca",
+            "2차 접종": "#2CABB1",
           },
         },
         axis: {

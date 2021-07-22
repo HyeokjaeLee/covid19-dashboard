@@ -124,6 +124,10 @@ main {
   border-radius: 5px;
   transition: box-shadow 0.3s;
 }
+.chart_section > div > div {
+  text-align: center;
+  font-size: larger;
+}
 .chart_section > div > span {
   font-size: smaller;
   color: #353942;
