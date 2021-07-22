@@ -40,6 +40,7 @@
       </button>
     </header>
     <main>
+      <!--좌측 리스트 영역-->
       <section class="list_section">
         <header>
           <ul class="list_item">
@@ -51,7 +52,12 @@
         </header>
         <ul id="list"></ul>
       </section>
+
+      <!--우측 차트 영역-->
       <section class="chart_section">
+        <loading id="chartLoading">
+          <div class="loader loader-8"></div>
+        </loading>
         <div>
           7일 평균 신규 확진자 <span>(10만명당)</span>
           <div id="per100k_7d_chart"></div>

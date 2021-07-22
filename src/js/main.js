@@ -1,4 +1,5 @@
 const today = new Date();
+const chartLoading = document.getElementById("chartLoading");
 const toLocalString = (number) =>
   number != null ? number.toLocaleString() : number;
 /**dynamic element들의 기준이 되는 정보*/
@@ -16,6 +17,7 @@ const main = (() => {
 /*사용할 함수 선언*/
 
 function change_data(_target) {
+  chartLoading.style.display = "block";
   if (typeof _target === "string") target.region = _target;
   else
     target.startDate = !!_target ? convert_date(minus_date(today, _target)) : 0;
@@ -417,8 +419,6 @@ function create_static_elements() {
         regionalDataList[0].covid19DataList.length - 1
       ].date
     }`;
-    const loading_div = document.getElementById("loading");
-    loading_div.parentElement.removeChild(loading_div);
   });
 }
 
@@ -929,6 +929,8 @@ function create_dynamic_elements(region, startDate, endDate) {
         },
       });
     }
+    document.getElementById("loading").style.display = "none";
+    chartLoading.style.display = "none";
   });
 }
 
