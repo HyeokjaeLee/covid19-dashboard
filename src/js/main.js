@@ -67,6 +67,7 @@ function create_static_elements() {
       per100kConfirmedList: [],
       immunityRatio: [],
       newQuarantineList: {
+        total: [],
         domestic: [],
         overseas: [],
       },
@@ -76,8 +77,11 @@ function create_static_elements() {
       },
       per100kAverage: [],
     };
+    const newConfirmedCase_per100k = [];
     const regionCount = regionalDataList.length;
     const regionList_ul = document.getElementById("list");
+    const count_per100k = (num, population) =>
+      Math.round(num * (100000 / population) * 100) / 100;
     /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
     regionalDataList.forEach((regionalData) => {
       const covid19Data = regionalData.covid19DataList;
@@ -109,6 +113,12 @@ function create_static_elements() {
 
       //사용할 데이터 분류
       {
+        newConfirmedCase_per100k.push(
+          count_per100k(
+            lastCovid19Data.quarantine.new.total,
+            regionalData.population
+          )
+        );
         elementData.regionList.push(regionalData.regionKor);
         elementData.per100kConfirmedList.push(lastCovid19Data.per100kConfirmed);
         elementData.immunityRatio.push(lastCovid19Data.immunityRatio);
@@ -143,25 +153,26 @@ function create_static_elements() {
           0
         );
         const average = sum / quarantineNewTotalList.length;
-        const per100kAverage =
-          Math.round(average * (100000 / regionalData.population) * 10) / 10;
+        const per100kAverage = count_per100k(average, regionalData.population);
         elementData.per100kAverage.push(per100kAverage);
       }
     });
     //차트 생성
     {
-      /**10만명 당 누적 확진 차트*/
+      /**누적 확진자(10만명당) 차트*/
       const per100k_chart = c3.generate({
         bindto: "#per100k_chart",
         padding: { left: 20, right: 20, top: 10, bottom: 10 },
         data: {
           json: {
-            region: elementData.regionList.slice(0, 18),
-            확진: elementData.per100kConfirmedList.slice(0, 18),
+            region: elementData.regionList.slice(1, 18),
+            확진: elementData.per100kConfirmedList.slice(1, 18),
           },
           x: "region",
           type: "bar",
           colors: { 확진: "#353942" },
+          color: (color, d) =>
+            d.value >= elementData.per100kConfirmedList[0] ? "#e7604a" : color,
         },
         legend: {
           hide: true,
@@ -178,10 +189,71 @@ function create_static_elements() {
             },
           },
         },
+        grid: {
+          y: {
+            lines: [
+              {
+                value: elementData.per100kConfirmedList[0],
+                text: `전국 ${elementData.per100kConfirmedList[0]}명`,
+              },
+            ],
+          },
+        },
+        point: {
+          show: false,
+        },
         point: {
           show: false,
         },
       });
+
+      const newConfirmedCase_per100k_chart = c3.generate({
+        bindto: "#newConfirmedCase_per100k_chart",
+        padding: { left: 20, right: 20, top: 10, bottom: 10 },
+        data: {
+          json: {
+            region: elementData.regionList.slice(1, 18),
+            확진: newConfirmedCase_per100k.slice(1, 18),
+          },
+          x: "region",
+          type: "bar",
+          colors: { 확진: "#353942" },
+          color: (color, d) =>
+            d.value >= newConfirmedCase_per100k[0] ? "#e7604a" : color,
+        },
+        legend: {
+          hide: true,
+        },
+        axis: {
+          x: {
+            show: true,
+            type: "category",
+          },
+          y: {
+            show: false,
+            tick: {
+              format: (d) => toLocalString(d) + " 명",
+            },
+          },
+        },
+        grid: {
+          y: {
+            lines: [
+              {
+                value: newConfirmedCase_per100k[0],
+                text: `전국 ${newConfirmedCase_per100k[0]}명`,
+              },
+            ],
+          },
+        },
+        point: {
+          show: false,
+        },
+        point: {
+          show: false,
+        },
+      });
+
       /**신규 격리 차트*/
       const newQuarantine_chart = c3.generate({
         bindto: "#newQuarantine_chart",
@@ -294,7 +366,9 @@ function create_static_elements() {
           },
           x: "region",
           type: "bar",
-          colors: { 확진: "#353942" },
+          colors: { 확진: "#2CABB1" },
+          color: (color, d) =>
+            d.value >= 4 ? "#e7604a" : d.value >= 1 ? "#353942" : color,
         },
         legend: {
           hide: true,
@@ -320,19 +394,16 @@ function create_static_elements() {
               {
                 value: 1,
                 text: "거리두기 2단계",
-                position: "middle",
                 class: "distancingLevelLine",
               },
               {
                 value: 2,
                 text: "거리두기 3단계",
-                position: "middle",
                 class: "distancingLevelLine",
               },
               {
                 value: 4,
                 text: "거리두기 4단계",
-                position: "middle",
                 class: "distancingLevelLine",
               },
             ],
