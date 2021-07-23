@@ -141,29 +141,29 @@ main {
   box-shadow: 0 0 20px rgba(156, 112, 112, 0.4);
 }
 
-#region_info {
+#regionInfo_table {
   width: 600px;
   display: flex;
   flex-direction: column;
   color: black;
 }
-#region_info > span {
+#regionInfo_table > span {
   padding-bottom: 25px;
   border-radius: 5px;
   color: black;
 }
 
-#region_info > table {
+#regionInfo_table > table {
   width: 100%;
   border-collapse: collapse;
   text-align: center;
   height: 280px;
 }
-#region_info th {
+#regionInfo_table th {
   background-color: #353942;
   color: white;
 }
-#region_info th,
+#regionInfo_table th,
 td {
   border: 1px solid gray;
   font-size: 13px;
@@ -276,8 +276,8 @@ text {
   font-weight: 900;
 }
 
-#first_vaccination,
-#second_vaccination {
+#vaccination1st_txt,
+#vaccination2nd_txt {
   font-size: large;
   text-align: center;
   margin-top: 30px;
@@ -299,8 +299,8 @@ text {
   display: none;
 }
 
-#estimatedIncreasingList > li,
-#estimatedDecreasingList > li {
+#estimatedIncreasing_list > li,
+#estimatedDecreasing_list > li {
   font-size: medium;
   text-align: left;
   padding: 10px;
@@ -309,14 +309,14 @@ text {
   border-radius: 5px;
 }
 
-#estimatedIncreasingList > li > span,
-#estimatedDecreasingList > li > span {
+#estimatedIncreasing_list > li > span,
+#estimatedDecreasing_list > li > span {
   color: #29c7ca;
   font-weight: bold;
   float: right;
   padding: 0 10px 0 10px;
 }
 
-#estimatedIncreasingList > li > span {
+#estimatedIncreasing_list > li > span {
   color: #ff8151;
 }
