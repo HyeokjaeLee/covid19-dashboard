@@ -11,7 +11,7 @@ const target = {
 
 const better = "#2CABB1",
   good = "#29C7CA",
-  normal = "#353942",
+  normal = "#FF9851",
   bad = "#FF8151",
   worse = "#E7604A";
 
@@ -565,6 +565,11 @@ async function create_dynamic_elements(region, startDate, endDate) {
     vaccinated_second_new: [],
     vaccinated_first_total: [],
     vaccinated_second_total: [],
+    covid19Data: {
+      dead: {
+        total: [],
+      },
+    },
   };
   covid19DataList.forEach((covid19Data) => {
     elementData.date.push(covid19Data.date);
@@ -580,7 +585,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
     );
     elementData.recovered_total.push(covid19Data.recovered.total);
     elementData.dead_new.push(covid19Data.dead.new);
-    elementData.dead_accumlated.push(covid19Data.dead.accumlated);
+    elementData.covid19Data.dead.total.push(covid19Data.dead.total);
     elementData.vaccinated_first_total.push(covid19Data.vaccinated.first.total);
     elementData.vaccinated_second_total.push(
       covid19Data.vaccinated.second.total
@@ -995,7 +1000,46 @@ async function create_dynamic_elements(region, startDate, endDate) {
           },
         },
       },
-
+      point: {
+        show: false,
+      },
+    });
+    const totalDeath_areaSpline = c3.generate({
+      bindto: "#totalDeath_areaSpline",
+      padding: { left: 20, right: 20, top: 10, bottom: 10 },
+      data: {
+        json: {
+          date: elementData.date,
+          사망: elementData.covid19Data.dead.total,
+        },
+        x: "date",
+        type: "area-spline",
+        colors: {
+          사망: worse,
+        },
+      },
+      legend: {
+        hide: true,
+      },
+      axis: {
+        x: {
+          show: true,
+          type: "timeseries",
+          tick: {
+            format: "%y.%m.%d",
+            fit: true,
+            outer: false,
+            count: axisXcount,
+          },
+        },
+        y: {
+          padding: 0,
+          show: false,
+          tick: {
+            format: (d) => toLocalString(d) + " 명",
+          },
+        },
+      },
       point: {
         show: false,
       },
