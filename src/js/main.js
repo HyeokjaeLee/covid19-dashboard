@@ -1,7 +1,6 @@
 const today = new Date();
 const chartLoading = document.getElementById("chartLoading");
-const toLocalString = (number) =>
-  number != null ? number.toLocaleString() : number;
+const toLocalString = (number) => (number != null ? number.toLocaleString() : number);
 /**dynamic element들의 기준이 되는 정보*/
 const target = {
   region: "Total",
@@ -11,27 +10,11 @@ const target = {
 
 const better = "#2CABB1",
   good = "#29C7CA",
-  normal = "#FF9851",
+  normal = "#353942",
   bad = "#FF8151",
   worse = "#E7604A";
 
 /**c3차트 생성 공통 데이터*/
-const common = {
-  padding: { left: 20, right: 20, top: 10, bottom: 10 },
-  format: (d) => toLocalString(d) + " 명",
-  axis: {
-    x: {
-      show: true,
-      type: "category",
-    },
-    y: {
-      show: false,
-      tick: {
-        format: (d) => toLocalString(d) + " 명",
-      },
-    },
-  },
-};
 
 const commonPadding = { left: 20, right: 20, top: 10, bottom: 10 },
   commonFormat = (d) => toLocalString(d) + " 명",
@@ -58,8 +41,7 @@ const main = (() => {
 function change_data(_target) {
   chartLoading.style.display = "block";
   if (typeof _target === "string") target.region = _target;
-  else
-    target.startDate = !!_target ? convert_date(minus_date(today, _target)) : 0;
+  else target.startDate = !!_target ? convert_date(minus_date(today, _target)) : 0;
   create_dynamic_elements(target.region, target.startDate, target.endDate);
 }
 
@@ -81,7 +63,6 @@ async function create_static_elements() {
           total
         }
         quarantine{
-          total
           new{
             domestic
             overseas
@@ -104,350 +85,143 @@ async function create_static_elements() {
     }
   }`;
   const regionalDataList = await covid19_API(query);
-  /**element를 생성하는 필요한 데이터 공간*/
-  const elementData = {
+  /**차트 생성을 위한 데이터*/
+  const chartData = {
     regionList: [],
-    per100kConfirmedList: [],
-    immunityRatio: [],
-    newQuarantineList: {
+    vaccination: {
+      _1st: {
+        new: [],
+        total: [],
+      },
+      _2nd: {
+        new: [],
+        total: [],
+      },
+    },
+    confirmedCase: {
       total: [],
-      domestic: [],
-      overseas: [],
     },
-    vaccinatedList: {
-      first: [],
-      second: [],
-    },
-    per100kAverage: [],
-    covid19Data: {
-      confirmed: {
-        totalList: [],
-      },
-      vaccinated: {
-        first: {
-          newList: [],
-        },
-        second: {
-          newList: [],
-        },
+    quarantine: {
+      new: {
+        domestic: [],
+        overseas: [],
+        total: [],
       },
     },
+    confirmedCasePer100k: {
+      new: [],
+      newAverage7Days: [],
+      total: [],
+    },
+    immunityRatio: [],
   };
-  const newConfirmedCase_per100k = [];
-  const regionList_ul = document.getElementById("list");
-  const estimatedIncreasing_list = document.getElementById(
-    "estimatedIncreasing_list"
-  );
-  const estimatedDecreasing_list = document.getElementById(
-    "estimatedDecreasing_list"
-  );
+  const regionList_ul = document.getElementById("list"),
+    estimatedIncreasing_list = document.getElementById("estimatedIncreasing_list"),
+    estimatedDecreasing_list = document.getElementById("estimatedDecreasing_list");
 
   /**인구 10만명당 대상 수
    * @param num 대상 수
    * @param population 인구 수
    * @returns 10만명당 수
    */
-  const count_per100k = (num, population) =>
-    Math.round(num * (100000 / population) * 100) / 100;
 
   /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
   regionalDataList.forEach((regionalData) => {
-    const covid19Data = regionalData.covid19DataList;
-
-    const lastCovid19Data = covid19Data[covid19Data.length - 1];
-
-    elementData.covid19Data.confirmed.totalList.push(
-      lastCovid19Data.confirmed.total
-    );
-    elementData.covid19Data.vaccinated.first.newList.push(
-      lastCovid19Data.vaccinated.first.new
-    );
-    elementData.covid19Data.vaccinated.second.newList.push(
-      lastCovid19Data.vaccinated.second.new
-    );
-
-    //지역 리스트 생성
-    const regionList_li = document.createElement("li");
-    regionList_li.setAttribute("id", regionalData.regionEng);
-    const regionName = regionalData.regionKor;
-    const distancingLevel =
-      regionName != "검역" ? regionalData.distancingLevel + " 단계" : "Null";
-    regionList_li.setAttribute(
-      "onClick",
-      `change_data("${regionalData.regionEng}"); location.href='#regionChartsLine'`
-    );
-    //수치 상으로는 일치하지만 마지막 li의 오른쪽 여백이 살짝 부족한것 처럼 느껴저서 2px를 더해줌
-    regionList_li.innerHTML = `
-        <ul class="list_item">
-          <li>${regionalData.regionKor}</li>
-          <li>${toLocalString(lastCovid19Data.quarantine.new.total)}</li>
-          <li>${toLocalString(lastCovid19Data.confirmed.total)}</li>
-          <li style="padding-right:2px">${distancingLevel}</li>
-        </ul>`;
-    regionList_ul.appendChild(regionList_li);
-
-    //사용할 데이터 분류
     {
-      newConfirmedCase_per100k.push(
-        count_per100k(
-          lastCovid19Data.quarantine.new.total,
-          regionalData.population
-        )
-      );
-      elementData.regionList.push(regionalData.regionKor);
-      elementData.per100kConfirmedList.push(lastCovid19Data.per100kConfirmed);
-      elementData.immunityRatio.push(lastCovid19Data.immunityRatio);
-      elementData.newQuarantineList.domestic.push(
-        lastCovid19Data.quarantine.new.domestic
-      );
-      elementData.newQuarantineList.overseas.push(
-        lastCovid19Data.quarantine.new.overseas
-      );
-      elementData.vaccinatedList.first.push(
-        lastCovid19Data.vaccinated.first.total
-      );
-      elementData.vaccinatedList.second.push(
-        lastCovid19Data.vaccinated.second.total
-      );
-    }
+      const covid19DataList = regionalData.covid19DataList.slice(-7);
+      const lastCovid19APIdata = covid19DataList[covid19DataList.length - 1];
+      //지역 리스트 item 생성 및 추가
+      {
+        const regionList_li = document.createElement("li");
+        regionList_li.setAttribute("id", regionalData.regionEng);
+        regionList_li.setAttribute(
+          "onClick",
+          `change_data("${regionalData.regionEng}"); location.href='#regionChartsLine'`
+        );
+        const unitTxt = regionalData.distancingLevel != null ? " 단계" : "";
+        regionList_li.innerHTML = `
+              <ul class="list_item">
+                <li>${regionalData.regionKor}</li>
+                <li>${toLocalString(lastCovid19APIdata.quarantine.new.total)}</li>
+                <li>${toLocalString(lastCovid19APIdata.confirmed.total)}</li>
+                <li>${regionalData.distancingLevel + unitTxt}</li>
+              </ul>`;
+        regionList_ul.appendChild(regionList_li);
+      }
+      //차트 생성에 '검역' 데이터는 사용하지 않음
+      if (regionalData.regionKor != "검역") {
+        const count_per100k = (num) =>
+          Math.round(num * (100000 / regionalData.population) * 100) / 100;
+        let newConfirmedAverage7DaysPer100k = null;
+        if (regionalData.regionKor != "전국") {
+          let newConfirmedCase7DaySum = 0;
+          covid19DataList.forEach((covid19Data) => {
+            newConfirmedCase7DaySum += covid19Data.quarantine.new.total;
+          });
+          const newConfirmedCase7DayAverage = newConfirmedCase7DaySum / covid19DataList.length;
+          newConfirmedAverage7DaysPer100k = count_per100k(newConfirmedCase7DayAverage);
+          const estimatedDistancingLv =
+            newConfirmedAverage7DaysPer100k >= 4
+              ? 4
+              : newConfirmedAverage7DaysPer100k >= 2
+              ? 3
+              : newConfirmedAverage7DaysPer100k >= 1
+              ? 2
+              : 1;
+          const differenceEstimatedDistancingLv =
+            estimatedDistancingLv - regionalData.distancingLevel;
+          const unitTxt = differenceEstimatedDistancingLv > 0 ? "+" : "";
+          const li = document.createElement("li"),
+            span = document.createElement("span");
+          li.append(
+            `${regionalData.regionKor}: ${regionalData.distancingLevel} > ${estimatedDistancingLv} 단계`
+          );
+          span.append(unitTxt + differenceEstimatedDistancingLv);
+          li.append(span);
+          if (differenceEstimatedDistancingLv < 0) {
+            estimatedDecreasing_list.append(li);
+          } else if (differenceEstimatedDistancingLv > 0) {
+            estimatedIncreasing_list.append(li);
+          }
+        }
+        chartData.immunityRatio.push(lastCovid19APIdata.immunityRatio);
+        chartData.regionList.push(regionalData.regionKor);
+        chartData.confirmedCase.total.push(lastCovid19APIdata.confirmed.total);
+        /**API의 신규 격리 데이터 shallow copy*/
+        const newQuarantineData = lastCovid19APIdata.quarantine.new;
+        chartData.quarantine.new.domestic.push(newQuarantineData.domestic);
+        chartData.quarantine.new.overseas.push(newQuarantineData.overseas);
+        chartData.quarantine.new.total.push(newQuarantineData.total);
+        /**API의 백신접종 데이터 shallow copy*/
+        const vaccinationData = lastCovid19APIdata.vaccinated;
+        chartData.vaccination._1st.new.push(vaccinationData.first.new);
+        chartData.vaccination._1st.total.push(vaccinationData.first.total);
+        chartData.vaccination._2nd.new.push(vaccinationData.second.new);
+        chartData.vaccination._2nd.total.push(vaccinationData.second.total);
 
-    /**몇몇 chart는 지역 구분 '전국', '검역'을 사용하지 않음
-     * @index0 전국
-     * @index18 검역
-     */
-    if (regionalData.regionKor != "검역" && regionalData.regionKor != "전국") {
-      const last7daysCovid19DataList = covid19Data.slice(-7);
-      const quarantineNewTotalList = last7daysCovid19DataList.map(
-        (covid19Data) => covid19Data.quarantine.new.total
-      );
-      const sum = quarantineNewTotalList.reduce(
-        (sum, currValue) => sum + currValue,
-        0
-      );
-      const average = sum / quarantineNewTotalList.length;
-      const per100kAverage = count_per100k(average, regionalData.population);
-      elementData.per100kAverage.push(per100kAverage);
-      const estimatedDistancingLv =
-        per100kAverage >= 4
-          ? 4
-          : per100kAverage >= 2
-          ? 3
-          : per100kAverage >= 1
-          ? 2
-          : 1;
-      const differenceEstimatedDistancingLv =
-          estimatedDistancingLv - regionalData.distancingLevel,
-        differenceEstimatedDistancingLvText =
-          differenceEstimatedDistancingLv > 0
-            ? "+" + differenceEstimatedDistancingLv
-            : differenceEstimatedDistancingLv;
-      //todo
-      const li = document.createElement("li");
-      const span = document.createElement("span");
-      li.append(
-        `${regionalData.regionKor}: ${distancingLevel} > ${estimatedDistancingLv} 단계`
-      );
-      span.append(differenceEstimatedDistancingLvText);
-      li.append(span);
-      if (differenceEstimatedDistancingLv < 0) {
-        estimatedDecreasing_list.append(li);
-      } else if (differenceEstimatedDistancingLv > 0) {
-        estimatedIncreasing_list.append(li);
+        chartData.confirmedCasePer100k.newAverage7Days.push(newConfirmedAverage7DaysPer100k);
+        chartData.confirmedCasePer100k.new.push(count_per100k(newQuarantineData.total));
+        chartData.confirmedCasePer100k.total.push(lastCovid19APIdata.per100kConfirmed);
       }
     }
   });
 
   //차트 생성
   {
-    /**누적 확진자(10만명당) 차트*/
-    const totalConfirmedCasePer100k_bar = c3.generate({
-      bindto: "#totalConfirmedCasePer100k_bar",
-      padding: commonPadding,
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          확진: elementData.per100kConfirmedList.slice(1, 18),
-        },
-        x: "region",
-        type: "bar",
-        colors: { 확진: normal },
-        color: (color, d) =>
-          d.value >= elementData.per100kConfirmedList[0] ? bad : color,
-      },
-      legend: {
-        hide: true,
-      },
-      axis: common.axis,
-      grid: {
-        y: {
-          lines: [
-            {
-              value: elementData.per100kConfirmedList[0],
-              text: `전국 ${elementData.per100kConfirmedList[0]}명`,
-            },
-          ],
-        },
-      },
-    });
-
-    const newConfirmedCasePer100k_bar = c3.generate({
-      bindto: "#newConfirmedCasePer100k_bar",
-      padding: commonPadding,
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          확진: newConfirmedCase_per100k.slice(1, 18),
-        },
-        x: "region",
-        type: "bar",
-        colors: { 확진: normal },
-        color: (color, d) =>
-          d.value >= newConfirmedCase_per100k[0] ? bad : color,
-      },
-      legend: {
-        hide: true,
-      },
-      axis: commonAxis,
-      grid: {
-        y: {
-          lines: [
-            {
-              value: newConfirmedCase_per100k[0],
-              text: `전국 ${newConfirmedCase_per100k[0]}명`,
-            },
-          ],
-        },
-      },
-    });
-
-    /**누적 확진자 차트*/
-    const totalConfirmedCase_bar = c3.generate({
-      bindto: "#totalConfirmedCase_bar",
-      padding: commonPadding,
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          확진: elementData.covid19Data.confirmed.totalList.slice(1, 18),
-        },
-        x: "region",
-        type: "bar",
-        colors: { 확진: normal },
-      },
-      legend: {
-        hide: true,
-      },
-      axis: commonAxis,
-    });
-
-    /**신규 확진자 차트*/
-    const newConfirmedCase_bar = c3.generate({
-      bindto: "#newConfirmedCase_bar",
-      padding: commonPadding,
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          해외: elementData.newQuarantineList.overseas.slice(1, 18),
-          국내: elementData.newQuarantineList.domestic.slice(1, 18),
-        },
-        x: "region",
-        type: "bar",
-        groups: [["해외", "국내"]],
-        colors: { 해외: "#e7604a", 국내: "#353942" },
-      },
-      axis: commonAxis,
-    });
-    //백신 접종 차트
-    c3.generate({
-      bindto: "#totalVaccination_bar",
-      padding: commonPadding,
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          "1차 접종": elementData.vaccinatedList.first.slice(1, 18),
-          "2차 접종": elementData.vaccinatedList.second.slice(1, 18),
-        },
-        x: "region",
-        type: "bar",
-        colors: { "1차 접종": "#2cabb1", "2차 접종": "#29c7ca" },
-      },
-      axis: commonAxis,
-    });
-
-    /**신규 백신접종*/
-    const newVaccination_bar = c3.generate({
-      bindto: "#newVaccination_bar",
-      padding: commonPadding,
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          "1차 접종": elementData.covid19Data.vaccinated.first.newList.slice(
-            1,
-            18
-          ),
-          "2차 접종": elementData.covid19Data.vaccinated.second.newList.slice(
-            1,
-            18
-          ),
-        },
-        x: "region",
-        type: "bar",
-        colors: { "1차 접종": "#353942", "2차 접종": "#e7604a" },
-      },
-      axis: commonAxis,
-    });
-
-    //면역 비율 차트
-    c3.generate({
-      bindto: "#immunityRatio_bar",
-      padding: { left: 20, right: 20, top: 10, bottom: 10 },
-      data: {
-        json: {
-          region: elementData.regionList.slice(1, 18),
-          "면역 비율": elementData.immunityRatio.slice(1, 18),
-        },
-        x: "region",
-        type: "bar",
-        colors: { "면역 비율": "#29c7ca" },
-      },
-      axis: {
-        x: {
-          show: true,
-          type: "category",
-        },
-        y: {
-          max: 0.8,
-          show: false,
-          tick: {
-            format: d3.format(".1%"),
-          },
-        },
-      },
-      grid: {
-        y: {
-          lines: [
-            {
-              value: 0.7,
-              text: `집단면역 70%`,
-            },
-          ],
-        },
-      },
-    });
-
-    /**7일 평균 신규 확진자 차트*/
+    const actualRegionList = chartData.regionList.slice(1);
+    /**7일 평균 10만명당 신규 확진자 차트*/
     const newConfirmedCaseAverage7Days_bar = c3.generate({
       bindto: "#newConfirmedCaseAverage7Days_bar",
-      padding: { left: 25, right: 25, top: 10, bottom: 10 },
+      padding: commonPadding,
       data: {
         json: {
-          region: elementData.regionList.slice(1, 18),
-          확진: elementData.per100kAverage,
+          region: actualRegionList,
+          확진: chartData.confirmedCasePer100k.newAverage7Days.slice(1),
         },
         x: "region",
         type: "bar",
-        colors: { 확진: "#2CABB1" },
-        color: (color, d) =>
-          d.value >= 4 ? "#e7604a" : d.value >= 1 ? "#353942" : color,
+        colors: { 확진: good },
+        color: (color, d) => (d.value >= 4 ? bad : d.value >= 1 ? normal : color),
       },
       legend: {
         hide: true,
@@ -489,12 +263,179 @@ async function create_static_elements() {
         },
       },
     });
+
+    /**10만명당 신규 확진자 차트*/
+    const newConfirmedCasePer100k_bar = c3.generate({
+      bindto: "#newConfirmedCasePer100k_bar",
+      padding: commonPadding,
+      data: {
+        json: {
+          region: actualRegionList,
+          확진: chartData.confirmedCasePer100k.new.slice(1),
+        },
+        x: "region",
+        type: "bar",
+        colors: { 확진: normal },
+        color: (color, d) => (d.value >= chartData.confirmedCasePer100k.new[0] ? bad : color),
+      },
+      legend: {
+        hide: true,
+      },
+      axis: commonAxis,
+      grid: {
+        y: {
+          lines: [
+            {
+              value: chartData.confirmedCasePer100k.new[0],
+              text: `전국 ${chartData.confirmedCasePer100k.new[0]}명`,
+            },
+          ],
+        },
+      },
+    });
+
+    /**인구 10만명당 누적 확진자 차트*/
+    const totalConfirmedCasePer100k_bar = c3.generate({
+      bindto: "#totalConfirmedCasePer100k_bar",
+      padding: commonPadding,
+      data: {
+        json: {
+          region: actualRegionList,
+          확진: chartData.confirmedCasePer100k.total.slice(1),
+        },
+        x: "region",
+        type: "bar",
+        colors: { 확진: normal },
+        color: (color, d) => (d.value >= chartData.confirmedCasePer100k.total[0] ? bad : color),
+      },
+      legend: {
+        hide: true,
+      },
+      axis: commonAxis,
+      grid: {
+        y: {
+          lines: [
+            {
+              value: chartData.confirmedCasePer100k.total[0],
+              text: `전국 ${chartData.confirmedCasePer100k.total[0]}명`,
+            },
+          ],
+        },
+      },
+    });
+
+    /**신규 확진자 차트*/
+    const newConfirmedCase_bar = c3.generate({
+      bindto: "#newConfirmedCase_bar",
+      padding: commonPadding,
+      data: {
+        json: {
+          region: actualRegionList,
+          해외: chartData.quarantine.new.overseas.slice(1),
+          국내: chartData.quarantine.new.domestic.slice(1),
+        },
+        x: "region",
+        type: "bar",
+        groups: [["해외", "국내"]],
+        colors: { 해외: bad, 국내: normal },
+      },
+      axis: commonAxis,
+    });
+
+    /**누적 확진자 차트*/
+    const totalConfirmedCase_bar = c3.generate({
+      bindto: "#totalConfirmedCase_bar",
+      padding: commonPadding,
+      data: {
+        json: {
+          region: actualRegionList,
+          확진: chartData.confirmedCase.total.slice(1),
+        },
+        x: "region",
+        type: "bar",
+        colors: { 확진: normal },
+      },
+      legend: {
+        hide: true,
+      },
+      axis: commonAxis,
+    });
+
+    /**신규 백신 접종자 차트*/
+    const newVaccination_bar = c3.generate({
+      bindto: "#newVaccination_bar",
+      padding: commonPadding,
+      data: {
+        json: {
+          region: actualRegionList,
+          "1차 접종": chartData.vaccination._1st.new.slice(1),
+          "2차 접종": chartData.vaccination._2nd.new.slice(1),
+        },
+        x: "region",
+        type: "bar",
+        colors: { "1차 접종": good, "2차 접종": better },
+      },
+      axis: commonAxis,
+    });
+
+    /**누적 백신 접종자 차트*/
+    c3.generate({
+      bindto: "#totalVaccination_bar",
+      padding: commonPadding,
+      data: {
+        json: {
+          region: actualRegionList,
+          "1차 접종": chartData.vaccination._1st.total.slice(1),
+          "2차 접종": chartData.vaccination._2nd.total.slice(1),
+        },
+        x: "region",
+        type: "bar",
+        colors: { "1차 접종": good, "2차 접종": better },
+      },
+      axis: commonAxis,
+    });
+
+    /**면역자 비율 차트*/
+    c3.generate({
+      bindto: "#immunityRatio_bar",
+      padding: { left: 20, right: 20, top: 10, bottom: 10 },
+      data: {
+        json: {
+          region: chartData.regionList,
+          "면역 비율": chartData.immunityRatio,
+        },
+        x: "region",
+        type: "bar",
+        colors: { "면역 비율": better },
+      },
+      axis: {
+        x: {
+          show: true,
+          type: "category",
+        },
+        y: {
+          max: 0.8,
+          show: false,
+          tick: {
+            format: d3.format(".1%"),
+          },
+        },
+      },
+      grid: {
+        y: {
+          lines: [
+            {
+              value: 0.7,
+              text: `집단면역 70%`,
+            },
+          ],
+        },
+      },
+    });
   }
   const updatedDate = document.getElementById("updatedDate");
   updatedDate.innerHTML = `Update: ${
-    regionalDataList[0].covid19DataList[
-      regionalDataList[0].covid19DataList.length - 1
-    ].date
+    regionalDataList[0].covid19DataList[regionalDataList[0].covid19DataList.length - 1].date
   }`;
 }
 
@@ -545,8 +486,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
     }
   }
 }`;
-  const lazarettoVaccinationText =
-    "해당지역은 백신 접종 정보를<br>제공하지 않습니다.";
+  const lazarettoVaccinationText = "해당지역은 백신 접종 정보를<br>제공하지 않습니다.";
   const regionalDataList = await covid19_API(query);
   const covid19DataList = regionalDataList[0].covid19DataList;
   const lastData = covid19DataList[covid19DataList.length - 1];
@@ -577,19 +517,13 @@ async function create_dynamic_elements(region, startDate, endDate) {
     elementData.confirmed_accumlated.push(covid19Data.confirmed.accumlated);
     elementData.quarantine_total.push(covid19Data.quarantine.total);
     elementData.quarantine_new_total.push(covid19Data.quarantine.new.total);
-    elementData.quarantine_new_domestic.push(
-      covid19Data.quarantine.new.domestic
-    );
-    elementData.quarantine_new_overseas.push(
-      covid19Data.quarantine.new.overseas
-    );
+    elementData.quarantine_new_domestic.push(covid19Data.quarantine.new.domestic);
+    elementData.quarantine_new_overseas.push(covid19Data.quarantine.new.overseas);
     elementData.recovered_total.push(covid19Data.recovered.total);
     elementData.dead_new.push(covid19Data.dead.new);
     elementData.covid19Data.dead.total.push(covid19Data.dead.total);
     elementData.vaccinated_first_total.push(covid19Data.vaccinated.first.total);
-    elementData.vaccinated_second_total.push(
-      covid19Data.vaccinated.second.total
-    );
+    elementData.vaccinated_second_total.push(covid19Data.vaccinated.second.total);
     elementData.vaccinated_first_new.push(covid19Data.vaccinated.first.new);
     elementData.vaccinated_second_new.push(covid19Data.vaccinated.second.new);
   });
@@ -611,9 +545,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
       <tbody>
         <tr>
           <td rowspan='2'>신규</td>
-          <td rowspan='2'>${toLocalString(
-            lastData.quarantine.new.total
-          )} 명</td>
+          <td rowspan='2'>${toLocalString(lastData.quarantine.new.total)} 명</td>
           <td>해외</td>
           <td>${toLocalString(lastData.quarantine.new.overseas)} 명</td>
           <td rowspan='2'>${toLocalString(lastData.recovered.new)} 명</td>
@@ -625,9 +557,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         </tr>
         <tr>
           <td>누적</td>
-          <td colspan='3'>(확진) ${toLocalString(
-            lastData.confirmed.accumlated
-          )} 명</td>
+          <td colspan='3'>(확진) ${toLocalString(lastData.confirmed.accumlated)} 명</td>
           <td>${toLocalString(lastData.recovered.accumlated)} 명</td>
           <td>${toLocalString(lastData.dead.accumlated)} 명</td>
         </tr>
@@ -647,8 +577,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
   }
   //차트 생성
   {
-    const axisXcount =
-      elementData.date.length < 30 ? elementData.date.length : 30;
+    const axisXcount = elementData.date.length < 30 ? elementData.date.length : 30;
     /**확진자 상태 비율 차트*/
     const confirmedRatio_donut = c3.generate({
       bindto: "#confirmedRatio_donut",
@@ -685,15 +614,9 @@ async function create_dynamic_elements(region, startDate, endDate) {
     if (regionalDataList[0].regionKor === "검역") {
       const vaccination1st_txt = document.getElementById("vaccination1st_txt");
       const vaccination2nd_txt = document.getElementById("vaccination2nd_txt");
-      const vaccination2ndRate_gauge = document.getElementById(
-        "vaccination2ndRate_gauge"
-      );
-      const newVaccination_spline = document.getElementById(
-        "newVaccination_spline"
-      );
-      const totalVaccination_areaSpline = document.getElementById(
-        "totalVaccination_areaSpline"
-      );
+      const vaccination2ndRate_gauge = document.getElementById("vaccination2ndRate_gauge");
+      const newVaccination_spline = document.getElementById("newVaccination_spline");
+      const totalVaccination_areaSpline = document.getElementById("totalVaccination_areaSpline");
       vaccination2ndRate_gauge.innerHTML = "";
       newVaccination_spline.innerHTML = `<br><br><br>${lazarettoVaccinationText}`;
       totalVaccination_areaSpline.innerHTML = `<br><br><br>${lazarettoVaccinationText}`;
@@ -701,17 +624,11 @@ async function create_dynamic_elements(region, startDate, endDate) {
       vaccination2nd_txt.innerHTML = lazarettoVaccinationText;
     } else {
       const lastVaccinatedFirstTotal =
-        elementData.vaccinated_first_total[
-          elementData.vaccinated_first_total.length - 1
-        ];
+        elementData.vaccinated_first_total[elementData.vaccinated_first_total.length - 1];
       const lastVaccinatedSecondTotal =
-        elementData.vaccinated_second_total[
-          elementData.vaccinated_second_total.length - 1
-        ];
+        elementData.vaccinated_second_total[elementData.vaccinated_second_total.length - 1];
 
-      vaccination1st_txt.innerHTML = `1차 백신 접종: ${toLocalString(
-        lastVaccinatedFirstTotal
-      )} 명`;
+      vaccination1st_txt.innerHTML = `1차 백신 접종: ${toLocalString(lastVaccinatedFirstTotal)} 명`;
       vaccination2nd_txt.innerHTML = `2차 백신 접종: ${toLocalString(
         lastVaccinatedSecondTotal
       )} 명`;
