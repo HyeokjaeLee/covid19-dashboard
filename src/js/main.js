@@ -215,7 +215,7 @@ async function create_static_elements() {
         x: "region",
         type: "bar",
         colors: { 확진: green },
-        color: (color, d) => (d.value >= 4 ? red : d.value >= 1 ? black : color),
+        color: (color, d) => (d.value >= 4 ? deepRed : d.value >= 1 ? red : color),
       },
       legend: {
         hide: true,
@@ -269,8 +269,8 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: black },
-        color: (color, d) => (d.value >= chartData.confirmedPer100k.new[0] ? red : color),
+        colors: { 확진: red },
+        color: (color, d) => (d.value >= chartData.confirmedPer100k.new[0] ? deepRed : color),
       },
       legend: {
         hide: true,
@@ -299,8 +299,8 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: black },
-        color: (color, d) => (d.value >= chartData.confirmedPer100k.total[0] ? red : color),
+        colors: { 확진: red },
+        color: (color, d) => (d.value >= chartData.confirmedPer100k.total[0] ? deepRed : color),
       },
       legend: {
         hide: true,
@@ -331,11 +331,10 @@ async function create_static_elements() {
         x: "region",
         type: "bar",
         groups: [["해외", "국내"]],
-        colors: { 해외: red, 국내: black },
+        colors: { 해외: deepRed, 국내: red },
       },
       axis: commonAxis,
     });
-
     /**누적 확진자 차트*/
     const totalConfirmed_bar = c3.generate({
       bindto: "#totalConfirmed_bar",
@@ -347,7 +346,7 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: black },
+        colors: { 확진: deepRed },
       },
       legend: {
         hide: true,
@@ -581,6 +580,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
   });
   /**차트 생성*/
   {
+    const chartTypeSwitcher = (type) => (chartData.dateList.length < 30 ? "bar" : type);
     const axisXcount = chartData.dateList.length < 30 ? chartData.dateList.length : 30;
     const commonAxis = {
       x: {
@@ -689,7 +689,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
             "2차 접종": chartData.vaccinated._2nd.new.slice(nonNullIndex),
           },
           x: "date",
-          type: "spline",
+          type: chartTypeSwitcher("spline"),
           colors: {
             "1차 접종": green,
             "2차 접종": deepGreen,
@@ -713,7 +713,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
             "2차 접종": vaccination2ndTotalList.slice(nonNullIndex),
           },
           x: "date",
-          type: "area-spline",
+          type: chartTypeSwitcher("area-spline"),
           colors: {
             "1차 접종": green,
             "2차 접종": deepGreen,
@@ -741,8 +741,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
             "신규 확진": "y2",
           },
           colors: {
-            "신규 확진": "#353942",
-            "2차 접종": "#2CABB1",
+            "신규 확진": deepRed,
+            "2차 접종": deepGreen,
           },
         },
         axis: {
@@ -767,7 +767,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
           격리해제: chartData.recovered.total,
         },
         x: "date",
-        type: "area-spline",
+        type: chartTypeSwitcher("area-spline"),
         colors: {
           확진: deepRed,
           격리해제: green,
@@ -788,19 +788,16 @@ async function create_dynamic_elements(region, startDate, endDate) {
           date: chartData.dateList,
           "국내 감염": chartData.quarantine.new.domestic,
           "해외 감염": chartData.quarantine.new.overseas,
-          전체: chartData.quarantine.new.total,
         },
         groups: [["국내 감염", "해외 감염"]],
         x: "date",
         types: {
           "국내 감염": "area-spline",
           "해외 감염": "area-spline",
-          전체: "spline",
         },
         colors: {
           "국내 감염": red,
           "해외 감염": deepRed,
-          전체: red,
         },
       },
       legend: {
@@ -845,7 +842,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         x: "date",
         type: "area-spline",
         colors: {
-          사망: deepRed,
+          사망: black,
         },
       },
       legend: {
