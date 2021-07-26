@@ -791,10 +791,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
         },
         groups: [["국내 감염", "해외 감염"]],
         x: "date",
-        types: {
-          "국내 감염": "area-spline",
-          "해외 감염": "area-spline",
-        },
+        type: chartTypeSwitcher("area-spline"),
+
         colors: {
           "국내 감염": red,
           "해외 감염": deepRed,
@@ -818,7 +816,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
           사망: chartData.dead.new,
         },
         x: "date",
-        type: "spline",
+        type: chartTypeSwitcher("spline"),
         colors: {
           사망: black,
         },
@@ -840,7 +838,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
           사망: chartData.dead.total,
         },
         x: "date",
-        type: "area-spline",
+        type: chartTypeSwitcher("area-spline"),
         colors: {
           사망: black,
         },
