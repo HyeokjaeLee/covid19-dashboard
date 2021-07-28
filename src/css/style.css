@@ -244,7 +244,8 @@ text {
   font-family: thin;
 }
 
-.menu_button {
+#sidebar_button {
+  margin: 10px;
   top: 50vh;
   position: fixed;
   height: 50px;
@@ -404,16 +405,15 @@ td {
   #charts_wrapper > .small_chart {
     width: 90%;
   }
-  #open_button {
-    left: 10px;
+  #sidebar_button {
     display: block;
   }
-  #close_button {
-    right: 10px;
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    display: none;
-  }
+}
+
+.hide {
+  right: 10px;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }

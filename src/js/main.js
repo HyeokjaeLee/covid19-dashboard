@@ -34,12 +34,19 @@ function change_data(_target) {
 function open_list() {
   sidebar_section.style.display = "flex";
   open_button.style.display = "none";
-  close_button.display = "block";
+  close_button.style.display = "block";
 }
 
-function close_list() {
-  sidebar_section.style.display = "none";
-  close_button.style.display = "none";
+let mobileSidebarState = "hide";
+function sidebar_control() {
+  sidebar_button.setAttribute("class", mobileSidebarState);
+  if (mobileSidebarState === "hide") {
+    mobileSidebarState = "show";
+    sidebar_section.style.display = "flex";
+  } else {
+    mobileSidebarState = "hide";
+    sidebar_section.style.removeProperty("display");
+  }
 }
 
 /**
