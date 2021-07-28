@@ -31,6 +31,8 @@ function change_data(_target) {
   create_dynamic_elements(target.region, target.startDate, target.endDate);
 }
 
+function showList() {}
+
 /**
  * 정적 데이터를 사용하는 element 업데이트
  * - 첫 페이지 로딩시에만 호출
@@ -102,12 +104,10 @@ async function create_static_elements() {
     },
     immunityRatio: [],
   };
-  const regionList_ul = document.getElementById("list"),
-    updatedDate = document.getElementById("updatedDate");
-  updatedDate.innerHTML = `Update: ${
+  const regionList_ul = document.getElementById("list");
+  updateddDate.innerHTML = `Updated: ${
     regionalDataList[0].covid19DataList[regionalDataList[0].covid19DataList.length - 1].date
   }`;
-
   /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
   regionalDataList.forEach((regionalData) => {
     const covid19DataList = regionalData.covid19DataList.slice(-7);
@@ -186,6 +186,14 @@ async function create_static_elements() {
       chartData.confirmedPer100k.total.push(lastCovid19Data.per100kConfirmed);
     }
   });
+  {
+    const li = document.createElement("li");
+    li.innerHTML = "예상되는 지역이 없습니다.";
+    li.setAttribute("style", "text-align:center");
+
+    if (estimatedDecreasing_list.childElementCount === 0) estimatedDecreasing_list.append(li);
+    if (estimatedIncreasing_list.childElementCount === 0) estimatedIncreasing_list.append(li);
+  }
 
   //차트 생성
   {
@@ -853,7 +861,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
     });
   }
   document.getElementById("loading").style.display = "none";
-  chartLoading.style.display = "none";
+  //chartLoading.style.display = "none";
 }
 
 /**날짜 형식 숫자로 변경

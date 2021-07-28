@@ -1,52 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>COVID-19 DASHBOARD</title>
     <!-- 전체 구조 css -->
-    <link rel="stylesheet" href="./src/css/global.css" />
-    <link rel="stylesheet" href="./src/css/elements.css" />
+    <link rel="stylesheet" href="./src/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" />
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
-    <title>CSS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
 
   <body>
     <div id="loading">
       <div class="loader loader-8"></div>
-      <h1>서버에서 데이터를 불러오는 중입니다.</h1>
+      <h1>데이터를 불러오는 중입니다.</h1>
       <h4>서버가 Sleep 상태일 경우 1분 정도 소요될수 있습니다.</h4>
       <footer>HyeokjaeLee © All rights reserved.</footer>
     </div>
-    <header class="main_header">
-      <div class="title">KOR<span>ON</span>A</div>
-      <span class="header_text">DASHBOARD<span id="updatedDate"></span></span>
-      <button onclick="change_data(7); location.href='#regionChartsLine'">최근 7일</button>
-      <button onclick="change_data(30); location.href='#regionChartsLine'">최근 30일</button>
-      <button onclick="change_data(); location.href='#regionChartsLine'">전체</button>
-    </header>
-    <main>
-      <!--좌측 리스트 영역-->
-      <section class="list_section">
-        <header>
-          <ul class="list_item">
-            <li>지역</li>
-            <li>신규 확진</li>
-            <li>전체 확진</li>
-            <li style="padding-right: 7px">거리 두기</li>
-          </ul>
-        </header>
-        <ul id="list"></ul>
-      </section>
+    <section id="sidebar_section">
+      <header>KOR<span>ON</span>A</header>
+      <ul class="list_item">
+        <li>지역</li>
+        <li>신규 확진</li>
+        <li>전체 확진</li>
+        <li>거리 두기</li>
+      </ul>
+      <ul id="list"></ul>
+    </section>
 
-      <!--우측 차트 영역-->
-      <section class="chart_section">
-        <loading id="chartLoading">
-          <div class="loader loader-8"></div>
-        </loading>
+    <section id="charts_section">
+      <div id="chartLoading">loading</div>
+      <header>
+        <div id="dashboard">
+          DASHBOARD
+          <div id="updateddDate"></div>
+        </div>
+        <button onclick="change_data(7); location.href='#regionChartsLine'">최근 7일</button>
+        <button onclick="change_data(30); location.href='#regionChartsLine'">최근 30일</button>
+        <button onclick="change_data(); location.href='#regionChartsLine'">전체</button>
+      </header>
+      <img title="menu" class="menu_button" src="./src/img/pngwing.com.png" />
+      <div id="charts_wrapper">
         <div class="small_chart">
           거리두기 격상 예상 지역
           <ul id="estimatedIncreasing_list"></ul>
@@ -128,10 +124,24 @@
           누적 백신 접종 추이
           <div id="totalVaccination_areaSpline"></div>
         </div>
-        <footer>HyeokjaeLee © All rights reserved.</footer>
-      </section>
-    </main>
-
+        <footer>
+          HyeokjaeLee © All rights reserved.
+          <div>
+            <img
+              src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fhyeokjaelee.github.io%2Fcovid19-dashboard%2Findex.html&count_bg=%23727B8E&title_bg=%23353942&icon=checkmarx.svg&icon_color=%23EBF0F5&title=Visitors&edge_flat=false"
+            />
+            <a href="https://github.com/HyeokjaeLee/covid19-dashboard">
+              <img
+                src="https://img.shields.io/badge/GitHub-181717?style=edge_flat&logo=GitHub&logoColor=white"
+            /></a>
+            <a href="mailto: leehyeokjae97@gmail.com">
+              <img
+                src="https://img.shields.io/badge/Gmail-EA4335?style=edge_flat&logo=Gmail&logoColor=white"
+            /></a>
+          </div>
+        </footer>
+      </div>
+    </section>
     <script src="./src/js/main.js"></script>
   </body>
 </html>
