@@ -1,5 +1,5 @@
 @font-face {
-  src: url("../fonts/NanumBarunGothicLight.otf");
+  src: url("../fonts/NotoSansKR-Thin.otf");
   font-family: "main";
 }
 @font-face {
@@ -160,11 +160,6 @@ text {
   100% {
     transform: translateX(100%) scale(0);
   }
-}
-
-.distancingLevelLine {
-  font-size: 12px;
-  font-weight: 900;
 }
 
 /*sidebar 관련 css*/
@@ -361,7 +356,7 @@ header > button:hover {
 #vaccination2nd_txt {
   font-size: large;
   text-align: center;
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 10px;
   background-color: #ebf0f5;
   border-radius: 5px;

@@ -15,7 +15,7 @@ const deepGreen = "#2CABB1",
   deepRed = "#E7604A";
 
 //c3차트 생성 공통 데이터
-const commonPadding = { left: 20, right: 20, top: 10, bottom: 10 },
+const commonPadding = { left: 25, right: 25, top: 10, bottom: 10 },
   commonFormat = (d) => toLocalString(d) + " 명";
 
 const main = (() => {
@@ -227,7 +227,7 @@ async function create_static_elements() {
     };
     /**지역 구분 '전국'을 제외한 지역 리스트*/
     const actualRegionList = chartData.regionList.slice(1);
-    /**7일 평균 인구 10만명당 신규 확진자 차트*/
+    /**7일 평균 인구 10만명당 신규 확진자*/
     const newConfirmedAverage7Days_bar = c3.generate({
       bindto: "#newConfirmedAverage7Days_bar",
       padding: commonPadding,
@@ -265,24 +265,21 @@ async function create_static_elements() {
             {
               value: 1,
               text: "거리두기 2단계",
-              class: "distancingLevelLine",
             },
             {
               value: 2,
               text: "거리두기 3단계",
-              class: "distancingLevelLine",
             },
             {
               value: 4,
               text: "거리두기 4단계",
-              class: "distancingLevelLine",
             },
           ],
         },
       },
     });
 
-    /**인구 10만명당 신규 확진자 차트*/
+    /**인구 10만명당 신규 확진자*/
     const newConfirmedPer100k_bar = c3.generate({
       bindto: "#newConfirmedPer100k_bar",
       padding: commonPadding,
@@ -312,7 +309,7 @@ async function create_static_elements() {
       },
     });
 
-    /**인구 10만명당 누적 확진자 차트*/
+    /**인구 10만명당 누적 확진자*/
     const totalConfirmedPer100k_bar = c3.generate({
       bindto: "#totalConfirmedPer100k_bar",
       padding: commonPadding,
@@ -342,7 +339,7 @@ async function create_static_elements() {
       },
     });
 
-    /**신규 확진자 차트*/
+    /**신규 확진자*/
     const newConfirmed_bar = c3.generate({
       bindto: "#newConfirmed_bar",
       padding: commonPadding,
@@ -359,7 +356,7 @@ async function create_static_elements() {
       },
       axis: commonAxis,
     });
-    /**누적 확진자 차트*/
+    /**누적 확진자*/
     const totalConfirmed_bar = c3.generate({
       bindto: "#totalConfirmed_bar",
       padding: commonPadding,
@@ -378,7 +375,7 @@ async function create_static_elements() {
       axis: commonAxis,
     });
 
-    /**신규 백신 접종자 차트*/
+    /**신규 백신 접종자*/
     const newVaccination_bar = c3.generate({
       bindto: "#newVaccination_bar",
       padding: commonPadding,
@@ -395,7 +392,7 @@ async function create_static_elements() {
       axis: commonAxis,
     });
 
-    /**누적 백신 접종자 차트*/
+    /**누적 백신 접종자*/
     const totalVaccination_bar = c3.generate({
       bindto: "#totalVaccination_bar",
       padding: commonPadding,
@@ -412,7 +409,7 @@ async function create_static_elements() {
       axis: commonAxis,
     });
 
-    /**면역자 비율 차트*/
+    /**면역자 비율*/
     const immunityRatio_bar = c3.generate({
       bindto: "#immunityRatio_bar",
       padding: { left: 20, right: 20, top: 10, bottom: 10 },
@@ -611,7 +608,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         show: true,
         type: "timeseries",
         tick: {
-          format: "%y.%m.%d",
+          format: "%m.%d",
           fit: true,
           outer: false,
           count: axisXcount,
@@ -626,7 +623,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         },
       },
     };
-    /**확진자 상태 비율 차트*/
+    /**확진자 상태 비율*/
     const confirmedRatio_donut = c3.generate({
       bindto: "#confirmedRatio_donut",
       data: {
@@ -678,6 +675,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
       vaccination1st_txt.innerHTML = `1차 백신 접종: ${toLocalString(lastVaccination1stTotal)} 명`;
       vaccination2nd_txt.innerHTML = `2차 백신 접종: ${toLocalString(lastVaccination2ndTotal)} 명`;
 
+      /**인규 대비 백신 접종률*/
       const vaccination2ndRate_gauge = c3.generate({
         bindto: "#vaccination2ndRate_gauge",
         data: {
@@ -695,6 +693,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
           show: false,
         },
       });
+
+      /**백신 정보 실제 시작 index*/
       const nonNullIndex = (() => {
         for (let i = 0; i < vaccination2ndTotalList.length; i++) {
           if (vaccination2ndTotalList[i] !== null) {
@@ -702,7 +702,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
           }
         }
       })();
-      /**신규 백신접종 추이 차트*/
+
+      /**신규 백신접종 추이*/
       const newVaccination_spline = c3.generate({
         bindto: "#newVaccination_spline",
         padding: commonPadding,
@@ -726,7 +727,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         },
       });
 
-      /**누적 백신접종 추이 차트*/
+      /**누적 백신접종 추이*/
       const totalVaccination_areaSpline = c3.generate({
         bindto: "#totalVaccination_areaSpline",
         padding: commonPadding,
@@ -750,6 +751,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         },
       });
 
+      /**신규 확진, 2차 백신 접종 추이 비교*/
       const newConfirmedVaccination_spline = c3.generate({
         bindto: "#newConfirmedVaccination_spline",
         padding: commonPadding,
@@ -780,29 +782,6 @@ async function create_dynamic_elements(region, startDate, endDate) {
       });
     }
 
-    /**누적 확진 추이 차트*/
-    const totalConfirmed_areaSpline = c3.generate({
-      bindto: "#totalConfirmed_areaSpline",
-      padding: commonPadding,
-      data: {
-        json: {
-          date: chartData.dateList,
-          확진: chartData.confirmed.total,
-          격리해제: chartData.recovered.total,
-        },
-        x: "date",
-        type: chartTypeSwitcher("area-spline"),
-        colors: {
-          확진: deepRed,
-          격리해제: green,
-        },
-      },
-      axis: commonAxis,
-      point: {
-        show: false,
-      },
-    });
-
     /**신규 확진 추이*/
     const newConfirmed_areaSpline = c3.generate({
       bindto: "#newConfirmed_areaSpline",
@@ -831,6 +810,30 @@ async function create_dynamic_elements(region, startDate, endDate) {
       },
     });
 
+    /**누적 확진 추이*/
+    const totalConfirmed_areaSpline = c3.generate({
+      bindto: "#totalConfirmed_areaSpline",
+      padding: commonPadding,
+      data: {
+        json: {
+          date: chartData.dateList,
+          확진: chartData.confirmed.total,
+          격리해제: chartData.recovered.total,
+        },
+        x: "date",
+        type: chartTypeSwitcher("area-spline"),
+        colors: {
+          확진: deepRed,
+          격리해제: green,
+        },
+      },
+      axis: commonAxis,
+      point: {
+        show: false,
+      },
+    });
+
+    /**신규 사망 추이*/
     const newDeath_spline = c3.generate({
       bindto: "#newDeath_spline",
       padding: commonPadding,
@@ -853,6 +856,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
         show: false,
       },
     });
+
+    /**누적 사망 추이*/
     const totalDeath_areaSpline = c3.generate({
       bindto: "#totalDeath_areaSpline",
       padding: commonPadding,
