@@ -31,7 +31,7 @@
     </section>
 
     <section id="charts_section">
-      <div id="chartLoading">loading</div>
+      <div id="charts_loading"><div class="loader loader-8"></div></div>
       <header>
         <div id="dashboard">
           DASHBOARD
@@ -41,7 +41,20 @@
         <button onclick="change_data(30); location.href='#regionChartsLine'">최근 30일</button>
         <button onclick="change_data(); location.href='#regionChartsLine'">전체</button>
       </header>
-      <img title="menu" class="menu_button" src="./src/img/pngwing.com.png" />
+      <img
+        title="menu"
+        id="open_button"
+        class="menu_button"
+        onclick="open_list()"
+        src="./src/img/pngwing.com.png"
+      />
+      <img
+        title="menu"
+        id="close_button"
+        class="menu_button"
+        onclick="close_list()"
+        src="./src/img/pngwing.com.png"
+      />
       <div id="charts_wrapper">
         <div class="small_chart">
           거리두기 격상 예상 지역

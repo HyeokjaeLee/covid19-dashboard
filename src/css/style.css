@@ -70,12 +70,15 @@ text {
   padding-top: 35vh;
 }
 
-#chartLoading {
-  position: fixed;
+#charts_loading {
+  position: absolute;
   height: 100vh;
   width: 100%;
-  background-color: green;
-  text-align: center;
+  background-color: #353942;
+  opacity: 0.6;
+  z-index: 2;
+  display: none;
+  align-items: center;
 }
 
 @-webkit-keyframes color-change-5x {
@@ -224,6 +227,7 @@ text {
 
 /*chart wrapper 관련 css*/
 #charts_section {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -241,7 +245,6 @@ text {
 }
 
 .menu_button {
-  left: 10px;
   top: 50vh;
   position: fixed;
   height: 50px;
@@ -395,19 +398,22 @@ td {
   }
   #sidebar_section {
     position: fixed;
+    display: none;
   }
   #charts_wrapper > div,
   #charts_wrapper > .small_chart {
     width: 90%;
   }
-  .menu_button {
+  #open_button {
+    left: 10px;
     display: block;
+  }
+  #close_button {
+    right: 10px;
     -moz-transform: scaleX(-1);
-
     -o-transform: scaleX(-1);
-
     -webkit-transform: scaleX(-1);
-
     transform: scaleX(-1);
+    display: none;
   }
 }
