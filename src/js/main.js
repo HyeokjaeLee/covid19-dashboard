@@ -14,7 +14,7 @@ const deepGreen = "#2CABB1",
   red = "#FF8151",
   deepRed = "#E7604A";
 
-//c3차트 생성 공통 데이터
+/**c3차트 생성 공통 데이터*/
 const commonPadding = { left: 25, right: 25, top: 10, bottom: 10 },
   commonFormat = (d) => toLocalString(d) + " 명";
 
@@ -31,21 +31,14 @@ function change_data(_target) {
   create_dynamic_elements(target.region, target.startDate, target.endDate);
 }
 
-function open_list() {
-  sidebar_section.style.display = "flex";
-  open_button.style.display = "none";
-  close_button.style.display = "block";
-}
-
-let mobileSidebarState = "hide";
+/**작은 화면에서 sidebar를 열고 닫기*/
 function sidebar_control() {
-  sidebar_button.setAttribute("class", mobileSidebarState);
-  if (mobileSidebarState === "hide") {
-    mobileSidebarState = "show";
+  if (sidebar_section.style.display != "flex") {
     sidebar_section.style.display = "flex";
+    sidebar_button.setAttribute("class", "hide");
   } else {
-    mobileSidebarState = "hide";
     sidebar_section.style.removeProperty("display");
+    sidebar_button.classList.remove("hide");
   }
 }
 
@@ -519,7 +512,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         domestic: [],
         overseas: [],
       },
-      total: [], //현재 격리중인 환자 그래프 생성 todo
+      total: [],
     },
     recovered: {
       total: [],
