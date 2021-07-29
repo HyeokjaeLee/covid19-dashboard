@@ -1,14 +1,17 @@
 @font-face {
-  src: url("../fonts/NotoSansKR-Thin.otf");
+  src: url("../fonts/NotoSansKR-Regular.otf") format("opentype");
   font-family: "main";
+  font-display: fallback;
 }
 @font-face {
-  src: url("../fonts/Raleway-Bold.ttf");
+  src: url("../fonts/Raleway-Bold.ttf") format("truetype");
   font-family: "bold";
+  font-display: fallback;
 }
 @font-face {
-  src: url("../fonts/Raleway-Thin.ttf");
+  src: url("../fonts/Raleway-Thin.ttf") format("truetype");
   font-family: "thin";
+  font-display: fallback;
 }
 
 ::-webkit-scrollbar {
