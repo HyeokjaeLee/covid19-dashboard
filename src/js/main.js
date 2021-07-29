@@ -172,10 +172,10 @@ async function create_static_elements() {
         /**실제와 예상 거리두기 단계 차*/
         const differenceEstimatedDistancingLv =
           estimatedDistancingLv - regionalData.distancingLevel;
-        const { arrow, unitTxt, estimated_list } =
+        const { arrow, unitTxt } =
           differenceEstimatedDistancingLv > 0
-            ? { arrow: "↗", unitTxt: "+", estimated_list: estimatedIncreasing_list }
-            : { arrow: "↘", unitTxt: "", estimated_list: estimatedDecreasing_list };
+            ? { arrow: "↗", unitTxt: "+" }
+            : { arrow: "↘", unitTxt: "" };
         const li = document.createElement("li"),
           span = document.createElement("span");
         li.append(
@@ -183,7 +183,11 @@ async function create_static_elements() {
         );
         span.append(unitTxt + differenceEstimatedDistancingLv);
         li.append(span);
-        estimated_list.append(li);
+        if (differenceEstimatedDistancingLv > 0) {
+          estimatedIncreasing_list.appendChild(li);
+        } else if (differenceEstimatedDistancingLv < 0) {
+          estimatedDecreasing_list.appendChild(li);
+        }
       }
       chartData.immunityRatio.push(lastCovid19Data.immunityRatio);
       chartData.regionList.push(regionalData.regionKor);
