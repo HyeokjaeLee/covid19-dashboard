@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>COVID-19 DASHBOARD</title>
-    <!-- 전체 구조 css -->
     <link rel="stylesheet" href="./src/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" />
     <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -13,6 +12,7 @@
   </head>
 
   <body>
+    <!--로딩 창-->
     <div id="loading">
       <div class="loader loader-8"></div>
       <h1>데이터를 불러오는 중입니다.</h1>
@@ -108,6 +108,10 @@
         <div>
           누적 확진 추이
           <div id="totalConfirmed_areaSpline"></div>
+        </div>
+        <div>
+          격리중 환자 수 추이
+          <div></div>
         </div>
         <div>
           신규 확진, 백신 접종 비교

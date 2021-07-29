@@ -157,8 +157,10 @@ async function create_static_elements() {
         covid19DataList.forEach((covid19Data) => {
           newConfirmed7DaySum += covid19Data.quarantine.new.total;
         });
+        /**신규 확진 7일 평균*/
         const newConfirmed7DayAverage = newConfirmed7DaySum / covid19DataList.length;
         newConfirmedAverage7DaysPer100k = count_per100k(newConfirmed7DayAverage);
+        /**예상 거리두기 단계*/
         const estimatedDistancingLv =
           newConfirmedAverage7DaysPer100k >= 4
             ? 4
@@ -167,21 +169,21 @@ async function create_static_elements() {
             : newConfirmedAverage7DaysPer100k >= 1
             ? 2
             : 1;
+        /**실제와 예상 거리두기 단계 차*/
         const differenceEstimatedDistancingLv =
           estimatedDistancingLv - regionalData.distancingLevel;
-        const unitTxt = differenceEstimatedDistancingLv > 0 ? "+" : "";
+        const { arrow, unitTxt, estimated_list } =
+          differenceEstimatedDistancingLv > 0
+            ? { arrow: "↗", unitTxt: "+", estimated_list: estimatedIncreasing_list }
+            : { arrow: "↘", unitTxt: "", estimated_list: estimatedDecreasing_list };
         const li = document.createElement("li"),
           span = document.createElement("span");
         li.append(
-          `${regionalData.regionKor}: ${regionalData.distancingLevel} > ${estimatedDistancingLv} 단계`
+          `${regionalData.regionKor}: ${regionalData.distancingLevel} ${arrow} ${estimatedDistancingLv} 단계`
         );
         span.append(unitTxt + differenceEstimatedDistancingLv);
         li.append(span);
-        if (differenceEstimatedDistancingLv < 0) {
-          estimatedDecreasing_list.append(li);
-        } else if (differenceEstimatedDistancingLv > 0) {
-          estimatedIncreasing_list.append(li);
-        }
+        estimated_list.append(li);
       }
       chartData.immunityRatio.push(lastCovid19Data.immunityRatio);
       chartData.regionList.push(regionalData.regionKor);

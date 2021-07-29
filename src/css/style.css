@@ -238,6 +238,7 @@ text {
   flex-direction: row;
   align-items: center;
   font-family: thin;
+  box-shadow: 0px 10px 10px rgba(156, 112, 112, 0.4);
 }
 
 #sidebar_button {
