@@ -208,7 +208,6 @@ async function create_static_elements() {
     const li = document.createElement("li");
     li.innerHTML = "예상되는 지역이 없습니다.";
     li.setAttribute("style", "text-align:center");
-
     if (estimatedDecreasing_list.childElementCount === 0) estimatedDecreasing_list.append(li);
     if (estimatedIncreasing_list.childElementCount === 0) estimatedIncreasing_list.append(li);
   }
@@ -604,13 +603,13 @@ async function create_dynamic_elements(region, startDate, endDate) {
   /**차트 생성*/
   {
     const chartTypeSwitcher = (type) => (chartData.dateList.length < 30 ? "bar" : type);
-    const axisXcount = chartData.dateList.length < 30 ? chartData.dateList.length : 30;
+    const axisXcount = chartData.dateList.length < 10 ? chartData.dateList.length : 2;
     const commonAxis = {
       x: {
         show: true,
         type: "timeseries",
         tick: {
-          format: "%m.%d",
+          format: "%y.%m.%d",
           fit: true,
           outer: false,
           count: axisXcount,
@@ -747,7 +746,30 @@ async function create_dynamic_elements(region, startDate, endDate) {
           },
         },
         axis: commonAxis,
+        point: {
+          show: false,
+        },
+      });
 
+      /**격리중 환자 수 추이*/
+      const quarantine_spline = c3.generate({
+        bindto: "#quarantine_spline",
+        padding: commonPadding,
+        data: {
+          json: {
+            date: chartData.dateList,
+            격리중: chartData.quarantine.total,
+          },
+          x: "date",
+          type: chartTypeSwitcher("spline"),
+          colors: {
+            격리중: deepRed,
+          },
+        },
+        legend: {
+          hide: true,
+        },
+        axis: commonAxis,
         point: {
           show: false,
         },
@@ -921,6 +943,6 @@ function covid19_API(query) {
  */
 function minus_date(date, num) {
   date = new Date(date);
-  date.setDate(date.getDate() - num);
+  date.setDate(date.getDate() - num + 1);
   return date;
 }
