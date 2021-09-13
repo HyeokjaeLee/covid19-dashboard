@@ -1,62 +1,4 @@
-@font-face {
-  src: url("../../fonts/NotoSansKR-Regular.otf") format("opentype");
-  font-family: "main";
-  font-display: fallback;
-}
-@font-face {
-  src: url("../../fonts/Raleway-Bold.ttf") format("truetype");
-  font-family: "bold";
-  font-display: fallback;
-}
-@font-face {
-  src: url("../../fonts/Raleway-Thin.ttf") format("truetype");
-  font-family: "thin";
-  font-display: fallback;
-}
-
-::-webkit-scrollbar {
-  position: fixed;
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #7e7e7e;
-}
-
-body {
-  word-break: keep-all;
-  display: flex;
-  margin: 0;
-  height: 100vh;
-  flex-direction: row;
-  font-family: main;
-}
-
-header {
-  height: 70px;
-  width: 100%;
-}
-
-ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-}
-footer {
-  font-family: thin;
-  text-align: center;
-  color: #5c8dbe;
-  width: 100%;
-  margin: 10px;
-}
-footer > div {
-  margin-top: 8px;
-}
-
-text {
-  font-family: main;
-  white-space: nowrap;
-}
+@import "./default";
 
 #loading {
   position: fixed;
@@ -128,33 +70,26 @@ text {
   position: relative;
   vertical-align: middle;
   margin: 0 auto;
-}
-.loader,
-.loader:before,
-.loader:after {
   animation: 1s infinite ease-in-out;
-}
-.loader:before,
-.loader:after {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.loader-8:before,
-.loader-8:after {
-  content: "";
-  background-color: white;
-  transform: scale(0);
-  animation: loader8 1.5s infinite ease-in-out;
-}
-.loader-8:after {
-  animation-delay: 0.75s;
+  &:before,
+  &:after {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    background-color: white;
+    transform: scale(0);
+    animation: loader 1.5s infinite ease-in-out;
+  }
+  &:after {
+    animation-delay: 0.75s;
+  }
 }
 
-@keyframes loader8 {
+@keyframes loader {
   0% {
     transform: translateX(-100%) scale(0);
   }
