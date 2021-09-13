@@ -1,15 +1,15 @@
 @font-face {
-  src: url("../fonts/NotoSansKR-Regular.otf") format("opentype");
+  src: url("/assets/fonts/NotoSansKR-Regular.otf") format("opentype");
   font-family: "main";
   font-display: fallback;
 }
 @font-face {
-  src: url("../fonts/Raleway-Bold.ttf") format("truetype");
+  src: url("/assets/fonts/Raleway-Bold.ttf") format("truetype");
   font-family: "bold";
   font-display: fallback;
 }
 @font-face {
-  src: url("../fonts/Raleway-Thin.ttf") format("truetype");
+  src: url("/assets/fonts/Raleway-Thin.ttf") format("truetype");
   font-family: "thin";
   font-display: fallback;
 }

@@ -925,7 +925,7 @@ function convert_date(date) {
  */
 function covid19_API(query) {
   return new Promise((resolve) => {
-    const APIworker = new Worker("./src/js/worker.js");
+    const APIworker = new Worker("./assets/js/worker.js");
     APIworker.postMessage(query);
     APIworker.onmessage = (messageEvent) => {
       APIworker.terminate();
