@@ -1,105 +1,5 @@
 @import "./default";
-
-#loading {
-  position: fixed;
-  height: 100vh;
-  width: 100%;
-  -webkit-animation: color-change-5x 25s linear infinite alternate both;
-  animation: color-change-5x 25s linear infinite alternate both;
-  z-index: 4;
-  opacity: 0.99;
-  align-items: center;
-  display: flex;
-  text-align: center;
-  flex-direction: column;
-  color: white;
-  padding-top: 35vh;
-}
-
-#charts_loading {
-  position: absolute;
-  height: 100vh;
-  width: 100%;
-  background-color: #353942;
-  opacity: 0.6;
-  z-index: 3;
-  display: none;
-  align-items: center;
-}
-
-@-webkit-keyframes color-change-5x {
-  0% {
-    background: #282c34;
-  }
-  25% {
-    background: #b22cff;
-  }
-  50% {
-    background: #ea2222;
-  }
-  75% {
-    background: #f5be10;
-  }
-  100% {
-    background: #82a9fb;
-  }
-}
-@keyframes color-change-5x {
-  0% {
-    background: #282c34;
-  }
-  25% {
-    background: #b22cff;
-  }
-  50% {
-    background: #ea2222;
-  }
-  75% {
-    background: #f5be10;
-  }
-  100% {
-    background: #82a9fb;
-  }
-}
-.loader {
-  margin: 0 auto;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-  margin: 0 auto;
-  animation: 1s infinite ease-in-out;
-  &:before,
-  &:after {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    background-color: white;
-    transform: scale(0);
-    animation: loader 1.5s infinite ease-in-out;
-  }
-  &:after {
-    animation-delay: 0.75s;
-  }
-}
-
-@keyframes loader {
-  0% {
-    transform: translateX(-100%) scale(0);
-  }
-  50% {
-    transform: translateX(0%) scale(1);
-  }
-  100% {
-    transform: translateX(100%) scale(0);
-  }
-}
+@import "./loading";
 
 /*sidebar 관련 css*/
 #sidebar_section {
@@ -110,54 +10,50 @@
   display: flex;
   flex-direction: column;
   z-index: 3;
-}
-
-#sidebar_section > header {
-  font-family: bold;
-  font-size: xx-large;
-  background-color: #29c7ca;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#sidebar_section > header > span {
-  color: #ff8151;
-}
-#sidebar_section > .list_item {
-  background-color: #2cabb1;
-  padding-right: 5px;
+  > .list_item {
+    background-color: #2cabb1;
+    padding-right: 5px;
+  }
+  > header {
+    font-family: bold;
+    font-size: xx-large;
+    background-color: #29c7ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > span {
+      color: #ff8151;
+    }
+  }
 }
 
 #list {
   flex: 1;
   overflow-y: scroll;
   font-size: 15px;
-}
-
-#list > li {
-  transition: background-color 0.5s;
-  border-bottom: #535a68 1px solid;
-  cursor: pointer;
-}
-
-#list > li:hover {
-  color: black;
-  background-color: #727b8e;
+  > li {
+    transition: background-color 0.5s, color 0.5s;
+    border-bottom: #535a68 1px solid;
+    cursor: pointer;
+    &:hover {
+      color: black;
+      background-color: #727b8e;
+    }
+  }
 }
 
 .list_item {
   display: flex;
   flex-direction: row;
   height: 50px;
-}
-
-.list_item > li {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  font-family: main;
+  > li {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-family: main;
+  }
 }
 
 /*chart wrapper 관련 css*/
@@ -169,16 +65,32 @@
   background-color: #ebf0f5;
   width: 100px;
   flex: 1;
-}
-#charts_section > header {
-  display: flex;
-  background-color: #353942;
-  color: white;
-  flex-direction: row;
-  align-items: center;
-  font-family: thin;
-  box-shadow: 0px 10px 10px rgba(156, 112, 112, 0.4);
-  z-index: 2;
+  > header {
+    display: flex;
+    background-color: #353942;
+    color: white;
+    flex-direction: row;
+    align-items: center;
+    font-family: thin;
+    box-shadow: 0px 10px 10px rgba(156, 112, 112, 0.4);
+    z-index: 2;
+    > button {
+      border-radius: 0;
+      border-style: hidden;
+      word-break: keep-all;
+      color: white;
+      font-family: main;
+      background-color: #e7604a;
+      width: 70px;
+      border-right: 1px solid #ff6951;
+      transition: background-color 0.5s;
+      cursor: pointer;
+      height: 100%;
+      &:hover {
+        background-color: #ff8151;
+      }
+    }
+  }
 }
 
 #sidebar_button {
@@ -196,25 +108,9 @@
   font-size: xx-large;
   padding: 0 30px;
   flex: 1;
-}
-#dashboard > div {
-  font-size: x-small;
-}
-header > button {
-  border-radius: 0;
-  border-style: hidden;
-  word-break: keep-all;
-  color: white;
-  font-family: main;
-  background-color: #e7604a;
-  width: 70px;
-  border-right: 1px solid #ff6951;
-  transition: background-color 0.5s;
-  cursor: pointer;
-  height: 100%;
-}
-header > button:hover {
-  background-color: #ff8151;
+  > div {
+    font-size: x-small;
+  }
 }
 
 #charts_wrapper {

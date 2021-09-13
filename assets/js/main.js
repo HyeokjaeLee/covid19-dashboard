@@ -25,7 +25,7 @@ const main = (() => {
 
 /*동적 차트 Data 변경*/
 function change_data(_target) {
-  charts_loading.style.display = "flex";
+  chartsLoading.style.display = "flex";
   if (typeof _target === "string") target.region = _target;
   else target.startDate = !!_target ? convert_date(minus_date(today, _target)) : 0;
   create_dynamic_elements(target.region, target.startDate, target.endDate);
@@ -902,8 +902,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
       },
     });
   }
-  document.getElementById("loading").style.display = "none";
-  charts_loading.style.display = "none";
+  pageLoading.style.display = "none";
+  chartsLoading.style.display = "none";
 }
 
 /**날짜 형식 숫자로 변경
