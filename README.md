@@ -1,6 +1,6 @@
 ![HEADER](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=COVID-19%20Dashboard&fontSize=30&fontAlign=50&fontAlignY=50)
 
-![VERSION](https://img.shields.io/badge/version-2.0.0-6DA854?style=flat-square)&nbsp;&nbsp;&nbsp;![PWA](https://img.shields.io/badge/PWA-570FC2?style=flat-square&logo=Windows&logoColor=white) ![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=sass&logoColor=white)
 
 > 대한민국 COVID-19 대쉬보드 <br>
 
