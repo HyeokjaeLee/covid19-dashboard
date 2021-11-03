@@ -55,7 +55,7 @@ async function create_static_elements() {
       regionKor
       population
       distancingLevel
-      covid19DataList{
+      covid19Data{
         date
         confirmed{
           total
