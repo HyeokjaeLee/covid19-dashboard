@@ -115,12 +115,12 @@ async function create_static_elements() {
   };
   const regionList_ul = document.getElementById("list");
   updateddDate.innerHTML = `Updated: ${
-    regionalDataList[0].covid19DataList[regionalDataList[0].covid19DataList.length - 1].date
+    regionalDataList[0].covid19Data[regionalDataList[0].covid19Data.length - 1].date
   }`;
   /**데이터를 분류하고 동시에 지역 List element를 생성하기 위한 루프*/
   regionalDataList.forEach((regionalData) => {
-    const covid19DataList = regionalData.covid19DataList.slice(-7);
-    const lastCovid19Data = covid19DataList[covid19DataList.length - 1];
+    const covid19Data = regionalData.covid19Data.slice(-7);
+    const lastCovid19Data = covid19Data[covid19Data.length - 1];
     //지역 리스트 item 생성 및 추가
     {
       const regionList_li = document.createElement("li");
@@ -147,11 +147,11 @@ async function create_static_elements() {
       let newConfirmedAverage7DaysPer100k = null;
       if (regionalData.regionKor != "전국") {
         let newConfirmed7DaySum = 0;
-        covid19DataList.forEach((covid19Data) => {
+        covid19Data.forEach((covid19Data) => {
           newConfirmed7DaySum += covid19Data.quarantine.new.total;
         });
         /**신규 확진 7일 평균*/
-        const newConfirmed7DayAverage = newConfirmed7DaySum / covid19DataList.length;
+        const newConfirmed7DayAverage = newConfirmed7DaySum / covid19Data.length;
         newConfirmedAverage7DaysPer100k = count_per100k(newConfirmed7DayAverage);
         /**예상 거리두기 단계*/
         const estimatedDistancingLv =
@@ -457,7 +457,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
       regionEng
       regionKor
       population
-      covid19DataList{
+      covid19Data{
         date
         confirmed{
           total
@@ -499,8 +499,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
     }
   }`;
   const regionalData = (await covid19_API(query))[0];
-  const covid19DataList = regionalData.covid19DataList;
-  const lastCovid19Data = covid19DataList[covid19DataList.length - 1];
+  const covid19Data = regionalData.covid19Data;
+  const lastCovid19Data = covid19Data[covid19Data.length - 1];
   const chartData = {
     dateList: [],
     confirmed: {
@@ -580,7 +580,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
     </table>
     `;
   }
-  covid19DataList.forEach((covid19Data) => {
+  covid19Data.forEach((covid19Data) => {
     chartData.dateList.push(covid19Data.date);
     chartData.confirmed.total.push(covid19Data.confirmed.total);
     chartData.recovered.total.push(covid19Data.recovered.total);
