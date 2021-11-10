@@ -1,6 +1,6 @@
 const today = new Date();
 
-class StaticData {
+class StaticChartData {
   regionList = [];
   vaccination = {
     _1st: {
@@ -20,15 +20,11 @@ class StaticData {
       total: [],
     },
   };
-  ratePer100k = {
-    new: [],
-    newAverage7Days: [],
-    total: [],
-  };
+  ratePer100k = [];
   immunityRatio = [];
 }
 
-class DynamicData {
+class DynamicChartData {
   dateList = [];
   confirmed = {
     total: [],

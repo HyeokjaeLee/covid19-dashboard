@@ -183,16 +183,14 @@ async function create_static_elements() {
       chartData.regionList.push(regionalData.nameKor);
       chartData.confirmed.total.push(lastCovid19Data.confirmed.total);
       /**API의 신규 격리 데이터 shallow copy*/
-      const newConfirmedData = lastCovid19Data.confirmed.new;
-      chartData.confirmed.new.domestic.push(newConfirmedData.domestic);
-      chartData.confirmed.new.overseas.push(newConfirmedData.overseas);
-      chartData.confirmed.new.total.push(newConfirmedData.total);
+      chartData.confirmed.new.domestic.push(lastCovid19Data.confirmed.new.domestic);
+      chartData.confirmed.new.overseas.push(lastCovid19Data.confirmed.new.overseas);
+      chartData.confirmed.new.total.push(lastCovid19Data.confirmed.new.total);
       /**API의 백신접종 데이터 shallow copy*/
-      const vaccinationData = lastCovid19Data.vaccinated;
-      chartData.vaccination._1st.new.push(vaccinationData.first.new);
-      chartData.vaccination._1st.total.push(vaccinationData.first.total);
-      chartData.vaccination._2nd.new.push(vaccinationData.second.new);
-      chartData.vaccination._2nd.total.push(vaccinationData.second.total);
+      chartData.vaccination._1st.new.push(lastCovid19Data.vaccinated.first.new);
+      chartData.vaccination._1st.total.push(lastCovid19Data.vaccinated.first.total);
+      chartData.vaccination._2nd.new.push(lastCovid19Data.vaccinated.second.new);
+      chartData.vaccination._2nd.total.push(lastCovid19Data.vaccinated.second.total);
       chartData.ratePer100k.newAverage7Days.push(newConfirmedAverage7DaysPer100k);
       chartData.ratePer100k.new.push(count_per100k(newConfirmedData.total));
       chartData.ratePer100k.total.push(lastCovid19Data.ratePer100k);
