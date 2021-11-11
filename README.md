@@ -2,32 +2,17 @@
 
 ![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=sass&logoColor=white)
 
-> 대한민국 COVID-19 대쉬보드 <br>
+| ⚠️ Use Heroku to deploy |
+|:-----------------------:|
+| 해당 프로젝트에서 사용한 API는 Toy Projects를 위한 API로 Heroku 서버가 Sleep 상태일 경우 첫 요청시 **1분** 가량 소요됩니다. |
 
-## :chart_with_upwards_trend: Dashboard
+## 📝 About
 
-**<U>:warning: Heroku 서버가 Sleep 상태일 경우 첫 요청시 1분 가량 소요됩니다.</U>**
+[Korea Covid19 API](https://github.com/HyeokjaeLee/covid19-api) 활용 예시 프로젝트입니다.
 
-- ### [Link](https://hyeokjaelee.github.io/covid19-dashboard)
-- ### Screenshot
-  ![screencapture-hyeokjaelee-github-io-covid19-dashboard-index-html-1627592656456](https://user-images.githubusercontent.com/71566740/127566330-331aa96b-6bc2-4259-b32d-7e60797e2e3e.png)
-  ![screencapture-hyeokjaelee-github-io-covid19-dashboard-index-html-1627593010080](https://user-images.githubusercontent.com/71566740/127566336-eb8d7f0a-c01b-4dce-b8cd-a413f6faf29d.png)
-  ![screencapture-hyeokjaelee-github-io-covid19-dashboard-index-html-1627592713578](https://user-images.githubusercontent.com/71566740/127566337-8aab6fba-6cc7-41bd-94c1-c2f56c888278.png)
+해당 API에서 제공하는 여러가지 정보들을 시각화한 그래프를 제공합니다.
 
-## :books: Used Data
+## 📸 Preview
+![screencapture-hyeokjaelee-github-io-covid19-dashboard-index-html-1627593010080](https://user-images.githubusercontent.com/71566740/127566336-eb8d7f0a-c01b-4dce-b8cd-a413f6faf29d.png)
 
-- [COVID19-API](https://korea-covid19-api.herokuapp.com/)
-
-  > 해당 API의 보다 자세한 문서는 해당 [Repository](https://github.com/HyeokjaeLee/covid19-api)에서 확인 가능합니다.
-
-## :wastebasket: Old Version
-
-**<U>:warning: 외부 API의 변경으로 더 이상 작동하지 않습니다.</U>**
-
-> ~~https://api.apify.com~~<br> ~~https://api.coivd19api.com~~
-
-- ### ~~[Link]()~~
-- ### Screenshot
-
-  ![preview_old1](https://user-images.githubusercontent.com/71566740/105497377-1a731700-5d02-11eb-8056-d6cf36f1b8e4.png)
-  ![preview_old2](https://user-images.githubusercontent.com/71566740/105497375-1810bd00-5d02-11eb-9cdc-93677dee45ce.png)
+![screencapture-hyeokjaelee-github-io-covid19-dashboard-index-html-1627592713578](https://user-images.githubusercontent.com/71566740/127566337-8aab6fba-6cc7-41bd-94c1-c2f56c888278.png)

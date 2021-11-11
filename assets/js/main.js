@@ -8,11 +8,11 @@ const target = {
   endDate: convert_date(today),
 };
 
-const deepGreen = "#2CABB1",
-  green = "#29C7CA",
-  black = "#353942",
-  red = "#FF8151",
-  deepRed = "#E7604A";
+const DEEP_GREEN = "#2CABB1",
+  GREEN = "#29C7CA",
+  BLACK = "#353942",
+  RED = "#FF8151",
+  DEEP_RED = "#E7604A";
 
 /**c3차트 생성 공통 데이터*/
 const commonPadding = { left: 25, right: 25, top: 10, bottom: 10 },
@@ -121,10 +121,10 @@ async function create_static_elements() {
     //지역 리스트 item 생성 및 추가
     {
       const regionList_li = document.createElement("li");
-      regionList_li.setAttribute("id", regionalData.regionEng);
+      regionList_li.setAttribute("id", regionalData.nameEng);
       regionList_li.setAttribute(
         "onClick",
-        `change_data("${regionalData.regionEng}"); location.href='#regionChartsLine'`
+        `change_data("${regionalData.nameEng}"); location.href='#regionChartsLine'`
       );
       const unitTxt = regionalData.distancingLevel != null ? " 단계" : "";
       regionList_li.innerHTML = `
@@ -183,22 +183,19 @@ async function create_static_elements() {
       chartData.regionList.push(regionalData.nameKor);
       chartData.confirmed.total.push(lastCovid19Data.confirmed.total);
       /**API의 신규 격리 데이터 shallow copy*/
-      const newConfirmedData = lastCovid19Data.confirmed.new;
-      chartData.confirmed.new.domestic.push(newConfirmedData.domestic);
-      chartData.confirmed.new.overseas.push(newConfirmedData.overseas);
-      chartData.confirmed.new.total.push(newConfirmedData.total);
+      chartData.confirmed.new.domestic.push(lastCovid19Data.confirmed.new.domestic);
+      chartData.confirmed.new.overseas.push(lastCovid19Data.confirmed.new.overseas);
+      chartData.confirmed.new.total.push(lastCovid19Data.confirmed.new.total);
       /**API의 백신접종 데이터 shallow copy*/
-      const vaccinationData = lastCovid19Data.vaccinated;
-      chartData.vaccination._1st.new.push(vaccinationData.first.new);
-      chartData.vaccination._1st.total.push(vaccinationData.first.total);
-      chartData.vaccination._2nd.new.push(vaccinationData.second.new);
-      chartData.vaccination._2nd.total.push(vaccinationData.second.total);
+      chartData.vaccination._1st.new.push(lastCovid19Data.vaccinated.first.new);
+      chartData.vaccination._1st.total.push(lastCovid19Data.vaccinated.first.total);
+      chartData.vaccination._2nd.new.push(lastCovid19Data.vaccinated.second.new);
+      chartData.vaccination._2nd.total.push(lastCovid19Data.vaccinated.second.total);
       chartData.ratePer100k.newAverage7Days.push(newConfirmedAverage7DaysPer100k);
-      chartData.ratePer100k.new.push(count_per100k(newConfirmedData.total));
+      chartData.ratePer100k.new.push(count_per100k(lastCovid19Data.confirmed.total));
       chartData.ratePer100k.total.push(lastCovid19Data.ratePer100k);
     }
   });
-  console.log(chartData);
   {
     const li = document.createElement("li");
     li.innerHTML = "예상되는 지역이 없습니다.";
@@ -234,8 +231,8 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: green },
-        color: (color, d) => (d.value >= 4 ? deepRed : d.value >= 1 ? red : color),
+        colors: { 확진: GREEN },
+        color: (color, d) => (d.value >= 4 ? DEEP_RED : d.value >= 1 ? RED : color),
       },
       legend: {
         hide: true,
@@ -286,8 +283,8 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: red },
-        color: (color, d) => (d.value >= chartData.ratePer100k.new[0] ? deepRed : color),
+        colors: { 확진: RED },
+        color: (color, d) => (d.value >= chartData.ratePer100k.new[0] ? DEEP_RED : color),
       },
       legend: {
         hide: true,
@@ -316,8 +313,8 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: red },
-        color: (color, d) => (d.value >= chartData.ratePer100k.total[0] ? deepRed : color),
+        colors: { 확진: RED },
+        color: (color, d) => (d.value >= chartData.ratePer100k.total[0] ? DEEP_RED : color),
       },
       legend: {
         hide: true,
@@ -348,7 +345,7 @@ async function create_static_elements() {
         x: "region",
         type: "bar",
         groups: [["해외", "국내"]],
-        colors: { 해외: deepRed, 국내: red },
+        colors: { 해외: DEEP_RED, 국내: RED },
       },
       axis: commonAxis,
     });
@@ -363,7 +360,7 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { 확진: deepRed },
+        colors: { 확진: DEEP_RED },
       },
       legend: {
         hide: true,
@@ -383,7 +380,7 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { "1차 접종": green, "2차 접종": deepGreen },
+        colors: { "1차 접종": GREEN, "2차 접종": DEEP_GREEN },
       },
       axis: commonAxis,
     });
@@ -400,7 +397,7 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { "1차 접종": green, "2차 접종": deepGreen },
+        colors: { "1차 접종": GREEN, "2차 접종": DEEP_GREEN },
       },
       axis: commonAxis,
     });
@@ -416,7 +413,7 @@ async function create_static_elements() {
         },
         x: "region",
         type: "bar",
-        colors: { "면역 비율": deepGreen },
+        colors: { "면역 비율": DEEP_GREEN },
       },
       axis: {
         x: {
@@ -625,9 +622,9 @@ async function create_dynamic_elements(region, startDate, endDate) {
         ],
         type: "donut",
         colors: {
-          사망: black,
-          회복: deepGreen,
-          격리: deepRed,
+          사망: BLACK,
+          회복: DEEP_GREEN,
+          격리: DEEP_RED,
         },
         labels: {
           format: {
@@ -658,142 +655,133 @@ async function create_dynamic_elements(region, startDate, endDate) {
       vaccination1st_txt.innerHTML = "검역";
       vaccination2nd_txt.innerHTML = lazarettoVaccinationTxt;
     } else {
-      const vaccination1stTotalList = chartData.vaccinated._1st.total,
-        vaccination2ndTotalList = chartData.vaccinated._2nd.total;
-      const lastVaccination1stTotal = vaccination1stTotalList[vaccination1stTotalList.length - 1],
-        lastVaccination2ndTotal = vaccination2ndTotalList[vaccination2ndTotalList.length - 1];
-
+      const vaccination1stTotalList = chartData.vaccinated._1st.total;
+      const vaccination2ndTotalList = chartData.vaccinated._2nd.total;
+      const lastVaccination1stTotal = vaccination1stTotalList[vaccination1stTotalList.length - 1];
+      const lastVaccination2ndTotal = vaccination2ndTotalList[vaccination2ndTotalList.length - 1];
+      const vaccinationMeaningfulIndex = vaccination2ndTotalList.findIndex((v) => v !== null);
       vaccination1st_txt.innerHTML = `1차 백신 접종: ${toLocalString(lastVaccination1stTotal)} 명`;
       vaccination2nd_txt.innerHTML = `2차 백신 접종: ${toLocalString(lastVaccination2ndTotal)} 명`;
-
-      /**인규 대비 백신 접종률*/
-      const vaccination2ndRate_gauge = c3.generate({
-        bindto: "#vaccination2ndRate_gauge",
-        data: {
-          columns: [["2차 백신 접종", lastVaccination2ndTotal]],
-          type: "gauge",
-        },
-        gauge: {
-          max: regionalData.population,
-          expand: false,
-          label: {
+      const chartOptions = {
+        /**인규 대비 백신 접종률*/
+        vaccination2ndRate_gauge: {
+          bindto: "#vaccination2ndRate_gauge",
+          data: {
+            columns: [["2차 백신 접종", lastVaccination2ndTotal]],
+            type: "gauge",
+          },
+          gauge: {
+            max: regionalData.population,
+            expand: false,
+            label: {
+              show: false,
+            },
+          },
+          tooltip: {
             show: false,
           },
         },
-        tooltip: {
-          show: false,
-        },
-      });
+        /**신규 백신접종 추이*/
+        newVaccination_spline: {
+          bindto: "#newVaccination_spline",
+          padding: commonPadding,
+          data: {
+            json: {
+              date: chartData.dateList.slice(vaccinationMeaningfulIndex),
+              "1차 접종": chartData.vaccinated._1st.new.slice(vaccinationMeaningfulIndex),
+              "2차 접종": chartData.vaccinated._2nd.new.slice(vaccinationMeaningfulIndex),
+            },
+            x: "date",
+            type: chartTypeSwitcher("spline"),
+            colors: {
+              "1차 접종": GREEN,
+              "2차 접종": DEEP_GREEN,
+            },
+          },
+          axis: commonAxis,
 
-      /**백신 정보 실제 시작 index*/
-      const nonNullIndex = (() => {
-        for (let i = 0; i < vaccination2ndTotalList.length; i++) {
-          if (vaccination2ndTotalList[i] !== null) {
-            return i;
-          }
-        }
-      })();
-
-      /**신규 백신접종 추이*/
-      const newVaccination_spline = c3.generate({
-        bindto: "#newVaccination_spline",
-        padding: commonPadding,
-        data: {
-          json: {
-            date: chartData.dateList.slice(nonNullIndex),
-            "1차 접종": chartData.vaccinated._1st.new.slice(nonNullIndex),
-            "2차 접종": chartData.vaccinated._2nd.new.slice(nonNullIndex),
-          },
-          x: "date",
-          type: chartTypeSwitcher("spline"),
-          colors: {
-            "1차 접종": green,
-            "2차 접종": deepGreen,
+          point: {
+            show: false,
           },
         },
-        axis: commonAxis,
-
-        point: {
-          show: false,
-        },
-      });
-
-      /**누적 백신접종 추이*/
-      const totalVaccination_areaSpline = c3.generate({
-        bindto: "#totalVaccination_areaSpline",
-        padding: commonPadding,
-        data: {
-          json: {
-            date: chartData.dateList.slice(nonNullIndex),
-            "1차 접종": vaccination1stTotalList.slice(nonNullIndex),
-            "2차 접종": vaccination2ndTotalList.slice(nonNullIndex),
+        /**누적 백신접종 추이*/
+        totalVaccination_areaSpline: {
+          bindto: "#totalVaccination_areaSpline",
+          padding: commonPadding,
+          data: {
+            json: {
+              date: chartData.dateList.slice(vaccinationMeaningfulIndex),
+              "1차 접종": vaccination1stTotalList.slice(vaccinationMeaningfulIndex),
+              "2차 접종": vaccination2ndTotalList.slice(vaccinationMeaningfulIndex),
+            },
+            x: "date",
+            type: chartTypeSwitcher("area-spline"),
+            colors: {
+              "1차 접종": GREEN,
+              "2차 접종": DEEP_GREEN,
+            },
           },
-          x: "date",
-          type: chartTypeSwitcher("area-spline"),
-          colors: {
-            "1차 접종": green,
-            "2차 접종": deepGreen,
+          axis: commonAxis,
+          point: {
+            show: false,
           },
         },
-        axis: commonAxis,
-        point: {
-          show: false,
-        },
-      });
-
-      /**격리중 환자 수 추이*/
-      const quarantine_spline = c3.generate({
-        bindto: "#quarantine_spline",
-        padding: commonPadding,
-        data: {
-          json: {
-            date: chartData.dateList,
-            격리중: chartData.quarantine,
+        /**격리중 환자 수 추이*/
+        quarantine_spline: {
+          bindto: "#quarantine_spline",
+          padding: commonPadding,
+          data: {
+            json: {
+              date: chartData.dateList,
+              격리중: chartData.quarantine,
+            },
+            x: "date",
+            type: chartTypeSwitcher("spline"),
+            colors: {
+              격리중: DEEP_RED,
+            },
           },
-          x: "date",
-          type: chartTypeSwitcher("spline"),
-          colors: {
-            격리중: deepRed,
+          legend: {
+            hide: true,
           },
-        },
-        legend: {
-          hide: true,
-        },
-        axis: commonAxis,
-        point: {
-          show: false,
-        },
-      });
-
-      /**신규 확진, 2차 백신 접종 추이 비교*/
-      const newConfirmedVaccination_spline = c3.generate({
-        bindto: "#newConfirmedVaccination_spline",
-        padding: commonPadding,
-        data: {
-          json: {
-            date: chartData.dateList,
-            "2차 접종": vaccination2ndTotalList,
-            "신규 확진": chartData.confirmed.new.total,
-          },
-          x: "date",
-          type: "spline",
-          axes: {
-            "신규 확진": "y2",
-          },
-          colors: {
-            "신규 확진": deepRed,
-            "2차 접종": deepGreen,
+          axis: commonAxis,
+          point: {
+            show: false,
           },
         },
-        axis: {
-          x: commonAxis.x,
-          y: commonAxis.y,
-          y2: commonAxis.y,
+        /**신규 확진, 2차 백신 접종 추이 비교*/
+        newConfirmedVaccination_spline: {
+          bindto: "#newConfirmedVaccination_spline",
+          padding: commonPadding,
+          data: {
+            json: {
+              date: chartData.dateList,
+              "2차 접종": vaccination2ndTotalList,
+              "신규 확진": chartData.confirmed.new.total,
+            },
+            x: "date",
+            type: "spline",
+            axes: {
+              "신규 확진": "y2",
+            },
+            colors: {
+              "신규 확진": DEEP_RED,
+              "2차 접종": DEEP_GREEN,
+            },
+          },
+          axis: {
+            x: commonAxis.x,
+            y: commonAxis.y,
+            y2: commonAxis.y,
+          },
+          point: {
+            show: false,
+          },
         },
-        point: {
-          show: false,
-        },
-      });
+      };
+      for (option in chartOptions) {
+        c3.generate(chartOptions[option]);
+      }
     }
 
     /**신규 확진 추이*/
@@ -811,8 +799,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
         type: chartTypeSwitcher("area-spline"),
 
         colors: {
-          "국내 감염": red,
-          "해외 감염": deepRed,
+          "국내 감염": RED,
+          "해외 감염": DEEP_RED,
         },
       },
       legend: {
@@ -837,8 +825,8 @@ async function create_dynamic_elements(region, startDate, endDate) {
         x: "date",
         type: chartTypeSwitcher("area-spline"),
         colors: {
-          확진: deepRed,
-          격리해제: green,
+          확진: DEEP_RED,
+          격리해제: GREEN,
         },
       },
       axis: commonAxis,
@@ -859,7 +847,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         x: "date",
         type: chartTypeSwitcher("spline"),
         colors: {
-          사망: black,
+          사망: BLACK,
         },
       },
       legend: {
@@ -883,7 +871,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
         x: "date",
         type: chartTypeSwitcher("area-spline"),
         colors: {
-          사망: black,
+          사망: BLACK,
         },
       },
       legend: {
