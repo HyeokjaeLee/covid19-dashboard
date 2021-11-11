@@ -2,7 +2,13 @@
 
 ![JAVASCRIPT](https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black) ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) ![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=sass&logoColor=white)
 
-> **⚠️ 해당 프로젝트에서 사용한 API는 Toy Projects를 위한 API로 Heroku 서버가 Sleep 상태일 경우 첫 요청시 **1분** 가량 소요됩니다.**
+<center style="width:100%; padding:1em; border:1px solid gray; border-radius:10px; margin-bottom:2em;">
+
+## ⚠️
+
+**해당 프로젝트에서 사용한 API는 Toy Projects를 위한 API로 Heroku 서버가 Sleep 상태일 경우 첫 요청시 1분 가량 소요됩니다.**
+
+</center>
 
 ## 📝 About
 
