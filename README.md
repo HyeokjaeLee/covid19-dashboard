@@ -6,11 +6,13 @@
 
 [Korea Covid19 API](https://github.com/HyeokjaeLee/covid19-api) 활용 예시 프로젝트입니다.
 
+해당 API에서 제공하는 여러가지 정보들을 시각화한 그래프로 제공합니다.
+
 ### ⚠️ Notice
 
-해당 프로젝트에서 사용한 API는 Toy Projects를 위한 API로 Heroku 서버가 Sleep 상태일 경우 첫 요청시 1분 가량 소요됩니다.
+Toy Projects를 위한 API를 사용한 프로젝트입니다.
 
-해당 API에서 제공하는 여러가지 정보들을 시각화한 그래프로 제공합니다.
+Heroku 서버가 Sleep 상태일 경우 첫 요청시 1분 가량 소요됩니다.
 
 ## Preview [COVID-19 Dashboard](https://hyeokjaelee.github.io/covid19-dashboard/)
 
