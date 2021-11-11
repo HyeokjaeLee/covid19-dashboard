@@ -10,12 +10,11 @@
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="./assets/js/global.js"></script>
   </head>
 
   <body>
     <!--로딩 창-->
-    <div id="pageLoading" style="display: none">
+    <div id="pageLoading">
       <div class="loader"></div>
       <h1>데이터를 불러오는 중입니다.</h1>
       <h4>서버가 Sleep 상태일 경우 1분 정도 소요될수 있습니다.</h4>
@@ -33,7 +32,7 @@
     </section>
 
     <section id="charts_section">
-      <div id="chartsLoading" style="display: none"><div class="loader"></div></div>
+      <div id="chartsLoading"><div class="loader"></div></div>
       <header>
         <div id="dashboard">
           DASHBOARD
@@ -154,7 +153,6 @@
         </footer>
       </div>
     </section>
-    <script src="./assets/js/create-static-data.js"></script>
     <script src="./assets/js/main.js"></script>
   </body>
 </html>
