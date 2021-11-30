@@ -172,7 +172,7 @@ async function create_dynamic_elements(region, startDate, endDate) {
       bindto: "#confirmedRatio_donut",
       data: {
         columns: [
-          ["격리", lastCovid19Data.confirmed],
+          ["격리", lastCovid19Data.quarantine],
           ["사망", lastCovid19Data.dead.total],
           ["회복", lastCovid19Data.recovered.total],
         ],
