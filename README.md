@@ -12,7 +12,9 @@
 
 Toy Projects를 위한 API를 사용한 프로젝트입니다.
 
-Heroku 서버가 Sleep 상태일 경우 첫 요청시 1분 가량 소요됩니다.
+**Heroku 서버가 Sleep 상태일 경우 첫 요청시 1분 가량 소요됩니다.**
+
+- 2021.11.30 이후 단계적 일상회복 시행에 따라 거리두기 단계(distancingLevel) 항목을 사용하는 그래프들은 제외됩니다.
 
 ## Preview [COVID-19 Dashboard](https://hyeokjaelee.github.io/covid19-dashboard/)
 

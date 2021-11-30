@@ -26,7 +26,6 @@
         <li>지역</li>
         <li>신규 확진</li>
         <li>전체 확진</li>
-        <li>거리 두기</li>
       </ul>
       <ul id="list"></ul>
     </section>
@@ -50,14 +49,7 @@
       />
       <div id="charts_wrapper">
         <!--정적 차트 영역-->
-        <div class="small_chart">
-          거리두기 격상 예상 지역
-          <ul id="estimatedIncreasing_list"></ul>
-        </div>
-        <div class="small_chart">
-          거리두기 완화 예상 지역
-          <ul id="estimatedDecreasing_list"></ul>
-        </div>
+
         <div>
           7일 평균 신규 확진자 <span>(인구 10만명당)</span>
           <div id="newConfirmedAverage7Days_bar"></div>
@@ -153,6 +145,8 @@
         </footer>
       </div>
     </section>
+    <script src="./assets/js/create-common-graph.js"></script>
+    <script src="./assets/js/create-target-graph.js"></script>
     <script src="./assets/js/main.js"></script>
   </body>
 </html>
